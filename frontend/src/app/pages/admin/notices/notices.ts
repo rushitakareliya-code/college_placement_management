@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './notices.html',
-  styleUrl: './notices.css'
+  styleUrls: ['./notices.css']
 })
 export class Notices {
 
@@ -16,52 +16,88 @@ export class Notices {
   notices: any[] = [
     {
       title: "Placement Drive",
-      description: "TCS campus drive tomorrow",
-      date: "15 March"
+      message: "TCS campus drive tomorrow",
+      sender_role: "tpo_admin",
+      receiver_role: "student",
+      createdAt: new Date()
     }
   ];
 
-  notice: any = {
-    title: '',
-    description: '',
-    date: ''
-  };
+
+  notice: any = this.createEmptyNotice();
 
   editIndex: number | null = null;
 
-  openModal() {
-    this.notice = { title: '', description: '', date: '' };
-    this.editIndex = null;
-    this.isModalOpen = true;
+
+  createEmptyNotice() {
+    return {
+      title: '',
+      message: '',
+      sender_role: '',
+      receiver_role: '',
+      createdAt: ''
+    };
   }
 
-  closeModal() {
-    this.isModalOpen = false;
+
+  openModal() {
+
+    this.notice = this.createEmptyNotice();
+
+    this.editIndex = null;
+
+    this.isModalOpen = true;
+
   }
+
+
+  closeModal() {
+
+    this.isModalOpen = false;
+
+  }
+
 
   saveNotice() {
 
+    const data = JSON.parse(JSON.stringify(this.notice));
+
     if (this.editIndex !== null) {
-      this.notices[this.editIndex] = { ...this.notice };
-    }
-    else {
-      this.notice.date = new Date().toLocaleDateString();
-      this.notices.push({ ...this.notice });
+
+      this.notices[this.editIndex] = data;
+
+    } else {
+
+      data.createdAt = new Date();
+
+      this.notices.push(data);
+
     }
 
     this.closeModal();
+
   }
+
 
   editNotice(index: number) {
-    this.notice = { ...this.notices[index] };
+
+    this.notice = JSON.parse(JSON.stringify(this.notices[index]));
+
     this.editIndex = index;
+
     this.isModalOpen = true;
+
   }
 
+
   deleteNotice(index: number) {
+
     if (confirm("Are you sure you want to delete this notice?")) {
+
       this.notices.splice(index, 1);
+
     }
+
   }
 
 }

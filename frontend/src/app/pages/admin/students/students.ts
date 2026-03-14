@@ -7,55 +7,130 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './students.html',
-  styleUrl: './students.css',
+  styleUrls: ['./students.css'],
 })
 export class Students {
 
-  students:any[] = [
-    { name: 'Rahul Patel', email: 'rahul@mail.com', course: 'BCA' }
+  students: any[] = [
+    {
+      first_name: 'Rahul',
+      middle_name: '',
+      last_name: 'Patel',
+      email: 'rahul@mail.com',
+      number: '9876543210',
+
+      studentProfile: {
+        department: 'Computer',
+        year: 3,
+        rollNumber: 101,
+        liveKT: 0,
+        gap: false,
+
+        pastQualification: {
+          ssc: { percentage: 85 },
+          hsc: { percentage: 82 }
+        },
+
+        resume: ''
+      }
+    }
   ];
 
-  student:any = {
-    name:'',
-    email:'',
-    course:''
-  };
 
-  editIndex:number | null = null;
+  student: any = this.getEmptyStudent();
+
+  editIndex: number | null = null;
+
   isModalOpen = false;
 
-  openModal(){
-    this.student = {name:'',email:'',course:''};
+
+  // Create empty student structure
+  getEmptyStudent() {
+
+    return {
+      first_name: '',
+      middle_name: '',
+      last_name: '',
+      email: '',
+      number: '',
+
+      studentProfile: {
+        department: '',
+        year: null,
+        rollNumber: null,
+        liveKT: 0,
+        gap: false,
+
+        pastQualification: {
+          ssc: { percentage: null },
+          hsc: { percentage: null }
+        },
+
+        resume: ''
+      }
+    };
+
+  }
+
+
+  openModal() {
+
+    this.student = this.getEmptyStudent();
+
     this.editIndex = null;
+
     this.isModalOpen = true;
+
   }
 
-  closeModal(){
+
+  closeModal() {
+
     this.isModalOpen = false;
+
   }
 
-  saveStudent(){
 
-    if(this.editIndex !== null){
-      this.students[this.editIndex] = {...this.student};
-    }
-    else{
-      this.students.push({...this.student});
+  saveStudent() {
+
+    const studentData = JSON.parse(JSON.stringify(this.student));
+
+    if (this.editIndex !== null) {
+
+      this.students[this.editIndex] = studentData;
+
+    } else {
+
+      this.students.push(studentData);
+
     }
 
     this.closeModal();
+
   }
 
-  editStudent(index:number){
-    this.student = {...this.students[index]};
+
+  editStudent(index: number) {
+
+    this.student = JSON.parse(JSON.stringify(this.students[index]));
+
     this.editIndex = index;
+
     this.isModalOpen = true;
+
   }
 
-  deleteStudent(index:number){
-    if(confirm("Are you sure you want to delete this student?")){
-      this.students.splice(index,1);
+
+  deleteStudent(index: number) {
+
+    const confirmDelete = confirm("Are you sure you want to delete this student?");
+
+    if (confirmDelete) {
+
+      this.students.splice(index, 1);
+
     }
+
   }
 
 }

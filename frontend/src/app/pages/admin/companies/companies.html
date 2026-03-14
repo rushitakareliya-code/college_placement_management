@@ -1,43 +1,74 @@
-<div class="flex justify-between mb-4">
+<div class="flex justify-between items-center mb-6">
 
-    <h2 class="text-2xl font-bold">Companies</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">
+        Companies
+    </h2>
 
-    <button (click)="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Add Company
+    <button (click)="openModal()"
+        class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition shadow">
+        + Add Company
     </button>
 
 </div>
 
-<div class="bg-white rounded shadow">
 
-    <table class="w-full">
+<div class="bg-white shadow rounded-xl border overflow-x-auto">
 
-        <thead class="bg-gray-200">
+    <table class="w-full text-sm">
+
+        <thead class="bg-gray-100 text-gray-600">
 
             <tr>
-                <th class="p-3 text-left">Company</th>
-                <th class="p-3 text-left">Email</th>
-                <th class="p-3 text-left">Location</th>
-                <th class="p-3 text-left">Action</th>
+                <th class="p-4 text-left">Company</th>
+                <th class="p-4 text-left">Website</th>
+                <th class="p-4 text-left">Location</th>
+                <th class="p-4 text-left">Difficulty</th>
+                <th class="p-4 text-left">Action</th>
             </tr>
 
         </thead>
 
+
         <tbody>
 
-            <tr *ngFor="let company of companies; let i=index" class="border-t hover:bg-gray-50">
+            <tr *ngFor="let company of companies; let i=index" class="border-t hover:bg-gray-50 transition">
 
-                <td class="p-3">{{company.name}}</td>
-                <td class="p-3">{{company.email}}</td>
-                <td class="p-3">{{company.location}}</td>
+                <td class="p-4 font-medium">
+                    {{company.companyName}}
+                </td>
 
-                <td class="p-3 flex gap-3">
+                <td class="p-4">
+                    <a *ngIf="company.companyWebsite"  [href]="company.companyWebsite"
+                        class="text-teal-600 hover:underline">
 
-                    <button (click)="editCompany(i)" class="text-blue-600 hover:text-blue-800">
+                        Visit
+
+                    </a>
+                </td>
+
+                <td class="p-4">
+                    {{company.companyLocation}}
+                </td>
+
+                <td class="p-4">
+
+                    <span class="px-2 py-1 rounded text-xs" [ngClass]="{
+'bg-green-100 text-green-700': company.companyDifficulty === 'Easy',
+'bg-yellow-100 text-yellow-700': company.companyDifficulty === 'Moderate',
+'bg-red-100 text-red-700': company.companyDifficulty === 'Hard'
+}">
+                        {{company.companyDifficulty}}
+                    </span>
+
+                </td>
+
+                <td class="p-4 flex gap-3">
+
+                    <button (click)="editCompany(i)" class="text-teal-600 hover:text-teal-800 font-medium">
                         Edit
                     </button>
 
-                    <button (click)="deleteCompany(i)" class="text-red-600 hover:text-red-800">
+                    <button (click)="deleteCompany(i)" class="text-red-500 hover:text-red-700 font-medium">
                         Delete
                     </button>
 
@@ -52,48 +83,100 @@
 </div>
 
 
+
 <!-- Modal -->
 
 <div *ngIf="isModalOpen" (click)="closeModal()"
-    class="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center">
+    class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center">
 
-    <div (click)="$event.stopPropagation()" class="bg-white w-96 p-6 rounded shadow-lg">
+    <div (click)="$event.stopPropagation()" class="bg-white w-[450px] p-6 rounded-xl shadow-lg">
 
-        <h2 class="text-xl font-bold mb-4">
+        <h2 class="text-xl font-semibold text-gray-700 mb-5">
+
             {{editIndex !== null ? 'Edit Company' : 'Add Company'}}
+
         </h2>
 
-        <form (ngSubmit)="saveCompany()">
 
-            <div class="mb-4">
-                <label class="block mb-1">Company Name</label>
+        <form (ngSubmit)="saveCompany()" class="space-y-4">
 
-                <input type="text" [(ngModel)]="company.name" name="name" class="w-full border rounded px-3 py-2"
-                    required>
+
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Company Name
+                </label>
+
+                <input type="text" [(ngModel)]="company.companyName" name="companyName"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none" required>
+
             </div>
 
-            <div class="mb-4">
-                <label class="block mb-1">Email</label>
 
-                <input type="email" [(ngModel)]="company.email" name="email" class="w-full border rounded px-3 py-2"
-                    required>
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Description
+                </label>
+
+                <textarea [(ngModel)]="company.companyDescription" name="companyDescription" rows="3"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+</textarea>
+
             </div>
 
-            <div class="mb-4">
-                <label class="block mb-1">Location</label>
 
-                <input type="text" [(ngModel)]="company.location" name="location"
-                    class="w-full border rounded px-3 py-2" required>
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Website
+                </label>
+
+                <input type="text" [(ngModel)]="company.companyWebsite" name="companyWebsite"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+
             </div>
 
-            <div class="flex justify-end gap-3">
 
-                <button type="button" (click)="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded">
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Location
+                </label>
+
+                <input type="text" [(ngModel)]="company.companyLocation" name="companyLocation"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+
+            </div>
+
+
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Difficulty
+                </label>
+
+                <select [(ngModel)]="company.companyDifficulty" name="companyDifficulty"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+
+                    <option value="">Select</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Hard">Hard</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="flex justify-end gap-3 pt-4">
+
+                <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
                     Cancel
                 </button>
 
-                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-                    Save
+                <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                    Save Company
                 </button>
 
             </div>
