@@ -1,0 +1,88 @@
+<h2 class="text-2xl font-bold mb-4">Applications</h2>
+
+<div class="bg-white rounded shadow">
+
+    <table class="w-full">
+
+        <thead class="bg-gray-200">
+
+            <tr>
+                <th class="p-3 text-left">Student</th>
+                <th class="p-3 text-left">Job</th>
+                <th class="p-3 text-left">Company</th>
+                <th class="p-3 text-left">Status</th>
+                <th class="p-3 text-left">Action</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr *ngFor="let app of applications" class="border-t hover:bg-gray-50">
+
+                <td class="p-3">{{app.student}}</td>
+                <td class="p-3">{{app.job}}</td>
+                <td class="p-3">{{app.company}}</td>
+
+                <td class="p-3">
+
+                    <span [class.bg-yellow-200]="app.status === 'Pending'"
+                        [class.bg-green-200]="app.status === 'Approved'" [class.bg-red-200]="app.status === 'Rejected'"
+                        class="px-2 py-1 rounded">
+
+                        {{app.status}}
+
+                    </span>
+
+                </td>
+
+                <td class="p-3">
+
+                    <button (click)="viewApplication(app)"
+                        class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                        View
+                    </button>
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- Modal -->
+
+<div *ngIf="isModalOpen" (click)="closeModal()"
+    class="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center">
+
+    <div (click)="$event.stopPropagation()" class="bg-white w-96 p-6 rounded shadow-lg">
+
+        <h2 class="text-xl font-bold mb-4">Application Details</h2>
+
+        <p class="mb-2"><b>Student:</b> {{selectedApplication?.student}}</p>
+        <p class="mb-2"><b>Job:</b> {{selectedApplication?.job}}</p>
+        <p class="mb-4"><b>Company:</b> {{selectedApplication?.company}}</p>
+
+        <div class="flex justify-between">
+
+            <button (click)="updateStatus('Approved')" class="bg-green-500 text-white px-4 py-2 rounded">
+                Approve
+            </button>
+
+            <button (click)="updateStatus('Rejected')" class="bg-red-500 text-white px-4 py-2 rounded">
+                Reject
+            </button>
+
+            <button (click)="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
