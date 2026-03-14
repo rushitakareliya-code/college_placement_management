@@ -7,59 +7,97 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './companies.html',
-  styleUrl: './companies.css',
+  styleUrls: ['./companies.css'],
 })
 export class Companies {
 
-  companies:any[] = [
+  companies: any[] = [
     {
-      name: 'TCS',
-      email: 'tcs@mail.com',
-      location: 'Mumbai'
+      companyName: 'TCS',
+      companyDescription: 'Leading IT services company',
+      companyWebsite: 'https://www.tcs.com',
+      companyLocation: 'Mumbai',
+      companyDifficulty: 'Moderate'
     }
   ];
 
-  company:any = {
-    name:'',
-    email:'',
-    location:''
-  };
 
-  editIndex:number | null = null;
+  company: any = this.createEmptyCompany();
+
+  editIndex: number | null = null;
+
   isModalOpen = false;
 
-  openModal(){
-    this.company = {name:'', email:'', location:''};
+
+  createEmptyCompany() {
+
+    return {
+      companyName: '',
+      companyDescription: '',
+      companyWebsite: '',
+      companyLocation: '',
+      companyDifficulty: ''
+    };
+
+  }
+
+
+  openModal() {
+
+    this.company = this.createEmptyCompany();
+
     this.editIndex = null;
+
     this.isModalOpen = true;
+
   }
 
-  closeModal(){
+
+  closeModal() {
+
     this.isModalOpen = false;
+
   }
 
-  saveCompany(){
 
-    if(this.editIndex !== null){
-      this.companies[this.editIndex] = {...this.company};
-    } 
-    else{
-      this.companies.push({...this.company});
+  saveCompany() {
+
+    const data = JSON.parse(JSON.stringify(this.company));
+
+    if (this.editIndex !== null) {
+
+      this.companies[this.editIndex] = data;
+
+    } else {
+
+      this.companies.push(data);
+
     }
 
     this.closeModal();
+
   }
 
-  editCompany(index:number){
-    this.company = {...this.companies[index]};
+
+  editCompany(index: number) {
+
+    this.company = JSON.parse(JSON.stringify(this.companies[index]));
+
     this.editIndex = index;
+
     this.isModalOpen = true;
+
   }
 
-  deleteCompany(index:number){
-    if(confirm("Are you sure you want to delete this company?")){
-      this.companies.splice(index,1);
+
+  deleteCompany(index: number) {
+
+    if (confirm("Are you sure you want to delete this company?")) {
+
+      this.companies.splice(index, 1);
+
     }
+
   }
 
 }

@@ -1,0 +1,15 @@
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:10px;
+  font-size:14px;
+  transition:all .25s ease;
+}
+
+.menu-item:hover{
+  background:#1f2937;
+  color:#14b8a6;
+  transform:translateX(4px);
+}

@@ -1,43 +1,81 @@
-<div class="flex justify-between mb-4">
+<div class="flex justify-between items-center mb-6">
 
-    <h2 class="text-2xl font-bold">Students</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">
+        Students
+    </h2>
 
-    <button (click)="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Add Student
+    <button (click)="openModal()"
+        class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition shadow">
+        + Add Student
     </button>
 
 </div>
 
-<div class="bg-white shadow rounded">
 
-    <table class="w-full">
+<div class="bg-white shadow rounded-xl border overflow-x-auto">
 
-        <thead class="bg-gray-200">
+    <table class="w-full text-sm">
+
+        <thead class="bg-gray-100 text-gray-600">
 
             <tr>
-                <th class="p-3 text-left">Name</th>
-                <th class="p-3 text-left">Email</th>
-                <th class="p-3 text-left">Course</th>
-                <th class="p-3 text-left">Action</th>
+                <th class="p-4 text-left">Name</th>
+                <th class="p-4 text-left">Email</th>
+                <th class="p-4 text-left">Phone</th>
+                <th class="p-4 text-left">Department</th>
+                <th class="p-4 text-left">Year</th>
+                <th class="p-4 text-left">KT</th>
+                <th class="p-4 text-left">SSC %</th>
+                <th class="p-4 text-left">HSC %</th>
+                <th class="p-4 text-left">Action</th>
             </tr>
 
         </thead>
 
+
         <tbody>
 
-            <tr *ngFor="let student of students; let i=index" class="border-t hover:bg-gray-50">
+            <tr *ngFor="let student of students; let i=index" class="border-t hover:bg-gray-50 transition">
 
-                <td class="p-3">{{student.name}}</td>
-                <td class="p-3">{{student.email}}</td>
-                <td class="p-3">{{student.course}}</td>
+                <td class="p-4 font-medium">
+                    {{student.first_name}} {{student.last_name}}
+                </td>
 
-                <td class="p-3 flex gap-3">
+                <td class="p-4">
+                    {{student.email}}
+                </td>
 
-                    <button (click)="editStudent(i)" class="text-blue-600 hover:text-blue-800">
+                <td class="p-4">
+                    {{student.number}}
+                </td>
+
+                <td class="p-4">
+                    {{student.studentProfile?.department}}
+                </td>
+
+                <td class="p-4">
+                    {{student.studentProfile?.year}}
+                </td>
+
+                <td class="p-4">
+                    {{student.studentProfile?.liveKT}}
+                </td>
+
+                <td class="p-4">
+                    {{student.studentProfile?.pastQualification?.ssc?.percentage}}
+                </td>
+
+                <td class="p-4">
+                    {{student.studentProfile?.pastQualification?.hsc?.percentage}}
+                </td>
+
+                <td class="p-4 flex gap-3">
+
+                    <button (click)="editStudent(i)" class="text-teal-600 hover:text-teal-800 font-medium">
                         Edit
                     </button>
 
-                    <button (click)="deleteStudent(i)" class="text-red-600 hover:text-red-800">
+                    <button (click)="deleteStudent(i)" class="text-red-500 hover:text-red-700 font-medium">
                         Delete
                     </button>
 
@@ -52,54 +90,129 @@
 </div>
 
 
+
 <!-- Modal -->
 
-<div *ngIf="isModalOpen" (click)="closeModal()"
-    class="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center">
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center">
 
-    <div (click)="$event.stopPropagation()" class="bg-white w-96 p-6 rounded shadow-lg">
+    <div (click)="$event.stopPropagation()" class="bg-white w-[450px] p-6 rounded-xl shadow-lg">
 
-        <h2 class="text-xl font-bold mb-4">
+        <h2 class="text-xl font-semibold text-gray-700 mb-5">
             {{editIndex !== null ? 'Edit Student' : 'Add Student'}}
         </h2>
 
-        <form (ngSubmit)="saveStudent()">
 
-            <div class="mb-4">
+        <form (ngSubmit)="saveStudent()" class="space-y-4">
 
-                <label class="block mb-1">Name</label>
 
-                <input type="text" [(ngModel)]="student.name" name="name" class="w-full border rounded px-3 py-2"
-                    required>
+            <div>
 
-            </div>
+                <label class="block text-sm mb-1 text-gray-600">
+                    First Name
+                </label>
 
-            <div class="mb-4">
-
-                <label class="block mb-1">Email</label>
-
-                <input type="email" [(ngModel)]="student.email" name="email" class="w-full border rounded px-3 py-2"
-                    required>
+                <input type="text" [(ngModel)]="student.first_name" name="first_name"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none" required>
 
             </div>
 
-            <div class="mb-4">
 
-                <label class="block mb-1">Course</label>
+            <div>
 
-                <input type="text" [(ngModel)]="student.course" name="course" class="w-full border rounded px-3 py-2"
-                    required>
+                <label class="block text-sm mb-1 text-gray-600">
+                    Last Name
+                </label>
+
+                <input type="text" [(ngModel)]="student.last_name" name="last_name"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
 
             </div>
 
-            <div class="flex justify-end gap-3">
 
-                <button type="button" (click)="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded">
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Email
+                </label>
+
+                <input type="email" [(ngModel)]="student.email" name="email"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+
+            </div>
+
+
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Phone
+                </label>
+
+                <input type="text" [(ngModel)]="student.number" name="number"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+
+            </div>
+
+
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Department
+                </label>
+
+                <select [(ngModel)]="student.studentProfile.department" name="department"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+
+                    <option value="">Select</option>
+                    <option value="Computer">Computer</option>
+                    <option value="Civil">Civil</option>
+                    <option value="ECS">ECS</option>
+                    <option value="AIDS">AIDS</option>
+                    <option value="Mechanical">Mechanical</option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Year
+                </label>
+
+                <select [(ngModel)]="student.studentProfile.year" name="year"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+
+                    <option [value]="1">1</option>
+                    <option [value]="2">2</option>
+                    <option [value]="3">3</option>
+                    <option [value]="4">4</option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label class="block text-sm mb-1 text-gray-600">
+                    Live KT
+                </label>
+
+                <input type="number" [(ngModel)]="student.studentProfile.liveKT" name="liveKT"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+
+            </div>
+
+
+            <div class="flex justify-end gap-3 pt-4">
+
+                <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
                     Cancel
                 </button>
 
-                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-                    Save
+                <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                    Save Student
                 </button>
 
             </div>
