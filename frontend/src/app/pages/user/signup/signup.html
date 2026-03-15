@@ -1,0 +1,110 @@
+<app-navbar></app-navbar>
+
+<div class="min-h-screen bg-gray-100 flex items-center justify-center pt-24">
+
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+
+    <h2 class="text-2xl font-bold text-center text-green-600 mb-6">
+      Student Signup
+    </h2>
+
+    <form (ngSubmit)="signup()">
+
+      <!-- Name -->
+
+      <div class="mb-4">
+        <label class="block text-gray-600 mb-1">Full Name</label>
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="form.name"
+          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400"
+          required
+        >
+      </div>
+
+      <!-- Phone -->
+
+      <div class="mb-4">
+        <label class="block text-gray-600 mb-1">Phone Number</label>
+        <input
+          type="tel"
+          name="phone"
+          [(ngModel)]="form.phone"
+          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400"
+          required
+        >
+      </div>
+
+      <!-- Email -->
+
+      <div class="mb-4">
+        <label class="block text-gray-600 mb-1">Email</label>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="form.email"
+          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400"
+          required
+        >
+      </div>
+
+      <!-- Address -->
+
+      <div class="mb-4">
+        <label class="block text-gray-600 mb-1">Address</label>
+        <textarea
+          name="address"
+          [(ngModel)]="form.address"
+          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Password -->
+
+      <div class="mb-4">
+        <label class="block text-gray-600 mb-1">Password</label>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="form.password"
+          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400"
+          required
+        >
+      </div>
+
+      <!-- Confirm Password -->
+
+      <div class="mb-6">
+        <label class="block text-gray-600 mb-1">Confirm Password</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          [(ngModel)]="form.confirmPassword"
+          class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400"
+          required
+        >
+      </div>
+
+      <!-- Button -->
+
+      <button
+        type="submit"
+        class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+      >
+        Signup
+      </button>
+
+      <p class="text-center text-sm mt-4">
+        Already have an account?
+        <a routerLink="/login" class="text-blue-600 font-medium">
+          Login
+        </a>
+      </p>
+
+    </form>
+
+  </div>
+
+</div>

@@ -1,0 +1,48 @@
+<nav class="bg-black text-white fixed top-0 left-0 w-full shadow-md z-50">
+
+  <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+
+    <!-- Logo -->
+    <div class="flex items-center space-x-4">
+      <div class="bg-white text-black font-bold px-4 py-2 rounded text-lg">
+        PMS
+      </div>
+
+      <span class="font-semibold text-xl">
+        Placement Portal
+      </span>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex items-center space-x-10 text-lg">
+
+      <!-- Show Login only if NOT logged in -->
+      <a routerLink="/" class="hover:text-gray-300">
+        Login
+      </a>
+
+      <a routerLink="/signup" class="hover:text-gray-300">
+        Signup
+      </a>
+
+      <a routerLink="/home" class="hover:text-gray-300">
+        Home
+      </a>
+
+       <a routerLink="/about" class="hover:underline">
+        About Us
+      </a>
+
+      <a routerLink="/contact" class="hover:underline">
+        Contact Us
+      </a>
+      <!-- Show Logout only if logged in -->
+      <!-- <button *ngIf="isLoggedIn()" (click)="logout()" class="hover:text-red-400">
+        Logout
+      </button> -->
+
+    </div>
+
+  </div>
+
+</nav>

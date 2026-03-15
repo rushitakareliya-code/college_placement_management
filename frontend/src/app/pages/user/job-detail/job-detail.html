@@ -1,0 +1,72 @@
+<app-navbar></app-navbar>
+
+<!-- Success Popup -->
+
+<div *ngIf="showSuccess"
+class="fixed top-20 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 text-md font-medium">
+
+✔ Your application has been submitted successfully.
+
+</div>
+
+
+<div class="pt-28 pb-12 bg-gray-100 min-h-screen flex justify-center">
+
+<div class="bg-white w-full max-w-4xl shadow-lg rounded-xl p-10">
+
+<h1 class="text-3xl font-bold text-gray-800 mb-2">
+{{job.role}}
+</h1>
+
+<p class="text-lg text-gray-600 mb-6">
+{{job.company}}
+</p>
+
+<div class="grid md:grid-cols-2 gap-6 text-gray-700 mb-8">
+
+<p><span class="font-semibold">Location:</span> {{job.location}}</p>
+
+<p><span class="font-semibold">Job Type:</span> {{job.type}}</p>
+
+<p><span class="font-semibold">Experience:</span> {{job.experience}}</p>
+
+<p><span class="font-semibold">Salary:</span> {{job.salary}}</p>
+
+<p><span class="font-semibold">Working Days:</span> {{job.workingDays}}</p>
+
+<p><span class="font-semibold">Week Off:</span> {{job.weekOff}}</p>
+
+<p><span class="font-semibold">Shift Timing:</span> {{job.shift}}</p>
+
+</div>
+
+<h2 class="text-xl font-semibold mb-2">Job Description</h2>
+
+<p class="text-gray-600 mb-6">
+{{job.description}}
+</p>
+
+<h2 class="text-xl font-semibold mb-3">Responsibilities</h2>
+
+<ul class="list-disc ml-6 text-gray-600 mb-6">
+<li *ngFor="let r of job.responsibilities">{{r}}</li>
+</ul>
+
+<h2 class="text-xl font-semibold mb-3">Requirements</h2>
+
+<ul class="list-disc ml-6 text-gray-600 mb-8">
+<li *ngFor="let r of job.requirements">{{r}}</li>
+</ul>
+
+<button
+(click)="applyJob()"
+class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-700 transition">
+
+Apply Now
+
+</button>
+
+</div>
+
+</div>
+

@@ -1,0 +1,32 @@
+<div class="pt-24 bg-gray-100 min-h-screen">
+
+<div class="max-w-4xl mx-auto p-8">
+
+<h1 class="text-4xl font-bold text-center mb-10">
+Frequently Asked Questions
+</h1>
+
+<div *ngFor="let faq of faqs" class="mb-4">
+
+<div
+(click)="faq.open = !faq.open"
+class="bg-white p-4 shadow rounded cursor-pointer hover:shadow-lg transition">
+
+<h3 class="font-semibold">
+{{faq.question}}
+</h3>
+
+</div>
+
+<div
+*ngIf="faq.open"
+class="bg-gray-50 p-4 border-l-4 border-blue-500 animate-slideDown">
+
+<p>{{faq.answer}}</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
