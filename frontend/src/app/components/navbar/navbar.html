@@ -16,16 +16,7 @@
     <!-- Navigation -->
     <div class="flex items-center space-x-10 text-lg">
 
-      <!-- Show Login only if NOT logged in -->
       <a routerLink="/" class="hover:text-gray-300">
-        Login
-      </a>
-
-      <a routerLink="/signup" class="hover:text-gray-300">
-        Signup
-      </a>
-
-      <a routerLink="/home" class="hover:text-gray-300">
         Home
       </a>
 
@@ -35,6 +26,12 @@
 
       <a routerLink="/contact" class="hover:underline">
         Contact Us
+      </a>
+
+      <!-- Show Login only if NOT logged in -->
+      <a routerLink="/login" class="hover:text-gray-300">
+        <i class="fa fa-sign-in" aria-hidden="true"></i>
+        &nbsp;Login
       </a>
       <!-- Show Logout only if logged in -->
       <!-- <button *ngIf="isLoggedIn()" (click)="logout()" class="hover:text-red-400">

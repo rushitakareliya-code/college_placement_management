@@ -32,7 +32,7 @@ export const routes: Routes = [
             { path: 'notices', component: Notices }
         ]
     },
-    { path: '', component: LoginComponent },
+    { path: '', component: HomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'home', component: HomeComponent },
