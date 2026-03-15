@@ -6,6 +6,18 @@ import { Students } from './pages/admin/students/students';
 import { Companies } from './pages/admin/companies/companies';
 import { Jobs } from './pages/admin/jobs/jobs';
 import { Applications } from './pages/admin/applications/applications';
+import { HomeComponent } from './pages/user/home/home';
+import { LoginComponent } from './pages/user/login/login';
+import { SignupComponent } from './pages/user/signup/signup';
+import { About } from './pages/user/about/about';
+import { JobDetailComponent } from './pages/user/job-detail/job-detail';
+import { Contact } from './pages/user/contact/contact';
+import { Chat } from './pages/user/chat/chat';
+import { Faq } from './pages/user/faq/faq';
+import { Terms } from './pages/user/terms/terms';
+import { Privacy } from './pages/user/privacy/privacy';
+import { StudentGuidelines } from './pages/user/student-guidelines/student-guidelines';
+import { RecruiterGuidelines } from './pages/user/recruiter-guidelines/recruiter-guidelines';
 
 export const routes: Routes = [
     {
@@ -19,6 +31,18 @@ export const routes: Routes = [
             { path: 'applications', component: Applications },
             { path: 'notices', component: Notices }
         ]
-    }
-
+    },
+    { path: '', component: LoginComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'signup', component: SignupComponent },
+    { path: 'home', component: HomeComponent },
+    { path: 'job/:id', component: JobDetailComponent },
+    { path: 'about', component: About },
+    { path: 'contact', component: Contact },
+    { path: 'chat', component: Chat },
+    { path: 'faq', component: Faq },
+    { path: 'terms', component: Terms },
+    { path: 'privacy', component: Privacy },
+    { path: 'student-guidelines', component: StudentGuidelines },
+    { path: 'recruiter-guidelines', component: RecruiterGuidelines }
 ];
