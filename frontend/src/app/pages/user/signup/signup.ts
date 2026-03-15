@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NavbarComponent } from '../../components/navbar/navbar';
+import { NavbarComponent } from '../../../components/navbar/navbar';
 
 @Component({
   selector: 'app-signup',
