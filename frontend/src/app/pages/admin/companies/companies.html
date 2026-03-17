@@ -1,38 +1,30 @@
 <div class="flex justify-between items-center mb-6">
-
     <h2 class="text-2xl font-semibold text-gray-700">
         Companies
     </h2>
-
     <button (click)="openModal()"
         class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition shadow">
         + Add Company
     </button>
-
 </div>
 
-
 <div class="bg-white shadow rounded-xl border overflow-x-auto">
-
     <table class="w-full text-sm">
-
         <thead class="bg-gray-100 text-gray-600">
-
             <tr>
-                <th class="p-4 text-left">Company</th>
+                <th class="p-4 text-left">Company Name</th>
                 <th class="p-4 text-left">Website</th>
                 <th class="p-4 text-left">Location</th>
                 <th class="p-4 text-left">Difficulty</th>
+                <th class="p-4 text-left">Email</th>
+                <th class="p-4 text-left">Description</th>
+                <th class="p-4 text-left">Phone number</th>
                 <th class="p-4 text-left">Action</th>
             </tr>
-
         </thead>
 
-
         <tbody>
-
             <tr *ngFor="let company of companies; let i=index" class="border-t hover:bg-gray-50 transition">
-
                 <td class="p-4 font-medium">
                     {{company.companyName}}
                 </td>
@@ -40,9 +32,7 @@
                 <td class="p-4">
                     <a *ngIf="company.companyWebsite"  [href]="company.companyWebsite"
                         class="text-teal-600 hover:underline">
-
                         Visit
-
                     </a>
                 </td>
 
@@ -51,35 +41,38 @@
                 </td>
 
                 <td class="p-4">
-
                     <span class="px-2 py-1 rounded text-xs" [ngClass]="{
-'bg-green-100 text-green-700': company.companyDifficulty === 'Easy',
-'bg-yellow-100 text-yellow-700': company.companyDifficulty === 'Moderate',
-'bg-red-100 text-red-700': company.companyDifficulty === 'Hard'
-}">
+                    'bg-green-100 text-green-700': company.companyDifficulty === 'Easy',
+                    'bg-yellow-100 text-yellow-700': company.companyDifficulty === 'Moderate',
+                    'bg-red-100 text-red-700': company.companyDifficulty === 'Hard'
+                    }">
                         {{company.companyDifficulty}}
                     </span>
+                </td>
 
+                <td class="p-4">
+                    {{company.companyEmail}}
+                </td>
+
+                <td class="p-4">
+                    {{company.companyDescription}}
+                </td>
+
+                <td class="p-4">
+                    {{company.companyPhone}}
                 </td>
 
                 <td class="p-4 flex gap-3">
-
                     <button (click)="editCompany(i)" class="text-teal-600 hover:text-teal-800 font-medium">
                         Edit
                     </button>
-
                     <button (click)="deleteCompany(i)" class="text-red-500 hover:text-red-700 font-medium">
                         Delete
                     </button>
-
                 </td>
-
             </tr>
-
         </tbody>
-
     </table>
-
 </div>
 
 
@@ -87,98 +80,132 @@
 <!-- Modal -->
 
 <div *ngIf="isModalOpen" (click)="closeModal()"
-    class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center">
+     class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
 
-    <div (click)="$event.stopPropagation()" class="bg-white w-[450px] p-6 rounded-xl shadow-lg">
+    <div (click)="$event.stopPropagation()" 
+     class="bg-white w-[450px] p-6 rounded-xl shadow-lg max-h-[90vh] overflow-y-auto">
 
         <h2 class="text-xl font-semibold text-gray-700 mb-5">
-
             {{editIndex !== null ? 'Edit Company' : 'Add Company'}}
-
         </h2>
 
-
-        <form (ngSubmit)="saveCompany()" class="space-y-4">
-
-
+        <form #companyForm="ngForm" (ngSubmit)="saveCompany(companyForm)" class="space-y-4">
             <div>
-
                 <label class="block text-sm mb-1 text-gray-600">
                     Company Name
                 </label>
-
                 <input type="text" [(ngModel)]="company.companyName" name="companyName"
                     class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none" required>
-
+                <div *ngIf="companyForm.submitted && !company.companyName" class="text-red-500 text-sm mt-1">
+                    Company Name is required
+                </div>
             </div>
 
+            <div>
+                <label class="block text-sm mb-1 text-gray-600">
+                    Email
+                </label>
+                <input type="email" [(ngModel)]="company.companyEmail" name="companyEmail"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none" required>
+                <div *ngIf="companyForm.submitted && !company.companyEmail" class="text-red-500 text-sm mt-1">
+                    Email is required
+                </div>
+            </div>
+
+            <div *ngIf="editIndex === null">
+                <label class="block text-sm mb-1 text-gray-600">
+                    Password
+                </label>
+                <input type="password" [(ngModel)]="company.companyPassword" name="companyPassword"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none" required>
+                <div *ngIf="companyForm.submitted && company.companyPassword?.length < 6" class="text-red-500 text-sm mt-1">
+                    Password must be at least 6 characters
+                </div>
+            </div>
+
+            <div *ngIf="editIndex === null">
+                <label class="block text-sm mb-1 text-gray-600">
+                    Confirm Password
+                </label>
+                <input type="password" [(ngModel)]="company.companyConfirmPassword" name="companyConfirmPassword"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none" required>
+                <div *ngIf="passwordMismatch" class="text-red-500 text-sm mt-1">
+                    Passwords do not match
+                </div>
+            </div>
 
             <div>
+                <label class="block text-sm mb-1 text-gray-600">
+                    Phone number
+                </label>
+                <input type="number" [(ngModel)]="company.companyPhone" name="companyPhone"
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none" required>
+                <div *ngIf="companyForm.submitted && !company.companyPhone" class="text-red-500 text-sm mt-1">
+                    Phone is required
+                </div>
+                <div *ngIf="companyForm.submitted && company.companyPhone?.length < 10" class="text-red-500 text-sm mt-1">
+                    Phone must be at least 10 digits
+                </div>
+            </div>
 
+            <div>
                 <label class="block text-sm mb-1 text-gray-600">
                     Description
                 </label>
-
                 <textarea [(ngModel)]="company.companyDescription" name="companyDescription" rows="3"
-                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
-</textarea>
-
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none"></textarea>
+                 <div *ngIf="companyForm.submitted && !company.companyDescription" class="text-red-500 text-sm mt-1">
+                    Description is required
+                </div>
             </div>
 
 
             <div>
-
                 <label class="block text-sm mb-1 text-gray-600">
                     Website
                 </label>
-
                 <input type="text" [(ngModel)]="company.companyWebsite" name="companyWebsite"
                     class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
-
+                <div *ngIf="companyForm.submitted && !company.companyWebsite" class="text-red-500 text-sm mt-1">
+                    Website is required
+                </div>
             </div>
 
 
             <div>
-
                 <label class="block text-sm mb-1 text-gray-600">
                     Location
                 </label>
-
                 <input type="text" [(ngModel)]="company.companyLocation" name="companyLocation"
                     class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
-
+                <div *ngIf="companyForm.submitted && !company.companyLocation" class="text-red-500 text-sm mt-1">
+                    Location is required
+                </div>
             </div>
 
 
             <div>
-
-                <label class="block text-sm mb-1 text-gray-600">
-                    Difficulty
-                </label>
-
-                <select [(ngModel)]="company.companyDifficulty" name="companyDifficulty"
-                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
-
-                    <option value="">Select</option>
-                    <option value="Easy">Easy</option>
-                    <option value="Moderate">Moderate</option>
-                    <option value="Hard">Hard</option>
-
+                <label class="block text-sm mb-1 text-gray-600">Difficulty</label>
+                <select [(ngModel)]="company.companyDifficulty" name="companyDifficulty" required
+                class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
+                <option value="">Select</option>
+                <option value="Easy">Easy</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Hard">Hard</option>
                 </select>
-
+                <div *ngIf="companyForm.submitted && !company.companyDifficulty" class="text-red-500 text-sm mt-1">
+                    Difficulty is required
+                </div>
             </div>
 
 
             <div class="flex justify-end gap-3 pt-4">
-
                 <button type="button" (click)="closeModal()" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
                     Cancel
                 </button>
-
                 <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
                     Save Company
                 </button>
-
             </div>
 
         </form>

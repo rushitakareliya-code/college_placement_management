@@ -18,8 +18,10 @@ import { Terms } from './pages/user/terms/terms';
 import { Privacy } from './pages/user/privacy/privacy';
 import { StudentGuidelines } from './pages/user/student-guidelines/student-guidelines';
 import { RecruiterGuidelines } from './pages/user/recruiter-guidelines/recruiter-guidelines';
+import { AdminLoginComponent } from './pages/admin/admin-login/admin-login';
 
 export const routes: Routes = [
+    { path: 'admin/login', component: AdminLoginComponent }, 
     {
         path: 'admin',
         component: AdminLayout,
@@ -29,7 +31,7 @@ export const routes: Routes = [
             { path: 'companies', component: Companies },
             { path: 'jobs', component: Jobs },
             { path: 'applications', component: Applications },
-            { path: 'notices', component: Notices }
+            { path: 'notices', component: Notices },
         ]
     },
     { path: '', component: HomeComponent },

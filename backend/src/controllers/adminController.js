@@ -18,13 +18,111 @@ const getAllStudents = async (req, res, next) => {
 const getAllCompanies = async (req, res, next) => {
   try {
     const companies = await Company.find()
-      .select('name email isApproved')
       .sort({ createdAt: -1 });
     res.json(companies);
   } catch (error) {
     next(error);
   }
 };
+
+const addCompany = async (req, res) => {
+  try {
+    const {
+      companyName,
+      companyEmail,
+      companyPassword,
+      companyPhone,
+      companyDescription,
+      companyWebsite,
+      companyLocation,
+      companyDifficulty
+    } = req.body;
+
+    // ✅ 1. Required field check
+    if (!companyName || !companyEmail || !companyPassword) {
+      return res.status(400).json({ message: 'Required fields missing' });
+    }
+
+    // ✅ 2. Check duplicate email
+    const existing = await Company.findOne({ companyEmail });
+    if (existing) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // ✅ 3. Create company
+    const company = new Company({
+      companyName,
+      companyEmail,
+      companyPassword,
+      companyPhone: String(companyPhone), // 🔥 fix type issue
+      companyDescription,
+      companyWebsite,
+      companyLocation,
+      companyDifficulty
+    });
+
+    const savedCompany = await company.save();
+
+    res.status(201).json(savedCompany);
+
+  } catch (error) {
+    console.log('REQ BODY:', req.body);
+    console.error('Add company failed:', error);
+
+    res.status(500).json({
+      message: error.message || 'Server error'
+    });
+  }
+};
+
+
+
+const updateCompany = async (req, res) => {
+  try {
+
+    const id = req.params.companyId;
+
+    // 🔥 Remove password if empty
+    if (!req.body.companyPassword) {
+      delete req.body.companyPassword;
+    }
+
+    const updatedCompany = await Company.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedCompany) {
+      return res.status(404).json({ message: 'Company not found' });
+    }
+
+    res.json(updatedCompany);
+
+  } catch (error) {
+    console.error('UPDATE ERROR:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteCompany = async (req, res) => {
+  try {
+    const id = req.params.companyId;
+
+    const deleted = await Company.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Company not found' });
+    }
+
+    res.json({ message: 'Company deleted successfully' });
+
+  } catch (error) {
+    console.error('DELETE ERROR:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 // Approve or block company (update isApproved)
 const approveOrBlockCompany = async (req, res, next) => {
@@ -92,5 +190,8 @@ module.exports = {
   getAllStudents,
   getAllCompanies,
   approveOrBlockCompany,
-  getPlacementReport
+  getPlacementReport,
+  addCompany,
+  updateCompany,
+  deleteCompany,
 };

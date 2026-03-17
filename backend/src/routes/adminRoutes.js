@@ -5,7 +5,11 @@ const {
   getAllStudents,
   getAllCompanies,
   approveOrBlockCompany,
-  getPlacementReport
+  getPlacementReport,
+  addCompany,
+  updateCompany,
+  deleteCompany,
+
 } = require('../controllers/adminController');
 
 // All routes require JWT + admin role
@@ -14,6 +18,9 @@ router.use(requireAdmin);
 
 router.get('/students', getAllStudents);
 router.get('/companies', getAllCompanies);
+router.post('/companies', addCompany);
+router.put('/companies/:companyId', updateCompany);
+router.delete('/companies/:companyId', deleteCompany);
 router.put('/companies/:companyId/approval', approveOrBlockCompany);
 router.get('/placement-report', getPlacementReport);
 
