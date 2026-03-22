@@ -9,9 +9,12 @@
 
     <form #loginForm="ngForm" (ngSubmit)="login()">
 
-        <div *ngIf="commonError" class="text-red-500 text-sm bg-red-50 p-3 rounded-lg border border-red-200 mb-4">
-      {{ commonError }}
-    </div>
+      <!-- ✅ COMMON ERROR -->
+      <div *ngIf="commonError" class="mb-6">
+        <p class="text-red-500 text-sm bg-red-50 p-3 rounded-lg border border-red-200">
+          {{ commonError }}
+        </p>
+      </div>
 
       <!-- Email -->
       <div class="mb-6">
@@ -39,13 +42,6 @@
 
         <p class="text-red-500 text-sm mt-1" *ngIf="passwordError">
           {{ passwordError }}
-        </p>
-      </div>
-
-      <!-- ✅ ERROR MESSAGE -->
-      <div class="mb-6" *ngIf="errorMessage">
-        <p class="text-red-500 text-sm bg-red-50 p-3 rounded-lg border border-red-200">
-          {{ errorMessage }}
         </p>
       </div>
 

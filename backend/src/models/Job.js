@@ -1,17 +1,20 @@
 const mongoose = require('mongoose');
 
-const applicantSchema = new mongoose.Schema({
-  student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
-  status: { type: String, enum: ['Applied', 'Selected', 'Rejected'], required: true }
-}, { _id: false });
-
 const jobSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String },
-  eligibility: { type: String },
-  company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
-  applicants: [applicantSchema],
-  createdAt: { type: Date, default: Date.now }
-});
+  role: { type: String, required: true },
+  company: { type: String, required: true },
+  location: { type: String, required: true },
+  type: { type: String, required: true }, // Full-time, Part-time, Hybrid, Remote
+  experience: { type: String, required: true },
+  salary: { type: String, required: true },
+  workingDays: { type: String, required: true },
+  weekOff: { type: String, required: true },
+  shift: { type: String, required: true },
+  description: { type: String, required: true },
+  responsibilities: [{ type: String }],
+  requirements: [{ type: String }],
+  companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Job', jobSchema);

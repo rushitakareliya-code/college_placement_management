@@ -36,6 +36,7 @@ export class LoginComponent {
     this.emailError = '';
     this.passwordError = '';
     this.commonError = '';
+
     this.loginForm.form.markAllAsTouched();
 
     if (!this.loginForm.valid) return;
@@ -51,19 +52,18 @@ export class LoginComponent {
           localStorage.setItem('token', res.token);
           localStorage.setItem('user', JSON.stringify(res.user));
 
-          // Navigate
+          // Navigate to home
           this.router.navigate(['/home']);
         },
         error: (err) => {
           this.isLoading = false;
 
-          const message = err?.error?.message || '';
+          const message = err?.error?.message || 'Login failed';
 
           // Detect errors
           const emailMsg = message.toLowerCase().includes('email') ? message : '';
           const passwordMsg = message.toLowerCase().includes('password') ? message : '';
 
-          // Both wrong → set common error
           if (emailMsg && passwordMsg) {
             this.commonError = 'Invalid credentials';
           } else if (emailMsg) {
@@ -71,8 +71,7 @@ export class LoginComponent {
           } else if (passwordMsg) {
             this.passwordError = passwordMsg;
           } else {
-            // fallback
-            this.commonError = message || 'Login failed';
+            this.commonError = message;
           }
 
           this.cdr.detectChanges();

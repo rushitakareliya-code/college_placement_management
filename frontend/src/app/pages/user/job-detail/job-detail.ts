@@ -1,51 +1,111 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+interface Job {
+  _id: string;
+  role: string;
+  company: string | any;
+  location: string;
+  type: string;
+  experience: string;
+  salary: string;
+  workingDays: string;
+  weekOff: string;
+  shift: string;
+  description: string;
+  responsibilities: string[];
+  requirements: string[];
+}
 
 @Component({
   selector: 'app-job-detail',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, HttpClientModule],
   templateUrl: './job-detail.html',
   styleUrls: ['./job-detail.css']
 })
-export class JobDetailComponent {
-
+export class JobDetail implements OnInit {
+  job: Job | null = null;
   showSuccess = false;
+  jobId = '';
+  isLoading = true;
+  errorMessage = '';
 
-  job = {
-    role: "Frontend Developer",
-    company: "Google",
-    location: "Bangalore",
-    type: "Hybrid",
-    experience: "1-3 years",
-    workingDays: "Monday - Friday",
-    weekOff: "Saturday, Sunday",
-    shift: "10 AM - 6 PM",
-    salary: "8 - 12 LPA",
-    description: "We are looking for a skilled Frontend Developer to build modern, scalable user interfaces using Angular.",
-    responsibilities: [
-      "Develop responsive UI using Angular",
-      "Collaborate with backend teams",
-      "Optimize application performance",
-      "Write reusable components"
-    ],
-    requirements: [
-      "Strong knowledge of HTML, CSS, JavaScript",
-      "Experience with Angular framework",
-      "Understanding of REST APIs",
-      "Good problem solving skills"
-    ]
-  };
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private router: Router,
+    private cdr: ChangeDetectorRef  // ✅ FIX 1: Force change detection
+  ) {}
 
-  applyJob() {
-
-    this.showSuccess = true;
-
-    setTimeout(() => {
-      this.showSuccess = false;
-    }, 3000);
-
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      console.log("🔁 Route changed");
+      this.jobId = params.get('id') || '';
+      console.log("New Job ID:", this.jobId);
+      
+      if (this.jobId) {
+        this.loadJobDetails();
+      }
+    });
   }
 
+  loadJobDetails() {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.job = null;  // ✅ FIX 2: Reset job
+
+    console.log("Calling API with ID:", this.jobId);
+
+    this.http.get<any>(`http://localhost:5000/api/jobs/${this.jobId}`)
+      .subscribe({
+        next: (res) => {
+          console.log("✅ RAW API RESPONSE:", res);
+          this.job = res;
+          this.isLoading = false;
+          this.cdr.detectChanges();  // ✅ FIX 3: Force UI update
+          console.log("✅ JOB ASSIGNED:", this.job);
+        },
+        error: (err) => {
+          console.error("❌ API ERROR:", err);
+          this.errorMessage = 'Job not found or failed to load';
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  applyJob() {
+    if (!this.job || !localStorage.getItem('token')) {
+      alert('Please login first');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const studentData = JSON.parse(localStorage.getItem('user') || '{}');
+
+    console.log("Applying with:", {
+      studentId: studentData.id || studentData._id,
+      jobId: this.job._id
+    });
+
+    this.http.post('http://localhost:5000/api/jobs/apply', {
+      studentId: studentData.id || studentData._id,
+      jobId: this.job._id
+    }).subscribe({
+      next: () => {
+        console.log("✅ Applied successfully");
+        this.showSuccess = true;
+        this.cdr.detectChanges();
+        setTimeout(() => this.showSuccess = false, 3000);
+      },
+      error: (err) => {
+        console.error("❌ Apply error:", err);
+        alert(err.error?.message || 'Application failed');
+      }
+    });
+  }
 }

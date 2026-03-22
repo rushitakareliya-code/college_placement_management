@@ -10,7 +10,7 @@ import { HomeComponent } from './pages/user/home/home';
 import { LoginComponent } from './pages/user/login/login';
 import { SignupComponent } from './pages/user/signup/signup';
 import { About } from './pages/user/about/about';
-import { JobDetailComponent } from './pages/user/job-detail/job-detail';
+import { JobDetail} from './pages/user/job-detail/job-detail';
 import { Contact } from './pages/user/contact/contact';
 import { Chat } from './pages/user/chat/chat';
 import { Faq } from './pages/user/faq/faq';
@@ -38,7 +38,7 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'signup', component: SignupComponent },
     { path: 'home', component: HomeComponent },
-    { path: 'job/:id', component: JobDetailComponent },
+    { path: 'job/:id', component: JobDetail },
     { path: 'about', component: About },
     { path: 'contact', component: Contact },
     { path: 'chat', component: Chat },
