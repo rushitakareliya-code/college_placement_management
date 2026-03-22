@@ -1,52 +1,69 @@
 <app-navbar></app-navbar>
 
 <div class="pt-20 min-h-screen flex items-center justify-center bg-gray-100">
-
   <div class="bg-white shadow-xl rounded-xl p-12 w-11/12 max-w-md md:max-w-lg">
+
     <h2 class="text-3xl font-bold text-center text-blue-600 mb-8">
       Placement Portal Login
     </h2>
 
-    <form (ngSubmit)="login()">
+    <form #loginForm="ngForm" (ngSubmit)="login()">
 
+        <div *ngIf="commonError" class="text-red-500 text-sm bg-red-50 p-3 rounded-lg border border-red-200 mb-4">
+      {{ commonError }}
+    </div>
+
+      <!-- Email -->
       <div class="mb-6">
         <label class="block text-gray-700 mb-2 text-lg">Email</label>
-        <input
-          type="email"
-          [(ngModel)]="form.email"
-          name="email"
-          class="w-full border rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          required
-        >
+        <input type="email" [(ngModel)]="form.email" name="email" #email="ngModel" required email [disabled]="isLoading"
+          class="w-full border rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <p class="text-red-500 text-sm mt-1" *ngIf="loginForm.submitted && email.invalid">
+          Please enter a valid email
+        </p>
+
+        <p class="text-red-500 text-sm mt-1" *ngIf="emailError">
+          {{ emailError }}
+        </p>
       </div>
 
-      <div class="mb-8">
+      <!-- Password -->
+      <div class="mb-6">
         <label class="block text-gray-700 mb-2 text-lg">Password</label>
-        <input
-          type="password"
-          [(ngModel)]="form.password"
-          name="password"
-          class="w-full border rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          required
-        >
+        <input type="password" [(ngModel)]="form.password" name="password" #password="ngModel" required minlength="4"
+          [disabled]="isLoading"
+          class="w-full border rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <p class="text-red-500 text-sm mt-1" *ngIf="loginForm.submitted && password.invalid">
+          Password is required (minimum 4 characters)
+        </p>
+
+        <p class="text-red-500 text-sm mt-1" *ngIf="passwordError">
+          {{ passwordError }}
+        </p>
       </div>
 
-      <button
-        type="submit"
-        class="w-full bg-blue-600 text-white py-3 text-lg rounded-lg hover:bg-blue-700 transition-all duration-200"
-      >
-        Login
+      <!-- ✅ ERROR MESSAGE -->
+      <div class="mb-6" *ngIf="errorMessage">
+        <p class="text-red-500 text-sm bg-red-50 p-3 rounded-lg border border-red-200">
+          {{ errorMessage }}
+        </p>
+      </div>
+
+      <!-- Button -->
+      <button type="submit" [disabled]="isLoading"
+        class="w-full bg-blue-600 text-white py-3 text-lg rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2">
+        <span *ngIf="isLoading">⏳ Logging in...</span>
+        <span *ngIf="!isLoading">Login</span>
       </button>
 
+      <!-- Signup -->
       <p class="text-center text-base mt-6">
         Don't have an account?
-        <a routerLink="/signup" class="text-blue-600 font-medium hover:underline">
+        <a (click)="goToSignup()" class="text-blue-600 font-medium cursor-pointer">
           Signup
         </a>
       </p>
 
     </form>
-
   </div>
-
 </div>

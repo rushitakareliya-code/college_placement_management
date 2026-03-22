@@ -27,7 +27,7 @@ export class AdminLoginComponent {
 
   loginAdmin() {
 
-    this.http.post('http://localhost:5000/api/auth/admin/login', this.form)
+    this.http.post('http://localhost:5000/api/admin/login', this.form)
       .subscribe((res: any) => {
 
         localStorage.setItem('token', res.token);

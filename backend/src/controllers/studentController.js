@@ -1,94 +1,124 @@
-const Student = require('../models/Student');
-const Job = require('../models/Job');
-const Company = require('../models/Company');
+const Student = require("../models/Student");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-// Get all approved jobs (company isApproved = true)
-const getApprovedJobs = async (req, res, next) => {
-  try {
-    const approvedCompanies = await Company.find({ isApproved: true }).select('_id');
-    const companyIds = approvedCompanies.map(c => c._id);
-    const jobs = await Job.find({ company: { $in: companyIds } })
-      .populate('company', 'name email')
-      .sort({ createdAt: -1 });
-    res.json(jobs);
-  } catch (error) {
-    next(error);
-  }
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+    expiresIn: '30d',
+  });
 };
 
-// Apply for a job (once per job, status "Applied")
-const applyForJob = async (req, res, next) => {
+const registerStudent = async (req, res, next) => {
   try {
-    const { jobId } = req.params;
-    const studentId = req.user.id;
-    const job = await Job.findById(jobId).populate('company', 'name isApproved');
-    if (!job) return res.status(404).json({ message: 'Job not found.' });
-    if (!job.company || !job.company.isApproved) {
-      return res.status(400).json({ message: 'Job is not open for applications.' });
+    const { name, email, number, address, password, cpassword } = req.body;
+
+    // ✅ Required field check
+    if (!name || !email || !number || !address || !password || !cpassword) {
+      return res.status(400).json({ message: 'All fields are required.' });
     }
-    const alreadyApplied = job.applicants.some(
-      a => a.student.toString() === studentId
-    );
-    if (alreadyApplied) {
-      return res.status(400).json({ message: 'You have already applied for this job.' });
+
+    // ✅ Password match check
+    if (password !== cpassword) {
+      return res.status(400).json({ message: 'Passwords do not match.' });
     }
-    job.applicants.push({ student: studentId, status: 'Applied' });
-    await job.save();
-    const updated = await Job.findById(jobId).populate('company', 'name');
+
+    // ✅ Check existing user
+    const exists = await Student.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ message: 'Email already registered.' });
+    }
+
+    // ✅ Hash password (bcrypt now works!)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // You only need ONE hashed password - use it for both
+    const student = await Student.create({
+      name,
+      email,
+      number,
+      address,
+      password: hashedPassword,
+      cpassword: hashedPassword  // ✅ Same hash for both
+    });
+
+    // ✅ Generate token
+    const token = generateToken(student._id, 'student');
+
     res.status(201).json({
-      message: 'Application submitted successfully.',
-      job: { _id: updated._id, title: updated.title, company: updated.company.name }
+      message: 'Student registered successfully.',
+      token,
+      user: {
+        id: student._id,
+        name: student.name,
+        email: student.email,
+        role: 'student'
+      }
     });
+
   } catch (error) {
     next(error);
   }
 };
 
-// View applied jobs (title, company name, status)
-const getAppliedJobs = async (req, res, next) => {
+// loginStudent remains the same...
+const loginStudent = async (req, res, next) => {
+  console.log("LOGIN API HIT"); 
   try {
-    const studentId = req.user.id;
-    const jobs = await Job.find({ 'applicants.student': studentId })
-      .populate('company', 'name')
-      .select('title applicants company');
-    const applied = jobs.map(job => {
-      const app = job.applicants.find(a => a.student.toString() === studentId);
-      return {
-        jobId: job._id,
-        title: job.title,
-        companyName: job.company ? job.company.name : null,
-        status: app ? app.status : null
-      };
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        emailError: !email,
+        passwordError: !password,
+        message: 'Email and password are required.'
+      });
+    }
+
+    const student = await Student.findOne({ email });
+
+    let emailError = false;
+    let passwordError = false;
+
+    // Check email
+    if (!student) {
+      emailError = true;
+    } else {
+      // Check password
+      const match = await bcrypt.compare(password, student.password);
+      if (!match) passwordError = true;
+    }
+
+    // Both email and password are wrong → common error
+    if (emailError && passwordError) {
+      return res.status(401).json({
+        emailError,
+        passwordError,
+        commonError: 'Invalid credentials'
+      });
+    }
+
+    // Only email wrong
+    if (emailError) {
+      return res.status(401).json({ emailError, message: 'Invalid email' });
+    }
+
+    // Only password wrong
+    if (passwordError) {
+      return res.status(401).json({ passwordError, message: 'Invalid password' });
+    }
+
+    // ✅ Successful login
+    const token = generateToken(student._id, 'student');
+    res.json({
+      message: 'Login successful.',
+      token,
+      user: { id: student._id, name: student.name, email: student.email, role: 'student' }
     });
-    res.json(applied);
+
   } catch (error) {
     next(error);
   }
 };
-
-// Update student profile (skills and resume only)
-const updateProfile = async (req, res, next) => {
-  try {
-    const studentId = req.user.id;
-    const { skills, resume } = req.body;
-    const update = {};
-    if (skills !== undefined) update.skills = Array.isArray(skills) ? skills : [];
-    if (resume !== undefined) update.resume = resume;
-    const student = await Student.findByIdAndUpdate(
-      studentId,
-      update,
-      { new: true, runValidators: true }
-    ).select('name email branch skills resume placed');
-    if (!student) return res.status(404).json({ message: 'Student not found.' });
-    res.json({ message: 'Profile updated successfully.', student });
-  } catch (error) {
-    next(error);
-  }
-};
-
 module.exports = {
-  getApprovedJobs,
-  applyForJob,
-  getAppliedJobs,
-  updateProfile
+  registerStudent,
+  loginStudent
 };
