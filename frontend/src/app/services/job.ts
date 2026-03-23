@@ -5,9 +5,8 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CompanyService {
-
-  apiUrl = 'http://localhost:5000/api/companies';
+export class JobService {
+  apiUrl = 'http://localhost:5000/api/jobs';
 
   constructor(private http: HttpClient) {}
 
@@ -21,19 +20,19 @@ export class CompanyService {
     };
   }
 
-  getCompanies(): Observable<any> {
+  getJobs(): Observable<any> {
     return this.http.get(this.apiUrl, this.getAuthHeaders());
   }
 
-  addCompany(data: any): Observable<any> {
+  addJob(data: any): Observable<any> {
     return this.http.post(this.apiUrl, data, this.getAuthHeaders());
   }
 
-  updateCompany(id: string, data: any): Observable<any> {
+  updateJob(id: string, data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, data, this.getAuthHeaders());
   }
 
-  deleteCompany(id: string): Observable<any> {
+  deleteJob(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, this.getAuthHeaders());
   }
 }

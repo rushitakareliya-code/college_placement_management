@@ -6,18 +6,19 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 interface Job {
   _id: string;
-  role: string;
-  company: string | any;
-  location: string;
-  type: string;
-  experience: string;
-  salary: string;
-  workingDays: string;
-  weekOff: string;
-  shift: string;
-  description: string;
-  responsibilities: string[];
-  requirements: string[];
+  role?: string;
+  company?: string;
+  companyId?: any;
+  location?: string;
+  type?: string;
+  experience?: string;
+  salary?: string;
+  workingDays?: string;
+  weekOff?: string;
+  shift?: string;
+  description?: string;
+  responsibilities?: string[];
+  requirements?: string[];
 }
 
 @Component({
@@ -79,21 +80,27 @@ export class JobDetail implements OnInit {
   }
 
   applyJob() {
-    if (!this.job || !localStorage.getItem('token')) {
-      alert('Please login first');
+    const token = localStorage.getItem('token');
+    const userRaw = localStorage.getItem('user');
+    if (!this.job || !token || !userRaw) {
       this.router.navigate(['/login']);
       return;
     }
 
-    const studentData = JSON.parse(localStorage.getItem('user') || '{}');
+    const studentData = JSON.parse(userRaw || '{}');
+    const studentId = studentData.id || studentData._id;
+    if (!studentId) {
+      this.router.navigate(['/login']);
+      return;
+    }
 
     console.log("Applying with:", {
-      studentId: studentData.id || studentData._id,
+      studentId,
       jobId: this.job._id
     });
 
     this.http.post('http://localhost:5000/api/jobs/apply', {
-      studentId: studentData.id || studentData._id,
+      studentId,
       jobId: this.job._id
     }).subscribe({
       next: () => {

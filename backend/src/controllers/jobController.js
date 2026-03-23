@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const Job = require('../models/Job');
 const Company = require('../models/Company');
-const Placement = require('../models/Placement'); // make sure Placement model is imported
+const Placement = require('../models/Placement');
 
-// ✅ Get all jobs (for job listing page)
+// Get all jobs (for job listing page)
 const getAllJobs = async (req, res, next) => {
   try {
     const jobs = await Job.find({ isActive: true })
-      .populate('companyId', 'name logo')
+      .populate('companyId', 'companyName companyEmail')
       .sort({ createdAt: -1 });
     res.json(jobs);
   } catch (error) {
@@ -15,18 +15,19 @@ const getAllJobs = async (req, res, next) => {
   }
 };
 
-// ✅ Get single job by ID (for job detail page)
+// Get single job by ID (for job detail page)
 const getJobById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid job ID' });
     }
 
-    const job = await Job.findById(id)
-      .populate('companyId', 'name logo description');
+    const job = await Job.findById(id).populate(
+      'companyId',
+      'companyName companyEmail companyDescription companyWebsite companyLocation'
+    );
 
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
@@ -38,7 +39,7 @@ const getJobById = async (req, res, next) => {
   }
 };
 
-// ✅ Apply for job (create placement)
+// Apply for job: record placement + push student onto job.applicants
 const applyForJob = async (req, res, next) => {
   try {
     const { studentId, jobId } = req.body;
@@ -52,24 +53,31 @@ const applyForJob = async (req, res, next) => {
       return res.status(404).json({ message: 'Job not found' });
     }
 
-    // Check if student applied already
-    const existingPlacement = await Placement.findOne({ 
-      student: studentId, 
-      company: job.companyId 
-    });
-    if (existingPlacement) {
-      return res.status(400).json({ message: 'Already applied to this company' });
+    const sid = studentId.toString();
+    const alreadyOnJob = (job.applicants || []).some(
+      (a) => a.student && a.student.toString() === sid
+    );
+    if (alreadyOnJob) {
+      return res.status(400).json({ message: 'You have already applied for this job.' });
     }
 
-    // Create placement
-    const placement = await Placement.create({ 
-      student: studentId, 
-      company: job.companyId 
+    const existingForJob = await Placement.findOne({ student: studentId, job: jobId });
+    if (existingForJob) {
+      return res.status(400).json({ message: 'You have already applied for this job.' });
+    }
+
+    await Placement.create({
+      student: studentId,
+      company: job.companyId,
+      job: jobId,
     });
 
-    res.status(201).json({ 
+    job.applicants = job.applicants || [];
+    job.applicants.push({ student: studentId, status: 'Pending' });
+    await job.save();
+
+    res.status(201).json({
       message: 'Application submitted successfully!',
-      placement 
     });
   } catch (error) {
     next(error);
@@ -79,5 +87,5 @@ const applyForJob = async (req, res, next) => {
 module.exports = {
   getAllJobs,
   getJobById,
-  applyForJob
+  applyForJob,
 };

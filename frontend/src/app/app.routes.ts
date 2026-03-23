@@ -19,12 +19,14 @@ import { Privacy } from './pages/user/privacy/privacy';
 import { StudentGuidelines } from './pages/user/student-guidelines/student-guidelines';
 import { RecruiterGuidelines } from './pages/user/recruiter-guidelines/recruiter-guidelines';
 import { AdminLoginComponent } from './pages/admin/admin-login/admin-login';
+import { AdminAuthGuard } from './guards/admin-auth.guard';
 
 export const routes: Routes = [
     { path: 'admin/login', component: AdminLoginComponent }, 
     {
         path: 'admin',
         component: AdminLayout,
+        canActivate: [AdminAuthGuard],
         children: [
             { path: 'dashboard', component: Dashboard },
             { path: 'students', component: Students },

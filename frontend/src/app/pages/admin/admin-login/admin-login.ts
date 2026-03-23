@@ -31,6 +31,10 @@ export class AdminLoginComponent {
       .subscribe((res: any) => {
 
         localStorage.setItem('token', res.token);
+        if (res.user) {
+          // Dedicated key so student `user` in localStorage never overwrites admin profile
+          localStorage.setItem('adminUser', JSON.stringify(res.user));
+        }
 
         this.toastr.success('Login successful!!', 'Success');
 

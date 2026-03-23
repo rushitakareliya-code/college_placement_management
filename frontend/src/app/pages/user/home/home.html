@@ -1,125 +1,157 @@
 <app-navbar></app-navbar>
 
-<div class="pt-24 bg-gray-50 min-h-screen">
+<div class="pt-20 bg-[#f8fafc] min-h-screen font-sans">
 
-  <!-- HERO SECTION -->
-  <section class="max-w-7xl mx-auto px-8 py-12 grid md:grid-cols-2 gap-10 items-center">
-
+  <section class="max-w-7xl mx-auto px-8 py-16 grid md:grid-cols-2 gap-12 items-center">
     <div class="animate-fade-in">
-      <h1 class="text-4xl font-bold text-gray-800 mb-4">
-        Placement Portal System
+      <h1 class="text-5xl font-extrabold text-[#1e293b] tracking-tight mb-6">
+        Placement Portal <span class="text-[#0eb39e]">System</span>
       </h1>
 
-      <p class="text-gray-600 text-lg mb-6">
-        Our Placement Portal helps students connect with top companies and
-        explore career opportunities. Browse available job postings,
-        review company requirements, and apply directly through the portal.
+      <p class="text-slate-600 text-xl leading-relaxed mb-8">
+        Streamline your career trajectory. Connect with corporate partners, 
+        manage applications, and explore opportunities within our verified ecosystem.
       </p>
 
       <button (click)="scrollToJobs()"
-        class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 hover:scale-105 transition">
+        class="bg-[#0eb39e] text-white px-8 py-4 rounded-xl font-semibold shadow-lg shadow-teal-200/50 hover:bg-[#0ca692] transition-all active:scale-95">
         Explore Jobs
       </button>
     </div>
 
-    <div class="animate-slide">
-      <img src="https://images.unsplash.com/photo-1551434678-e076c223a692" class="rounded-lg shadow-lg w-full">
+    <div class="relative">
+      <div class="absolute -inset-4 bg-teal-100 rounded-full blur-3xl opacity-30"></div>
+      <img src="https://images.unsplash.com/photo-1551434678-e076c223a692" 
+           class="relative rounded-2xl shadow-2xl w-full border border-white/50">
     </div>
-
   </section>
 
-
-  <!-- ABOUT SECTION -->
-  <section class="bg-white py-12">
-
-    <div class="max-w-6xl mx-auto px-8 text-center">
-
-      <h2 class="text-3xl font-bold mb-6 text-gray-800">
-        About the Placement Portal
+  <section class="bg-white border-y border-gray-100 py-16">
+    <div class="max-w-4xl mx-auto px-8 text-center">
+      <h2 class="text-3xl font-bold mb-6 text-[#1e293b]">
+        Bridging the Gap Between Talent & Opportunity
       </h2>
-
-      <p class="text-gray-600 max-w-3xl mx-auto">
-        The Placement Portal is designed to simplify the recruitment
-        process for students and companies. Students can explore available
-        job opportunities, understand company requirements, and apply
-        directly through the portal. Companies can post job openings and
-        connect with talented candidates efficiently.
+      <p class="text-slate-500 text-lg leading-relaxed">
+        The PortalHub ecosystem is designed to simplify recruitment. 
+        We provide a centralized workspace where students can track their journey 
+        and companies can identify top-tier talent through a transparent, difficulty-rated process.
       </p>
-
     </div>
-
   </section>
 
-
-  <!-- FEATURES SECTION -->
-  <section class="py-14">
-
-    <div class="max-w-6xl mx-auto px-8 grid md:grid-cols-3 gap-8 text-center">
-
-      <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-16 mx-auto mb-4">
-
-        <h3 class="font-semibold text-lg mb-2">Verified Job Listings</h3>
-
-        <p class="text-gray-600 text-sm">
-          Access authentic job opportunities from trusted companies.
-        </p>
+  <section class="py-20 bg-[#f8fafc]">
+    <div class="max-w-7xl mx-auto px-8 grid md:grid-cols-3 gap-8">
+      
+      <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="w-14 h-14 bg-teal-50 rounded-lg flex items-center justify-center mb-6">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-8">
+        </div>
+        <h3 class="font-bold text-xl text-[#1e293b] mb-3">Verified Listings</h3>
+        <p class="text-slate-500">Access authentic job opportunities from our trusted corporate partners.</p>
       </div>
 
-
-      <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png" class="w-16 mx-auto mb-4">
-
-        <h3 class="font-semibold text-lg mb-2">Easy Application</h3>
-
-        <p class="text-gray-600 text-sm">
-          Apply to jobs quickly through a simple and user-friendly process.
-        </p>
+      <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="w-14 h-14 bg-orange-50 rounded-lg flex items-center justify-center mb-6">
+            <img src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png" class="w-8">
+        </div>
+        <h3 class="font-bold text-xl text-[#1e293b] mb-3">Easy Application</h3>
+        <p class="text-slate-500">Apply to multiple roles with a single click and track status in real-time.</p>
       </div>
 
-
-      <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-        <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" class="w-16 mx-auto mb-4">
-
-        <h3 class="font-semibold text-lg mb-2">Career Growth</h3>
-
-        <p class="text-gray-600 text-sm">
-          Discover opportunities that help you build your professional career.
-        </p>
+      <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+        <div class="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+            <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" class="w-8">
+        </div>
+        <h3 class="font-bold text-xl text-[#1e293b] mb-3">Career Growth</h3>
+        <p class="text-slate-500">Discover paths that align with your long-term professional ambitions.</p>
       </div>
 
     </div>
-
   </section>
 
+  <section id="jobsSection" class="max-w-7xl mx-auto px-8 py-20">
+    <div class="flex flex-col items-center mb-12">
+        <h2 class="text-3xl font-bold text-[#1e293b] mb-2">Available Job Openings</h2>
+        <div class="h-1 w-20 bg-[#0eb39e] rounded-full"></div>
+    </div>
 
-  <!-- JOB POSTINGS -->
-  <section id="jobsSection" class="max-w-7xl mx-auto px-8 py-14">
+    <div class="max-w-3xl mx-auto mb-10">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search jobs by role, company, or location..."
+        class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
+      />
+    </div>
 
-    <h2 class="text-3xl font-bold text-center mb-10 text-gray-800">
-      Available Job Openings
-    </h2>
+    <div *ngIf="isLoading" class="text-center text-slate-600 py-10">
+      Loading jobs...
+    </div>
 
-    <div class="grid md:grid-cols-3 gap-8">
+    <div *ngIf="!isLoading && loadError" class="text-center text-red-600 py-10">
+      {{ loadError }}
+    </div>
 
-      <div *ngFor="let job of jobs"
-        class="bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition transform hover:-translate-y-2">
+    <div *ngIf="!isLoading && !loadError && displayJobs.length > 0" class="grid md:grid-cols-3 gap-8">
+      <div *ngFor="let job of displayJobs"
+        class="bg-white border border-gray-100 rounded-2xl p-7 hover:border-teal-200 transition-all group">
+        
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="text-xl font-bold text-gray-800 group-hover:text-[#0eb39e] transition-colors">
+              {{job.role}}
+            </h3>
+            <span class="px-3 py-1 text-xs font-medium rounded-full bg-orange-50 text-orange-600 border border-orange-100">
+                {{ job.type || 'Open' }}
+            </span>
+        </div>
 
-        <h3 class="text-lg font-semibold mb-3">
-          {{job.role}}
-        </h3>
+        <div class="space-y-2 mb-8">
+            <p class="flex items-center text-slate-500 text-sm">
+                <span class="font-semibold text-slate-700 mr-2">Company:</span> {{job.company}}
+            </p>
+            <p class="flex items-center text-slate-500 text-sm">
+                <span class="font-semibold text-slate-700 mr-2">Location:</span> {{job.location}}
+            </p>
+            <p class="flex items-center text-slate-500 text-sm">
+                <span class="font-semibold text-slate-700 mr-2">Experience:</span> {{job.exp}}
+            </p>
+        </div>
 
-        <p class="text-gray-600">Company: {{job.company}}</p>
-        <p class="text-gray-600">Location: {{job.location}}</p>
-        <p class="text-gray-600 mb-4">Experience: {{job.exp}}</p>
         <button (click)="openJob(job._id)"
-          class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+          class="w-full bg-[#1e293b] text-white py-3 rounded-xl font-medium hover:bg-[#0eb39e] transition-colors shadow-sm">
           Apply Now
         </button>
       </div>
-
     </div>
 
-  </section>
+    <div *ngIf="!isLoading && !loadError && displayJobs.length === 0" class="text-center text-slate-500 py-10">
+      No jobs found.
+    </div>
 
+    <div
+      *ngIf="!isLoading && !loadError && !isSearching && totalPages > 1"
+      class="flex items-center justify-center gap-4 mt-10"
+    >
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="px-4 py-2 rounded-xl border border-gray-200 text-slate-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Prev
+      </button>
+
+      <span class="text-slate-600">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="px-4 py-2 rounded-xl border border-gray-200 text-slate-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Next
+      </button>
+    </div>
+  </section>
 </div>

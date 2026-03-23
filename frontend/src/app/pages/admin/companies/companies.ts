@@ -113,18 +113,18 @@ constructor(
     if (this.editIndex !== null) {
       const id = this.companies[this.editIndex]._id;
       this.companyService.updateCompany(id, companyData).subscribe({
-        next: () => {
+        next: (updatedCompany: any) => {
           this.toastr.success('Company Details Updated Successfully!!');
-          this.loadCompanies();
+          this.companies[this.editIndex!] = updatedCompany;
           this.closeModal();
         },
         error: handleError
       });
     } else {
       this.companyService.addCompany(companyData).subscribe({
-        next: () => {
+        next: (createdCompany: any) => {
           this.toastr.success('Company Details Added successfully!!');
-          this.loadCompanies();
+          this.companies = [createdCompany, ...this.companies];
           this.closeModal();
         },
         error: handleError
@@ -156,18 +156,14 @@ constructor(
       console.error('ID not found');
       return;
     }
-
-    if (confirm("Are you sure you want to delete this company?")) {
-      this.companyService.deleteCompany(id).subscribe({
-        next: () => {
-          this.toastr.success('Company Deleted Successfully!!');
-          console.log('Deleted successfully');
-          this.loadCompanies(); // refresh list
-        },
-        error: (err) => {
-          console.error('Delete failed:', err);
-        }
-      });
-    }
+    this.companyService.deleteCompany(id).subscribe({
+      next: () => {
+        this.toastr.success('Company Deleted Successfully!!');
+        this.companies.splice(index, 1);
+      },
+      error: (err) => {
+        console.error('Delete failed:', err);
+      }
+    });
   }
 }

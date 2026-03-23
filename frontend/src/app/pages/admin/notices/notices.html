@@ -21,8 +21,7 @@
             <tr>
                 <th class="p-4 text-left">Title</th>
                 <th class="p-4 text-left">Message</th>
-                <th class="p-4 text-left">Sender Role</th>
-                <th class="p-4 text-left">Receiver Role</th>
+                <th class="p-4 text-left">Attachments</th>
                 <th class="p-4 text-left">Date</th>
                 <th class="p-4 text-left">Action</th>
             </tr>
@@ -43,11 +42,15 @@
                 </td>
 
                 <td class="p-4">
-                    {{notice.sender_role}}
-                </td>
-
-                <td class="p-4">
-                    {{notice.receiver_role}}
+                    <ng-container *ngIf="notice.attachments?.length; else noAttachment">
+                        <div class="flex flex-col gap-1">
+                            <a *ngFor="let file of notice.attachments" [href]="'http://localhost:5000' + file" target="_blank"
+                                class="text-teal-600 hover:underline">
+                                {{file}}
+                            </a>
+                        </div>
+                    </ng-container>
+                    <ng-template #noAttachment>-</ng-template>
                 </td>
 
                 <td class="p-4">
@@ -113,46 +116,30 @@
 
                 <textarea [(ngModel)]="notice.message" name="message" rows="3"
                     class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none" required>
-</textarea>
+                </textarea>
 
             </div>
-
 
             <div>
-
                 <label class="block text-sm mb-1 text-gray-600">
-                    Sender Role
+                    Attachments
                 </label>
-
-                <select [(ngModel)]="notice.sender_role" name="sender_role"
+                <input type="file" name="attachments" multiple (change)="onFilesSelected($event)"
+                    accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.webp"
                     class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
-
-                    <option value="student">Student</option>
-                    <option value="tpo_admin">TPO Admin</option>
-                    <option value="management_admin">Management Admin</option>
-
-                </select>
-
+                <div *ngIf="selectedFiles.length" class="text-xs text-gray-600 mt-2">
+                    {{selectedFiles.length}} file(s) selected
+                </div>
+                <div *ngIf="editIndex !== null && notice.attachments?.length" class="mt-2">
+                    <p class="text-xs text-gray-600 mb-1">Existing attachments:</p>
+                    <div class="flex flex-col gap-1">
+                        <a *ngFor="let file of notice.attachments" [href]="'http://localhost:5000' + file" target="_blank"
+                            class="text-teal-600 hover:underline text-xs">
+                            {{file}}
+                        </a>
+                    </div>
+                </div>
             </div>
-
-
-            <div>
-
-                <label class="block text-sm mb-1 text-gray-600">
-                    Receiver Role
-                </label>
-
-                <select [(ngModel)]="notice.receiver_role" name="receiver_role"
-                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 outline-none">
-
-                    <option value="student">Student</option>
-                    <option value="tpo_admin">TPO Admin</option>
-                    <option value="management_admin">Management Admin</option>
-
-                </select>
-
-            </div>
-
 
             <div class="flex justify-end gap-3 pt-4">
 

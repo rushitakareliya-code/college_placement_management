@@ -12,9 +12,10 @@ const {
 // router.use(authMiddleware);
 // router.use(requireCompany);
 
-router.post('/jobs', postJob);
-router.get('/jobs', getMyJobs);
-router.get('/jobs/:jobId/applicants', getApplicantsForJob);
-router.put('/jobs/:jobId/applicants/:studentId/status', updateApplicationStatus);
+// Use /company/jobs so /api/jobs is reserved for admin + public job API (no conflict)
+router.post('/company/jobs', postJob);
+router.get('/company/jobs', getMyJobs);
+router.get('/company/jobs/:jobId/applicants', getApplicantsForJob);
+router.put('/company/jobs/:jobId/applicants/:studentId/status', updateApplicationStatus);
 
 module.exports = router;

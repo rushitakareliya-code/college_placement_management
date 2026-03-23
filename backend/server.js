@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const connectDB = require('./src/config/db');
 // const { errorHandler } = require('./src/middleware/errorHandler');
 // const { notFound } = require('./src/middleware/notFound');
@@ -19,11 +20,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api', authRoutes);
 app.use('/api/s', studentRoutes);
-app.use('/api', companyRoutes);
 app.use('/api', adminRoutes);
+app.use('/api', companyRoutes);
 app.use('/api', placementRoutes);
 app.use('/api/jobs', jobRoutes);
 
