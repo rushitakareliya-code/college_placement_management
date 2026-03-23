@@ -6,6 +6,9 @@ const path = require('path');
 const fs = require('fs');
 const {
   getAllStudents,
+  addStudent,
+  updateStudent,
+  deleteStudent,
   getAllCompanies,
   getAllJobs,
   addJob,
@@ -56,6 +59,9 @@ const upload = multer({
 // router.use(requireAdmin);
 
 router.get('/students', getAllStudents);
+router.post('/students', addStudent);
+router.put('/students/:studentId', updateStudent);
+router.delete('/students/:studentId', deleteStudent);
 router.get('/companies', getAllCompanies);
 router.post('/companies', addCompany);
 router.put('/companies/:companyId', updateCompany);

@@ -2,6 +2,7 @@ const Student = require('../models/Student');
 const Company = require('../models/Company');
 const Job = require('../models/Job');
 const Notice = require('../models/Notice');
+const bcrypt = require('bcrypt');
 
 const toAttachmentUrl = (req, file) => `/uploads/notices/${file.filename}`;
 
@@ -16,13 +17,100 @@ const parseExistingAttachments = (rawValue) => {
   }
 };
 
-// View all students (name, email, branch, placed)
+// View all students (name, email, number, address)
 const getAllStudents = async (req, res, next) => {
   try {
     const students = await Student.find()
-      .select('name email branch placed')
+      .select('name email number address')
       .sort({ createdAt: -1 });
     res.json(students);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addStudent = async (req, res, next) => {
+  try {
+    const { name, email, number, address, password, cpassword } = req.body;
+
+    if (!name || !email || !number || !address || !password || !cpassword) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    if (password !== cpassword) {
+      return res.status(400).json({ message: 'Passwords do not match.' });
+    }
+
+    const exists = await Student.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ message: 'Email already registered.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const created = await Student.create({
+      name,
+      email,
+      number: Number(number),
+      address,
+      password: hashedPassword,
+    });
+
+    const safeStudent = await Student.findById(created._id).select('name email number address');
+    res.status(201).json(safeStudent);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateStudent = async (req, res, next) => {
+  try {
+    const { studentId } = req.params;
+    const { name, email, number, address, password, cpassword } = req.body;
+
+    const update = {};
+    if (name !== undefined) update.name = String(name).trim();
+    if (email !== undefined) update.email = String(email).trim();
+    if (number !== undefined) update.number = Number(number);
+    if (address !== undefined) update.address = String(address).trim();
+
+    // Optional password update
+    if (password !== undefined && String(password).trim()) {
+      if (!cpassword || password !== cpassword) {
+        return res.status(400).json({ message: 'Passwords do not match.' });
+      }
+      update.password = await bcrypt.hash(String(password), 10);
+    }
+
+    if (update.email) {
+      const existing = await Student.findOne({ email: update.email, _id: { $ne: studentId } });
+      if (existing) {
+        return res.status(400).json({ message: 'Email already registered.' });
+      }
+    }
+
+    const updated = await Student.findByIdAndUpdate(studentId, update, {
+      new: true,
+      runValidators: true,
+    }).select('name email number address');
+
+    if (!updated) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    res.json(updated);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteStudent = async (req, res, next) => {
+  try {
+    const { studentId } = req.params;
+    const deleted = await Student.findByIdAndDelete(studentId);
+    if (!deleted) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    res.json({ message: 'Student deleted successfully' });
   } catch (error) {
     next(error);
   }
@@ -453,6 +541,7 @@ const getPlacementReport = async (req, res, next) => {
 
 module.exports = {
   getAllStudents,
+  addStudent,
   getAllCompanies,
   getAllJobs,
   addJob,
@@ -467,4 +556,6 @@ module.exports = {
   addCompany,
   updateCompany,
   deleteCompany,
+  updateStudent,
+  deleteStudent,
 };
