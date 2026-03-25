@@ -1,0 +1,101 @@
+<div *ngIf="visible"
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+
+  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+
+    <!-- Header -->
+    <div class="bg-blue-600 text-white p-6 rounded-t-2xl flex justify-between">
+      <div>
+        <h2 class="text-xl font-bold">Apply for {{ job?.role }}</h2>
+        <p>{{ job?.companyId?.companyName || job?.company?.name || job?.company }}</p>
+      </div>
+      <button type="button" (click)="closeForm()" class="text-2xl">&times;</button>
+    </div>
+
+    <!-- Form -->
+    <form #appForm="ngForm" (ngSubmit)="submitApplication(appForm)" novalidate class="p-6 space-y-4">
+
+      <div>
+        <input #fullNameRef="ngModel" name="fullName" [(ngModel)]="formData.fullName" placeholder="Full Name"
+          class="w-full border p-2 rounded" required>
+        <p *ngIf="fullNameRef.invalid && fullNameRef.touched" class="text-red-600 text-sm">Full name is required</p>
+      </div>
+
+      <div>
+        <input #emailRef="ngModel" name="email" type="email" [(ngModel)]="formData.email" placeholder="Email"
+          class="w-full border p-2 rounded" required email>
+        <p *ngIf="emailRef.errors?.['required'] && emailRef.touched" class="text-red-600 text-sm">Email is required</p>
+        <p *ngIf="emailRef.touched && emailRef.errors?.['email']" class="text-red-600 text-sm">Enter a valid email address</p>
+      </div>
+
+      <div>
+        <input #phoneRef="ngModel" name="phone" [(ngModel)]="formData.phone" placeholder="Phone (10–15 digits)"
+          class="w-full border p-2 rounded" required pattern="^[0-9]{10,15}$" maxlength="15">
+        <p *ngIf="phoneRef.errors?.['required'] && phoneRef.touched" class="text-red-600 text-sm">Phone is required</p>
+        <p *ngIf="phoneRef.touched && phoneRef.errors?.['pattern']" class="text-red-600 text-sm">Enter 10 to 15 digits only</p>
+      </div>
+
+      <div>
+        <input #locRef="ngModel" name="currentLocation" [(ngModel)]="formData.currentLocation" placeholder="Location"
+          class="w-full border p-2 rounded" required>
+        <p *ngIf="locRef.invalid && locRef.touched" class="text-red-600 text-sm">Location is required</p>
+      </div>
+
+      <div>
+        <input #skillsRef="ngModel" name="skills" [(ngModel)]="formData.skills" placeholder="Skills"
+          class="w-full border p-2 rounded" required>
+        <p *ngIf="skillsRef.invalid && skillsRef.touched" class="text-red-600 text-sm">Skills are required</p>
+      </div>
+
+      <div>
+        <select #expRef="ngModel" name="experience" [(ngModel)]="formData.experience" class="w-full border p-2 rounded" required>
+          <option value="">Select Experience</option>
+          <option value="Fresher">Fresher</option>
+          <option value="0-1 Year">0-1 Year</option>
+          <option value="1-2 Years">1-2 Years</option>
+          <option value="2-5 Years">2-5 Years</option>
+          <option value="5+ Years">5+ Years</option>
+        </select>
+        <p *ngIf="expRef.invalid && expRef.touched" class="text-red-600 text-sm">Experience is required</p>
+      </div>
+
+      <div>
+        <input #qualRef="ngModel" name="qualification" [(ngModel)]="formData.qualification" placeholder="Qualification"
+          class="w-full border p-2 rounded" required>
+        <p *ngIf="qualRef.invalid && qualRef.touched" class="text-red-600 text-sm">Qualification is required</p>
+      </div>
+
+      <div>
+        <input #salRef="ngModel" name="expectedSalary" [(ngModel)]="formData.expectedSalary" placeholder="Expected Salary"
+          class="w-full border p-2 rounded" required>
+        <p *ngIf="salRef.invalid && salRef.touched" class="text-red-600 text-sm">Expected salary is required</p>
+      </div>
+
+      <div>
+        <textarea #coverRef="ngModel" name="coverLetter" [(ngModel)]="formData.coverLetter" placeholder="Cover Letter"
+          class="w-full border p-2 rounded" required rows="4"></textarea>
+        <p *ngIf="coverRef.invalid && coverRef.touched" class="text-red-600 text-sm">Cover letter is required</p>
+      </div>
+
+      <div>
+        <input #resumeInput type="file" name="resumeFile" (change)="onResumeSelect($event)" class="w-full border p-2 rounded"
+          accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        <p *ngIf="resumeName" class="text-green-600 text-sm">✅ {{ resumeName }}</p>
+        <p *ngIf="resumeSubmitError" class="text-red-600 text-sm">Resume is required (PDF or Word)</p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-3">
+        <button type="button" (click)="closeForm()" class="bg-gray-400 text-white px-4 py-2 rounded">
+          Cancel
+        </button>
+
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+          Submit
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

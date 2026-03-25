@@ -4,9 +4,15 @@ const Company = require('../models/Company');
 
 const getAllPlacements = async (req, res, next) => {
   try {
-    const placements = await Placement.find()
+    const filter = {};
+    if (req.query.studentId) {
+      filter.student = req.query.studentId;
+    }
+
+    const placements = await Placement.find(filter)
       .populate('student')
       .populate('company')
+      .populate('job')
       .sort({ createdAt: -1 });
     res.json(placements);
   } catch (error) {

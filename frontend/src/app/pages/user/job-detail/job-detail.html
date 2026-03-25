@@ -129,3 +129,11 @@
     <p class="text-xl font-bold text-slate-400">No job details available at this time</p>
   </div>
 </div>
+
+<!-- Application Form Modal -->
+<app-job-application-form
+  [job]="job"
+  [visible]="showApplicationForm"
+  (close)="onApplicationFormClosed()"
+  (applicationSubmitted)="onApplicationSubmitted()">
+</app-job-application-form>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { JobApplicationFormComponent } from '../../job-application-form/job-application-form';
 
 interface Job {
   _id: string;
@@ -24,7 +25,7 @@ interface Job {
 @Component({
   selector: 'app-job-detail',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, HttpClientModule],
+  imports: [CommonModule, NavbarComponent, HttpClientModule, JobApplicationFormComponent],
   templateUrl: './job-detail.html',
   styleUrls: ['./job-detail.css']
 })
@@ -34,6 +35,9 @@ export class JobDetail implements OnInit {
   jobId = '';
   isLoading = true;
   errorMessage = '';
+
+  // Application form
+  showApplicationForm = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,32 +91,18 @@ export class JobDetail implements OnInit {
       return;
     }
 
-    const studentData = JSON.parse(userRaw || '{}');
-    const studentId = studentData.id || studentData._id;
-    if (!studentId) {
-      this.router.navigate(['/login']);
-      return;
-    }
+    // Show the application form
+    this.showApplicationForm = true;
+  }
 
-    console.log("Applying with:", {
-      studentId,
-      jobId: this.job._id
-    });
+  onApplicationSubmitted() {
+    this.showApplicationForm = false;
+    this.showSuccess = true;
+    this.cdr.detectChanges();
+    setTimeout(() => this.showSuccess = false, 3000);
+  }
 
-    this.http.post('http://localhost:5000/api/jobs/apply', {
-      studentId,
-      jobId: this.job._id
-    }).subscribe({
-      next: () => {
-        console.log("✅ Applied successfully");
-        this.showSuccess = true;
-        this.cdr.detectChanges();
-        setTimeout(() => this.showSuccess = false, 3000);
-      },
-      error: (err) => {
-        console.error("❌ Apply error:", err);
-        alert(err.error?.message || 'Application failed');
-      }
-    });
+  onApplicationFormClosed() {
+    this.showApplicationForm = false;
   }
 }

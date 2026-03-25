@@ -7,40 +7,55 @@
       <div class="bg-white text-black font-bold px-4 py-2 rounded text-lg">
         PMS
       </div>
-
       <span class="font-semibold text-xl">
         Placement Portal
       </span>
     </div>
 
     <!-- Navigation -->
-    <div class="flex items-center space-x-10 text-lg">
+    <div class="flex items-center space-x-8 text-base">
 
-      <a routerLink="/" class="hover:text-gray-300">
+      <a routerLink="/" class="hover:text-gray-300 transition">
         Home
       </a>
 
-       <a routerLink="/about" class="hover:underline">
+      <a routerLink="/about" class="hover:text-gray-300 transition">
         About Us
       </a>
 
-      <a routerLink="/contact" class="hover:underline">
+      <a routerLink="/contact" class="hover:text-gray-300 transition">
         Contact Us
       </a>
 
-      <a routerLink="/signup" class="hover:underline">
-        Signup
-      </a>
+      <!-- Show when NOT logged in -->
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/signup" class="hover:text-gray-300 transition">
+          Signup
+        </a>
 
-      <!-- Show Login only if NOT logged in -->
-      <a routerLink="/login" class="hover:text-gray-300">
-        <i class="fa fa-sign-in" aria-hidden="true"></i>
-        &nbsp;Login
-      </a>
-      <!-- Show Logout only if logged in -->
-      <!-- <button *ngIf="isLoggedIn()" (click)="logout()" class="hover:text-red-400">
-        Logout
-      </button> -->
+        <a routerLink="/login"
+          class="text-white px-4 py-2 rounded-lg transition font-medium">
+          <i class="fa fa-sign-in" aria-hidden="true"></i>
+          &nbsp;Login
+        </a>
+      </ng-container>
+
+      <!-- Show when logged in -->
+      <ng-container *ngIf="isLoggedIn">
+        <a routerLink="/student-dashboard"
+          class="flex items-center gap-2 hover:text-gray-300 transition font-medium">
+          <i class="fa fa-tachometer-alt" aria-hidden="true"></i>
+          Dashboard
+        </a>
+
+        <div class="flex items-center gap-3">
+          <button
+            (click)="logout()"
+            class="text-white px-4 py-2 rounded-lg transition text-sm font-medium">
+            Logout
+          </button>
+        </div>
+      </ng-container>
 
     </div>
 

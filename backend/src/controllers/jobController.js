@@ -42,18 +42,77 @@ const getJobById = async (req, res, next) => {
 // Apply for job: record placement + push student onto job.applicants
 const applyForJob = async (req, res, next) => {
   try {
-    const { studentId, jobId } = req.body;
+    const {
+      studentId,
+      jobId,
+      fullName,
+      email,
+      phone,
+      skills,
+      experience,
+      qualification,
+      currentLocation,
+      expectedSalary,
+      coverLetter
+    } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(jobId) || !mongoose.Types.ObjectId.isValid(studentId)) {
+    console.log('Received IDs:', { studentId, jobId });
+    console.log('StudentId valid:', mongoose.Types.ObjectId.isValid(studentId));
+    console.log('JobId valid:', mongoose.Types.ObjectId.isValid(jobId));
+
+    // Try to convert string IDs to ObjectIds if they're valid
+    let validJobId = jobId;
+    let validStudentId = studentId;
+
+    if (typeof jobId === 'string' && mongoose.Types.ObjectId.isValid(jobId)) {
+      validJobId = new mongoose.Types.ObjectId(jobId);
+    }
+    if (typeof studentId === 'string' && mongoose.Types.ObjectId.isValid(studentId)) {
+      validStudentId = new mongoose.Types.ObjectId(studentId);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(validJobId) || !mongoose.Types.ObjectId.isValid(validStudentId)) {
       return res.status(400).json({ message: 'Invalid job or student ID' });
     }
 
-    const job = await Job.findById(jobId);
+    const job = await Job.findById(validJobId);
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
     }
 
-    const sid = studentId.toString();
+    console.log('Job found:', job);
+    console.log('Job companyId:', job.companyId);
+    console.log('Job companyId type:', typeof job.companyId);
+
+    if (!job.companyId) {
+      console.error('Job does not have companyId:', job);
+      // Try to find company by name
+      if (job.company) {
+        const company = await Company.findOne({ companyName: { $regex: new RegExp('^' + job.company + '$', 'i') } });
+        if (company) {
+          job.companyId = company._id;
+          await job.save();
+          console.log('Updated job with companyId:', job.companyId);
+        } else {
+          // Last resort: create minimal placeholder company so application is allowed
+          const placeholderEmail = `${job.company.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}@example.com`;
+          const placeholder = await Company.create({
+            companyName: job.company,
+            companyEmail: placeholderEmail,
+            companyPassword: 'Temp@1234',
+            companyPhone: '0000000000',
+            companyDescription: 'Auto-generated for missing company mapping'
+          });
+          job.companyId = placeholder._id;
+          await job.save();
+          console.log('Created placeholder company and updated job:', placeholder._id);
+        }
+      } else {
+        return res.status(400).json({ message: 'Job does not have a valid company associated' });
+      }
+    }
+
+    const sid = validStudentId.toString();
     const alreadyOnJob = (job.applicants || []).some(
       (a) => a.student && a.student.toString() === sid
     );
@@ -61,19 +120,41 @@ const applyForJob = async (req, res, next) => {
       return res.status(400).json({ message: 'You have already applied for this job.' });
     }
 
-    const existingForJob = await Placement.findOne({ student: studentId, job: jobId });
+    const existingForJob = await Placement.findOne({ student: validStudentId, job: validJobId });
     if (existingForJob) {
       return res.status(400).json({ message: 'You have already applied for this job.' });
     }
 
-    await Placement.create({
-      student: studentId,
+    // Handle resume upload
+    let resumePath = null;
+    if (req.file) {
+      resumePath = req.file.path;
+    }
+
+    // Create placement with application data
+    const placementData = {
+      student: validStudentId,
       company: job.companyId,
-      job: jobId,
-    });
+      job: validJobId,
+      fullName,
+      email,
+      phone,
+      resume: resumePath,
+      skills,
+      experience,
+      qualification,
+      currentLocation,
+      expectedSalary,
+      coverLetter,
+      status: 'Pending'
+    };
+
+    console.log('Creating placement with data:', placementData);
+
+    await Placement.create(placementData);
 
     job.applicants = job.applicants || [];
-    job.applicants.push({ student: studentId, status: 'Pending' });
+    job.applicants.push({ student: validStudentId, status: 'Pending' });
     await job.save();
 
     res.status(201).json({
