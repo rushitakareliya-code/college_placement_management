@@ -13,7 +13,7 @@ export interface JobApplicationData {
   qualification: string;
   currentLocation: string;
   expectedSalary: string;
-  coverLetter: string;
+  projects: string;
   jobId: string;
   studentId: string;
 }
@@ -45,7 +45,7 @@ export class JobApplicationFormComponent implements OnChanges {
     qualification: '',
     currentLocation: '',
     expectedSalary: '',
-    coverLetter: '',
+    projects: '',
     jobId: '',
     studentId: ''
   };
@@ -145,7 +145,7 @@ export class JobApplicationFormComponent implements OnChanges {
       qualification: '',
       currentLocation: '',
       expectedSalary: '',
-      coverLetter: '',
+      projects: '',
       jobId: '',
       studentId: ''
     };

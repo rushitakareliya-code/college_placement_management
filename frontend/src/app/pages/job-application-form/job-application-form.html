@@ -29,10 +29,10 @@
       </div>
 
       <div>
-        <input #phoneRef="ngModel" name="phone" [(ngModel)]="formData.phone" placeholder="Phone (10–15 digits)"
-          class="w-full border p-2 rounded" required pattern="^[0-9]{10,15}$" maxlength="15">
+        <input #phoneRef="ngModel" name="phone" [(ngModel)]="formData.phone" placeholder="Phone (10 digits)"
+          class="w-full border p-2 rounded" required pattern="^[0-9]{10}$" maxlength="10">
         <p *ngIf="phoneRef.errors?.['required'] && phoneRef.touched" class="text-red-600 text-sm">Phone is required</p>
-        <p *ngIf="phoneRef.touched && phoneRef.errors?.['pattern']" class="text-red-600 text-sm">Enter 10 to 15 digits only</p>
+        <p *ngIf="phoneRef.touched && phoneRef.errors?.['pattern']" class="text-red-600 text-sm">Enter exactly 10 digits</p>
       </div>
 
       <div>
@@ -72,10 +72,20 @@
       </div>
 
       <div>
-        <textarea #coverRef="ngModel" name="coverLetter" [(ngModel)]="formData.coverLetter" placeholder="Cover Letter"
-          class="w-full border p-2 rounded" required rows="4"></textarea>
-        <p *ngIf="coverRef.invalid && coverRef.touched" class="text-red-600 text-sm">Cover letter is required</p>
-      </div>
+  <textarea
+    #projectRef="ngModel"
+    name="projects"
+    [(ngModel)]="formData.projects"
+    placeholder="Projects / Achievements (e.g. Built a website, internship, certifications)"
+    class="w-full border p-2 rounded"
+    rows="4"
+    required
+  ></textarea>
+
+  <p *ngIf="projectRef.invalid && projectRef.touched" class="text-red-600 text-sm">
+    Projects or achievements are required
+  </p>
+</div>
 
       <div>
         <input #resumeInput type="file" name="resumeFile" (change)="onResumeSelect($event)" class="w-full border p-2 rounded"

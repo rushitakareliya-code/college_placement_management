@@ -13,9 +13,9 @@ const registerStudent = async (req, res, next) => {
     const { name, email, number, address, password, cpassword } = req.body;
 
     // ✅ Required field check
-    if (!name || !email || !number || !address || !password || !cpassword) {
-      return res.status(400).json({ message: 'All fields are required.' });
-    }
+    // if (!name || !email || !number || !address || !password || !cpassword) {
+    //   return res.status(400).json({ message: 'All fields are required.' });
+    // }
 
     // ✅ Password match check
     if (password !== cpassword) {

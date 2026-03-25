@@ -34,7 +34,7 @@
         </a>
 
         <a routerLink="/login"
-          class="text-white px-4 py-2 rounded-lg transition font-medium">
+          class="text-white rounded-lg transition">
           <i class="fa fa-sign-in" aria-hidden="true"></i>
           &nbsp;Login
         </a>
@@ -43,15 +43,15 @@
       <!-- Show when logged in -->
       <ng-container *ngIf="isLoggedIn">
         <a routerLink="/student-dashboard"
-          class="flex items-center gap-2 hover:text-gray-300 transition font-medium">
+          class="flex items-center gap-2 hover:text-gray-300 transition">
           <i class="fa fa-tachometer-alt" aria-hidden="true"></i>
           Dashboard
         </a>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center">
           <button
             (click)="logout()"
-            class="text-white px-4 py-2 rounded-lg transition text-sm font-medium">
+            class="text-white px-4 py-2 rounded-lg transition">
             Logout
           </button>
         </div>

@@ -45,13 +45,14 @@
       console.log('Loading applications for studentId:', studentId);
 
       this.placementService.getStudentApplications(studentId).subscribe({
-        next: (data: any[]) => {
+        next: (data: any) => {
           console.log('Applications data received:', data);
-          this.applications = (data || []).map(item => ({
-            status: item.status || 'Pending',
-            appliedAt: item.createdAt || item.updatedAt || null,
-            job: item.job || {},
-            company: item.company || {},
+          const arrayData = Array.isArray(data) ? data : data?.data || [];
+          this.applications = (Array.isArray(arrayData) ? arrayData : []).map(item => ({
+            status: item?.status || 'Pending',
+            appliedAt: item?.createdAt || item?.updatedAt || null,
+            job: item?.job || {},
+            company: item?.company || {},
             extra: item
           }));
 
@@ -61,6 +62,9 @@
         error: (err) => {
           console.error('Failed to load applications', err);
           this.errorMessage = err?.error?.message || 'Unable to fetch your applications';
+          this.isLoading = false;
+        },
+        complete: () => {
           this.isLoading = false;
         }
       });

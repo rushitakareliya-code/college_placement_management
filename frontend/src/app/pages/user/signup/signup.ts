@@ -22,54 +22,56 @@ export class SignupComponent {
     email: '',
     address: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   };
 
+  errorMessage: string = '';
+  passwordError: string = '';
   constructor(private router: Router, private http: HttpClient) {} // ✅ inject
 
   signup() {
-    console.log("Signup clicked");
+  this.errorMessage = '';
+  this.passwordError = '';
 
-    this.formRef.form.markAllAsTouched();
+  this.formRef.form.markAllAsTouched();
 
-    // ❌ Stop if invalid
-    if (!this.formRef.valid) {
-      alert("Please fill all fields correctly");
-      return;
-    }
-
-    // ❌ Password mismatch
-    if (this.form.password !== this.form.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    const payload = {
-      name: this.form.name,
-      email: this.form.email,
-      number: this.form.phone,
-      address: this.form.address,
-      password: this.form.password,
-      cpassword: this.form.confirmPassword
-    };
-
-    // ✅ API CALL
-    this.http.post('http://localhost:5000/api/s/student/register', payload)
-      .subscribe({
-        next: (res: any) => {
-          console.log("API called successfully", res);
-
-          // ✅ Navigate ONLY after success
-          this.router.navigate(['/home']);
-
-          // ✅ Reset form
-          this.formRef.resetForm();
-        },
-       error: (err) => {
-  console.log("FULL ERROR OBJECT 👉", err);
-  console.log("ERROR MESSAGE 👉", err.error);
-  alert(JSON.stringify(err.error)); // 👈 show real backend error
-}
-      });
+  // 🚫 STOP if form invalid
+  if (this.formRef.invalid) {
+    return;
   }
+
+  // Password mismatch
+  if (this.form.password !== this.form.confirmPassword) {
+    this.passwordError = "Passwords do not match";
+    return;
+  }
+
+  const payload = {
+    name: this.form.name,
+    email: this.form.email,
+    number: this.form.phone,
+    address: this.form.address,
+    password: this.form.password,
+    cpassword: this.form.confirmPassword
+  };
+
+  this.http.post('http://localhost:5000/api/s/student/register', payload)
+    .subscribe({
+      next: (res: any) => {
+        this.router.navigate(['/home']);
+        this.formRef.resetForm();
+      },
+      error: (err) => {
+        // ❌ DO NOT show raw error
+        console.log("ERROR 👉", err);
+
+        // ✅ Clean message only
+        if (err?.error?.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Something went wrong';
+        }
+      }
+    });
+}
 }
