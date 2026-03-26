@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NoticeService } from '../../services/notice';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -9,33 +11,82 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
 
   isLoggedIn = false;
   studentName = '';
+  unreadNoticeCount = 0;
+  private pollTimer: any = null;
+  private readonly noticeSeenKey = 'student_notices_last_seen_at';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private noticeService: NoticeService) {}
 
   ngOnInit() {
     this.checkAuth();
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+      this.checkAuth();
+    });
+    this.startNoticePolling();
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollTimer) {
+      clearInterval(this.pollTimer);
+    }
   }
 
   checkAuth() {
     const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
+    this.isLoggedIn = false;
+    this.unreadNoticeCount = 0;
     if (token && userStr) {
       const user = JSON.parse(userStr);
       if (user.role === 'student') {
         this.isLoggedIn = true;
         this.studentName = user.name?.split(' ')[0] || 'Student';
+        this.fetchUnreadNoticeCount();
       }
     }
+  }
+
+  startNoticePolling(): void {
+    this.pollTimer = setInterval(() => {
+      if (this.isLoggedIn) {
+        this.fetchUnreadNoticeCount();
+      }
+    }, 30000);
+  }
+
+  fetchUnreadNoticeCount(): void {
+    this.noticeService.getNotices().subscribe({
+      next: (data: any) => {
+        const notices = Array.isArray(data) ? data : [];
+        const seenAtRaw = localStorage.getItem(this.noticeSeenKey) || '0';
+        const seenAt = Number(seenAtRaw) || 0;
+        this.unreadNoticeCount = notices.filter((notice: any) => {
+          const createdAt = new Date(notice?.createdAt || 0).getTime();
+          return createdAt > seenAt;
+        }).length;
+      },
+      error: () => {
+        this.unreadNoticeCount = 0;
+      }
+    });
+  }
+
+  openNotices(): void {
+    localStorage.setItem(this.noticeSeenKey, String(Date.now()));
+    this.unreadNoticeCount = 0;
+    this.router.navigate(['/notices']);
   }
 
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem(this.noticeSeenKey);
     this.isLoggedIn = false;
+    this.unreadNoticeCount = 0;
     this.router.navigate(['/login']);
   }
 }

@@ -19,6 +19,7 @@ import { Privacy } from './pages/user/privacy/privacy';
 import { StudentGuidelines } from './pages/user/student-guidelines/student-guidelines';
 import { RecruiterGuidelines } from './pages/user/recruiter-guidelines/recruiter-guidelines';
 import { StudentDashboard } from './pages/user/student-dashboard/student-dashboard';
+import { UserNotices } from './pages/user/notices/notices';
 import { AdminLoginComponent } from './pages/admin/admin-login/admin-login';
 import { AdminAuthGuard } from './guards/admin-auth.guard';
 
@@ -50,5 +51,6 @@ export const routes: Routes = [
     { path: 'privacy', component: Privacy },
     { path: 'student-guidelines', component: StudentGuidelines },
     { path: 'recruiter-guidelines', component: RecruiterGuidelines },
-    { path: 'student-dashboard', component: StudentDashboard }
+    { path: 'student-dashboard', component: StudentDashboard },
+    { path: 'notices', component: UserNotices }
 ];

@@ -1,0 +1,37 @@
+<div class="pt-24 min-h-screen bg-gray-100 pb-12">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
+      <h1 class="text-3xl font-bold text-[#1e293b]">Notices</h1>
+      <p class="text-slate-500 mt-2">Latest updates from admin.</p>
+    </div>
+
+    <div *ngIf="isLoading" class="text-center text-slate-600 py-10">
+      Loading notices...
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="text-center text-red-600 py-10">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && notices.length === 0" class="text-center text-slate-500 py-10">
+      No notices available.
+    </div>
+
+    <div *ngIf="!isLoading && notices.length > 0" class="space-y-4">
+      <div *ngFor="let notice of notices" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-[#1e293b] mb-2">{{ notice.title }}</h2>
+        <p class="text-slate-600 whitespace-pre-wrap">{{ notice.message }}</p>
+        <p class="text-xs text-slate-400 mt-4">{{ notice.createdAt | date:'medium' }}</p>
+        <div *ngIf="notice.attachments?.length" class="mt-3 flex flex-wrap gap-3">
+          <a *ngFor="let file of notice.attachments"
+             [href]="'http://localhost:5000' + file"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="text-[#0eb39e] font-semibold hover:text-[#0ca692]">
+            View attachment
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
