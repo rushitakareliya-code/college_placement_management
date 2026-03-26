@@ -1,107 +1,126 @@
 <div *ngIf="visible"
-     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+     class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
 
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-100">
 
     <!-- Header -->
-    <div class="bg-blue-600 text-white p-6 rounded-t-2xl flex justify-between">
-      <div>
-        <h2 class="text-xl font-bold">Apply for {{ job?.role }}</h2>
-        <p>{{ job?.companyId?.companyName || job?.company?.name || job?.company }}</p>
+    <div class="bg-gradient-to-r from-[#0eb39e] to-[#0ca692] text-white p-8 rounded-t-2xl flex justify-between items-start">
+      <div class="flex-1">
+        <h2 class="text-2xl font-bold mb-1">Apply for {{ job?.role }}</h2>
+        <p class="text-teal-50 font-medium">{{ job?.companyId?.companyName || job?.company?.name || job?.company }}</p>
       </div>
-      <button type="button" (click)="closeForm()" class="text-2xl">&times;</button>
+      <button type="button" (click)="closeForm()" class="text-2xl hover:scale-110 transition-transform font-light text-teal-50">&times;</button>
     </div>
 
     <!-- Form -->
-    <form #appForm="ngForm" (ngSubmit)="submitApplication(appForm)" novalidate class="p-6 space-y-4">
+    <form #appForm="ngForm" (ngSubmit)="submitApplication(appForm)" novalidate class="p-8 space-y-5">
 
       <div>
-        <input #fullNameRef="ngModel" name="fullName" [(ngModel)]="formData.fullName" placeholder="Full Name"
-          class="w-full border p-2 rounded" required>
-        <p *ngIf="fullNameRef.invalid && fullNameRef.touched" class="text-red-600 text-sm">Full name is required</p>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Full Name *</label>
+        <input #fullNameRef="ngModel" name="fullName" [(ngModel)]="formData.fullName" placeholder="Enter your full name"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <p *ngIf="fullNameRef.invalid && fullNameRef.touched" class="text-red-600 text-sm mt-1">Full name is required</p>
       </div>
 
       <div>
-        <input #emailRef="ngModel" name="email" type="email" [(ngModel)]="formData.email" placeholder="Email"
-          class="w-full border p-2 rounded" required email>
-        <p *ngIf="emailRef.errors?.['required'] && emailRef.touched" class="text-red-600 text-sm">Email is required</p>
-        <p *ngIf="emailRef.touched && emailRef.errors?.['email']" class="text-red-600 text-sm">Enter a valid email address</p>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Email Address *</label>
+        <input #emailRef="ngModel" name="email" type="email" [(ngModel)]="formData.email" placeholder="your.email@example.com"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required email>
+        <p *ngIf="emailRef.errors?.['required'] && emailRef.touched" class="text-red-600 text-sm mt-1">Email is required</p>
+        <p *ngIf="emailRef.touched && emailRef.errors?.['email']" class="text-red-600 text-sm mt-1">Enter a valid email address</p>
       </div>
 
       <div>
-        <input #phoneRef="ngModel" name="phone" [(ngModel)]="formData.phone" placeholder="Phone (10 digits)"
-          class="w-full border p-2 rounded" required pattern="^[0-9]{10}$" maxlength="10">
-        <p *ngIf="phoneRef.errors?.['required'] && phoneRef.touched" class="text-red-600 text-sm">Phone is required</p>
-        <p *ngIf="phoneRef.touched && phoneRef.errors?.['pattern']" class="text-red-600 text-sm">Enter exactly 10 digits</p>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Phone Number *</label>
+        <input #phoneRef="ngModel" name="phone" [(ngModel)]="formData.phone" placeholder="10-digit phone number"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required pattern="^[0-9]{10}$" maxlength="10">
+        <p *ngIf="phoneRef.errors?.['required'] && phoneRef.touched" class="text-red-600 text-sm mt-1">Phone is required</p>
+        <p *ngIf="phoneRef.touched && phoneRef.errors?.['pattern']" class="text-red-600 text-sm mt-1">Enter exactly 10 digits</p>
       </div>
 
       <div>
-        <input #locRef="ngModel" name="currentLocation" [(ngModel)]="formData.currentLocation" placeholder="Location"
-          class="w-full border p-2 rounded" required>
-        <p *ngIf="locRef.invalid && locRef.touched" class="text-red-600 text-sm">Location is required</p>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Current Location *</label>
+        <input #locRef="ngModel" name="currentLocation" [(ngModel)]="formData.currentLocation" placeholder="Your current location"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <p *ngIf="locRef.invalid && locRef.touched" class="text-red-600 text-sm mt-1">Location is required</p>
       </div>
 
       <div>
-        <input #skillsRef="ngModel" name="skills" [(ngModel)]="formData.skills" placeholder="Skills"
-          class="w-full border p-2 rounded" required>
-        <p *ngIf="skillsRef.invalid && skillsRef.touched" class="text-red-600 text-sm">Skills are required</p>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Skills *</label>
+        <input #skillsRef="ngModel" name="skills" [(ngModel)]="formData.skills" placeholder="e.g. Java, React, Node.js, SQL"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <p *ngIf="skillsRef.invalid && skillsRef.touched" class="text-red-600 text-sm mt-1">Skills are required</p>
       </div>
 
       <div>
-        <select #expRef="ngModel" name="experience" [(ngModel)]="formData.experience" class="w-full border p-2 rounded" required>
-          <option value="">Select Experience</option>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Experience Level *</label>
+        <select #expRef="ngModel" name="experience" [(ngModel)]="formData.experience" class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+          <option value="">Select your experience level</option>
           <option value="Fresher">Fresher</option>
           <option value="0-1 Year">0-1 Year</option>
           <option value="1-2 Years">1-2 Years</option>
           <option value="2-5 Years">2-5 Years</option>
           <option value="5+ Years">5+ Years</option>
         </select>
-        <p *ngIf="expRef.invalid && expRef.touched" class="text-red-600 text-sm">Experience is required</p>
+        <p *ngIf="expRef.invalid && expRef.touched" class="text-red-600 text-sm mt-1">Experience is required</p>
       </div>
 
       <div>
-        <input #qualRef="ngModel" name="qualification" [(ngModel)]="formData.qualification" placeholder="Qualification"
-          class="w-full border p-2 rounded" required>
-        <p *ngIf="qualRef.invalid && qualRef.touched" class="text-red-600 text-sm">Qualification is required</p>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Qualification *</label>
+        <input #qualRef="ngModel" name="qualification" [(ngModel)]="formData.qualification" placeholder="e.g. B.Tech, MCA, B.Sc"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <p *ngIf="qualRef.invalid && qualRef.touched" class="text-red-600 text-sm mt-1">Qualification is required</p>
       </div>
 
       <div>
-        <input #salRef="ngModel" name="expectedSalary" [(ngModel)]="formData.expectedSalary" placeholder="Expected Salary"
-          class="w-full border p-2 rounded" required>
-        <p *ngIf="salRef.invalid && salRef.touched" class="text-red-600 text-sm">Expected salary is required</p>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Expected Salary *</label>
+        <input #salRef="ngModel" name="expectedSalary" [(ngModel)]="formData.expectedSalary" placeholder="e.g. 5,00,000 LPA"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <p *ngIf="salRef.invalid && salRef.touched" class="text-red-600 text-sm mt-1">Expected salary is required</p>
       </div>
 
       <div>
-  <textarea
-    #projectRef="ngModel"
-    name="projects"
-    [(ngModel)]="formData.projects"
-    placeholder="Projects / Achievements (e.g. Built a website, internship, certifications)"
-    class="w-full border p-2 rounded"
-    rows="4"
-    required
-  ></textarea>
-
-  <p *ngIf="projectRef.invalid && projectRef.touched" class="text-red-600 text-sm">
-    Projects or achievements are required
-  </p>
-</div>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Projects & Achievements *</label>
+        <textarea
+          #projectRef="ngModel"
+          name="projects"
+          [(ngModel)]="formData.projects"
+          placeholder="Tell us about your projects, internships, certifications, or notable achievements..."
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          rows="4"
+          required
+        ></textarea>
+        <p *ngIf="projectRef.invalid && projectRef.touched" class="text-red-600 text-sm mt-1">
+          Projects or achievements are required
+        </p>
+      </div>
 
       <div>
-        <input #resumeInput type="file" name="resumeFile" (change)="onResumeSelect($event)" class="w-full border p-2 rounded"
-          accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-        <p *ngIf="resumeName" class="text-green-600 text-sm">✅ {{ resumeName }}</p>
-        <p *ngIf="resumeSubmitError" class="text-red-600 text-sm">Resume is required (PDF or Word)</p>
+        <label class="block text-sm font-semibold text-[#1e293b] mb-2">Upload Resume *</label>
+        <div class="relative">
+          <input #resumeInput type="file" name="resumeFile" (change)="onResumeSelect($event)" 
+            class="w-full border-2 border-dashed border-gray-300 bg-gray-50 p-4 rounded-lg cursor-pointer hover:border-[#0eb39e] hover:bg-teal-50/30 transition-all"
+            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        </div>
+        <p *ngIf="resumeName" class="text-green-600 text-sm mt-2 flex items-center gap-2">
+          <span class="text-lg">✅</span> {{ resumeName }}
+        </p>
+        <p *ngIf="resumeSubmitError" class="text-red-600 text-sm mt-2 flex items-center gap-2">
+          <span class="text-lg">⚠️</span> Resume is required (PDF or Word)
+        </p>
+        <p class="text-slate-500 text-xs mt-2">Supported formats: PDF, DOC, DOCX (Max 5MB)</p>
       </div>
 
       <!-- Buttons -->
-      <div class="flex justify-end gap-3">
-        <button type="button" (click)="closeForm()" class="bg-gray-400 text-white px-4 py-2 rounded">
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+        <button type="button" (click)="closeForm()" 
+          class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all">
           Cancel
         </button>
 
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
-          Submit
+        <button type="submit" 
+          class="bg-[#0eb39e] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#0ca692] hover:scale-105 transition-all shadow-lg shadow-teal-200/50">
+          Submit Application
         </button>
       </div>
 

@@ -14,7 +14,7 @@ const placementSchema = new mongoose.Schema({
   qualification: { type: String, required: true },
   currentLocation: { type: String, required: true },
   expectedSalary: { type: String, required: true },
-  coverLetter: { type: String, required: true },
+  projects: { type: String, required: true },
   status: { type: String, enum: ['Pending', 'Shortlisted', 'Selected', 'Rejected'], default: 'Pending' },
 }, { timestamps: true });
 

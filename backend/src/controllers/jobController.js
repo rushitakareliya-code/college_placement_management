@@ -53,7 +53,7 @@ const applyForJob = async (req, res, next) => {
       qualification,
       currentLocation,
       expectedSalary,
-      coverLetter
+      projects
     } = req.body;
 
     console.log('Received IDs:', { studentId, jobId });
@@ -145,7 +145,7 @@ const applyForJob = async (req, res, next) => {
       qualification,
       currentLocation,
       expectedSalary,
-      coverLetter,
+      projects,
       status: 'Pending'
     };
 

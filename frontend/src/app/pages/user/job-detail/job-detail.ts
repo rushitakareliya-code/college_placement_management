@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '../../../components/navbar/navbar';
@@ -30,6 +30,7 @@ interface Job {
   styleUrls: ['./job-detail.css']
 })
 export class JobDetail implements OnInit {
+
   job: Job | null = null;
   showSuccess = false;
   jobId = '';
@@ -43,7 +44,8 @@ export class JobDetail implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
-    private cdr: ChangeDetectorRef  // ✅ FIX 1: Force change detection
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone   // ✅ FIX: Added NgZone
   ) {}
 
   ngOnInit() {
@@ -61,7 +63,7 @@ export class JobDetail implements OnInit {
   loadJobDetails() {
     this.isLoading = true;
     this.errorMessage = '';
-    this.job = null;  // ✅ FIX 2: Reset job
+    this.job = null;
 
     console.log("Calling API with ID:", this.jobId);
 
@@ -71,8 +73,7 @@ export class JobDetail implements OnInit {
           console.log("✅ RAW API RESPONSE:", res);
           this.job = res;
           this.isLoading = false;
-          this.cdr.detectChanges();  // ✅ FIX 3: Force UI update
-          console.log("✅ JOB ASSIGNED:", this.job);
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error("❌ API ERROR:", err);
@@ -86,21 +87,28 @@ export class JobDetail implements OnInit {
   applyJob() {
     const token = localStorage.getItem('token');
     const userRaw = localStorage.getItem('user');
+
     if (!this.job || !token || !userRaw) {
       this.router.navigate(['/login']);
       return;
     }
 
-    // Show the application form
     this.showApplicationForm = true;
   }
 
   onApplicationSubmitted() {
-    this.showApplicationForm = false;
-    this.showSuccess = true;
-    this.cdr.detectChanges();
-    setTimeout(() => this.showSuccess = false, 3000);
-  }
+  this.showApplicationForm = false;
+  this.showSuccess = true;
+
+  this.cdr.detectChanges(); 
+
+  setTimeout(() => {
+    this.ngZone.run(() => {
+      this.showSuccess = false;
+      this.cdr.detectChanges(); 
+    });
+  }, 3000);
+}
 
   onApplicationFormClosed() {
     this.showApplicationForm = false;
