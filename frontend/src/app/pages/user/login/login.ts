@@ -1,14 +1,13 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgForm, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { NavbarComponent } from '../../../components/navbar/navbar';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, NavbarComponent, HttpClientModule],
+  imports: [FormsModule, CommonModule, HttpClientModule, RouterModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
@@ -23,6 +22,7 @@ export class LoginComponent {
   emailError = '';
   passwordError = '';
   commonError = '';
+  authError = '';
   isLoading = false;
 
   constructor(
@@ -36,6 +36,7 @@ export class LoginComponent {
     this.emailError = '';
     this.passwordError = '';
     this.commonError = '';
+    this.authError = '';
 
     this.loginForm.form.markAllAsTouched();
 
@@ -60,16 +61,11 @@ export class LoginComponent {
 
           const message = err?.error?.message || 'Login failed';
 
-          // Detect errors
-          const emailMsg = message.toLowerCase().includes('email') ? message : '';
-          const passwordMsg = message.toLowerCase().includes('password') ? message : '';
+          const status = err?.status;
+          const isCredentialError = message.toLowerCase().includes('email') || message.toLowerCase().includes('password');
 
-          if (emailMsg && passwordMsg) {
-            this.commonError = 'Invalid credentials';
-          } else if (emailMsg) {
-            this.emailError = emailMsg;
-          } else if (passwordMsg) {
-            this.passwordError = passwordMsg;
+          if (status === 401 || isCredentialError) {
+            this.authError = message;
           } else {
             this.commonError = message;
           }
