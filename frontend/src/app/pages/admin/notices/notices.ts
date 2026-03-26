@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NoticeService } from '../../../services/notice';
 
@@ -21,6 +21,7 @@ export class Notices implements OnInit {
   notice: any = this.createEmptyNotice();
 
   editIndex: number | null = null;
+  formError = '';
 
   constructor(
     private noticeService: NoticeService,
@@ -77,22 +78,24 @@ export class Notices implements OnInit {
     this.selectedFiles = [];
 
     this.isModalOpen = true;
+    this.formError = '';
 
   }
 
 
   closeModal() {
-
     this.isModalOpen = false;
-
+    this.selectedFiles = [];
+    this.cdr.detectChanges();
   }
 
 
-  saveNotice() {
-    if (!this.notice.title || !this.notice.message) {
-      this.toastr.warning('Title and message are required');
+  saveNotice(form: NgForm) {
+    if (form.invalid) {
+      form.form.markAllAsTouched();
       return;
     }
+    this.formError = '';
 
     if (this.editIndex !== null) {
       const id = this.notices[this.editIndex]?._id;
@@ -104,13 +107,15 @@ export class Notices implements OnInit {
       const formData = this.buildFormData(existingAttachments);
       this.noticeService.updateNotice(id, formData).subscribe({
         next: (updatedNotice: any) => {
-          this.notices[this.editIndex!] = updatedNotice;
+          const updated = updatedNotice?.notice || updatedNotice;
+          this.notices = this.notices.map((item, idx) => idx === this.editIndex ? updated : item);
           this.toastr.success('Notice updated successfully');
           this.closeModal();
+          this.loadNotices();
         },
         error: (err) => {
           console.error('Failed to update notice', err);
-          this.toastr.error('Failed to update notice');
+          this.formError = err?.error?.message || 'Failed to update notice';
         }
       });
 
@@ -118,13 +123,15 @@ export class Notices implements OnInit {
       const formData = this.buildFormData();
       this.noticeService.addNotice(formData).subscribe({
         next: (createdNotice: any) => {
-          this.notices = [createdNotice, ...this.notices];
+          const created = createdNotice?.notice || createdNotice;
+          this.notices = [created, ...this.notices];
           this.toastr.success('Notice added successfully');
           this.closeModal();
+          this.loadNotices();
         },
         error: (err) => {
           console.error('Failed to add notice', err);
-          this.toastr.error('Failed to add notice');
+          this.formError = err?.error?.message || 'Failed to add notice';
         }
       });
 
@@ -160,8 +167,10 @@ export class Notices implements OnInit {
     if (confirm("Are you sure you want to delete this notice?")) {
       this.noticeService.deleteNotice(id).subscribe({
         next: () => {
-          this.notices.splice(index, 1);
+          this.notices = this.notices.filter((_, idx) => idx !== index);
           this.toastr.success('Notice deleted successfully');
+          this.cdr.detectChanges();
+          this.loadNotices();
         },
         error: (err) => {
           console.error('Failed to delete notice', err);

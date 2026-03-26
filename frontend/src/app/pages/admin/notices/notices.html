@@ -97,18 +97,23 @@
             </button>
         </div>
 
-        <form (ngSubmit)="saveNotice()" class="p-6 space-y-5">
+        <form #noticeForm="ngForm" (ngSubmit)="saveNotice(noticeForm)" class="p-6 space-y-5">
+            <div *ngIf="formError" class="p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium">
+                {{ formError }}
+            </div>
 
             <div>
                 <label class="block text-sm font-semibold mb-1.5 text-gray-700">Title</label>
-                <input type="text" [(ngModel)]="notice.title" name="title"
+                <input #titleRef="ngModel" type="text" [(ngModel)]="notice.title" name="title"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required>
+                <p *ngIf="titleRef.invalid && titleRef.touched" class="text-red-500 text-xs mt-1 font-medium">Title is required.</p>
             </div>
 
             <div>
                 <label class="block text-sm font-semibold mb-1.5 text-gray-700">Message</label>
-                <textarea [(ngModel)]="notice.message" name="message" rows="4"
+                <textarea #messageRef="ngModel" [(ngModel)]="notice.message" name="message" rows="4"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required></textarea>
+                <p *ngIf="messageRef.invalid && messageRef.touched" class="text-red-500 text-xs mt-1 font-medium">Message is required.</p>
             </div>
 
             <div>

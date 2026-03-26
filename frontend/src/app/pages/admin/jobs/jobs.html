@@ -77,78 +77,111 @@
             </button>
         </div>
 
-        <form (ngSubmit)="saveJob()" class="p-6 overflow-y-auto custom-scrollbar">
+        <form #jobForm="ngForm" (ngSubmit)="saveJob(jobForm)" class="p-6 overflow-y-auto custom-scrollbar">
+            <div *ngIf="formError" class="mb-4 p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium">
+                {{ formError }}
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
                 <div class="md:col-span-2"><h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider">Position Basics</h3></div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Role Title</label>
-                    <input type="text" [(ngModel)]="job.role" name="role" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required>
+                    <input #roleRef="ngModel" type="text" [(ngModel)]="job.role" name="role" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required minlength="2" maxlength="80" pattern="^[A-Za-z ]+$">
+                    <p *ngIf="roleRef.errors?.['required'] && roleRef.touched" class="text-red-500 text-xs mt-1 font-medium">Role title is required.</p>
+                    <p *ngIf="roleRef.errors?.['pattern'] && roleRef.touched" class="text-red-500 text-xs mt-1 font-medium">Role title should contain only letters and spaces.</p>
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Company</label>
-                    <select [(ngModel)]="job.companyId" name="companyId" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all cursor-pointer">
+                    <select #companyRef="ngModel" [(ngModel)]="job.companyId" name="companyId" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all cursor-pointer">
                         <option value="" disabled>Select company</option>
                         <option *ngFor="let company of companies" [value]="company._id">{{ company.companyName }}</option>
                     </select>
+                    <p *ngIf="companyRef.invalid && companyRef.touched" class="text-red-500 text-xs mt-1 font-medium">Company is required.</p>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Location</label>
-                    <input type="text" [(ngModel)]="job.location" name="location" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all">
+                    <input #locationRef="ngModel" type="text" [(ngModel)]="job.location" name="location" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required maxlength="100" pattern="^[A-Za-z0-9 ,.-]+$">
+                    <p *ngIf="locationRef.errors?.['required'] && locationRef.touched" class="text-red-500 text-xs mt-1 font-medium">Location is required.</p>
+                    <p *ngIf="locationRef.errors?.['pattern'] && locationRef.touched" class="text-red-500 text-xs mt-1 font-medium">Location contains invalid characters.</p>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Job Type</label>
-                    <input type="text" [(ngModel)]="job.type" name="type" placeholder="Full-time, Remote" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all">
+                    <input #typeRef="ngModel" type="text" [(ngModel)]="job.type" name="type" placeholder="Full-time, Remote" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required maxlength="40" pattern="^[A-Za-z -]+$">
+                    <p *ngIf="typeRef.errors?.['required'] && typeRef.touched" class="text-red-500 text-xs mt-1 font-medium">Job type is required.</p>
+                    <p *ngIf="typeRef.errors?.['pattern'] && typeRef.touched" class="text-red-500 text-xs mt-1 font-medium">Job type should contain only letters, spaces and hyphen.</p>
                 </div>
 
                 <div class="md:col-span-2 space-y-4 pt-4"><h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider">Requirements & Pay</h3></div>
 
                 <div>
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Experience</label>
-                    <input type="text" [(ngModel)]="job.experience" name="experience" placeholder="e.g. 0–2 years" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all">
+                    <input #experienceRef="ngModel" type="text" [(ngModel)]="job.experience" name="experience" placeholder="e.g. 0-2 years" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required maxlength="40" pattern="^[A-Za-z0-9 +.-]+$">
+                    <p *ngIf="experienceRef.errors?.['required'] && experienceRef.touched" class="text-red-500 text-xs mt-1 font-medium">Experience is required.</p>
+                    <p *ngIf="experienceRef.errors?.['pattern'] && experienceRef.touched" class="text-red-500 text-xs mt-1 font-medium">Experience contains invalid characters.</p>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Salary</label>
-                    <input type="text" [(ngModel)]="job.salary" name="salary" placeholder="e.g. 6–8 LPA" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all">
+                    <input #salaryRef="ngModel" type="text" [(ngModel)]="job.salary" name="salary" placeholder="e.g. 6-8 LPA" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required maxlength="40" pattern="^[A-Za-z0-9 .,+-]+$">
+                    <p *ngIf="salaryRef.errors?.['required'] && salaryRef.touched" class="text-red-500 text-xs mt-1 font-medium">Salary is required.</p>
+                    <p *ngIf="salaryRef.errors?.['pattern'] && salaryRef.touched" class="text-red-500 text-xs mt-1 font-medium">Salary contains invalid characters.</p>
                 </div>
 
                 <div class="md:col-span-2 space-y-4 pt-4"><h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider">Schedule Info</h3></div>
 
                 <div>
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Working Days</label>
-                    <input type="text" [(ngModel)]="job.workingDays" name="workingDays" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all">
+                    <input #workingDaysRef="ngModel" type="text" [(ngModel)]="job.workingDays" name="workingDays" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required maxlength="40" pattern="^[A-Za-z0-9 ,-]+$">
+                    <p *ngIf="workingDaysRef.errors?.['required'] && workingDaysRef.touched" class="text-red-500 text-xs mt-1 font-medium">Working days is required.</p>
+                    <p *ngIf="workingDaysRef.errors?.['pattern'] && workingDaysRef.touched" class="text-red-500 text-xs mt-1 font-medium">Working days contains invalid characters.</p>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Week Off</label>
-                    <input type="text" [(ngModel)]="job.weekOff" name="weekOff" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all">
+                    <input #weekOffRef="ngModel" type="text" [(ngModel)]="job.weekOff" name="weekOff" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required maxlength="40" pattern="^[A-Za-z0-9 ,-]+$">
+                    <p *ngIf="weekOffRef.errors?.['required'] && weekOffRef.touched" class="text-red-500 text-xs mt-1 font-medium">Week off is required.</p>
+                    <p *ngIf="weekOffRef.errors?.['pattern'] && weekOffRef.touched" class="text-red-500 text-xs mt-1 font-medium">Week off contains invalid characters.</p>
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Shift</label>
-                    <input type="text" [(ngModel)]="job.shift" name="shift" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all">
+                    <input #shiftRef="ngModel" type="text" [(ngModel)]="job.shift" name="shift" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required maxlength="40" pattern="^[A-Za-z0-9 :.-]+$">
+                    <p *ngIf="shiftRef.errors?.['required'] && shiftRef.touched" class="text-red-500 text-xs mt-1 font-medium">Shift is required.</p>
+                    <p *ngIf="shiftRef.errors?.['pattern'] && shiftRef.touched" class="text-red-500 text-xs mt-1 font-medium">Shift contains invalid characters.</p>
                 </div>
 
                 <div class="md:col-span-2 space-y-4 pt-4"><h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider">Job Content</h3></div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Description</label>
-                    <textarea [(ngModel)]="job.description" name="description" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required></textarea>
+                    <textarea #descriptionRef="ngModel" [(ngModel)]="job.description" name="description" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required></textarea>
+                    <p *ngIf="descriptionRef.errors?.['required'] && descriptionRef.touched" class="text-red-500 text-xs mt-1 font-medium">Description is required.</p>
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Responsibilities (One per line)</label>
-                    <textarea [(ngModel)]="job.responsibilitiesText" name="responsibilitiesText" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all font-mono text-xs"></textarea>
+                    <textarea #responsibilitiesRef="ngModel" [(ngModel)]="job.responsibilitiesText" name="responsibilitiesText" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all font-mono text-xs"
+                        required minlength="5"></textarea>
+                    <p *ngIf="responsibilitiesRef.errors?.['required'] && responsibilitiesRef.touched" class="text-red-500 text-xs mt-1 font-medium">Responsibilities are required.</p>
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Requirements (One per line)</label>
-                    <textarea [(ngModel)]="job.requirementsText" name="requirementsText" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all font-mono text-xs"></textarea>
+                    <textarea #requirementsRef="ngModel" [(ngModel)]="job.requirementsText" name="requirementsText" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all font-mono text-xs"
+                        required minlength="5"></textarea>
+                    <p *ngIf="requirementsRef.errors?.['required'] && requirementsRef.touched" class="text-red-500 text-xs mt-1 font-medium">Requirements are required.</p>
                 </div>
             </div>
 

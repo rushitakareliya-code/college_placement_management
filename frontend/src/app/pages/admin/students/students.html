@@ -87,39 +87,54 @@
                 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Full Name</label>
-                    <input type="text" [(ngModel)]="student.name" name="name"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required>
+                    <input #nameRef="ngModel" type="text" [(ngModel)]="student.name" name="name"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required minlength="2" maxlength="50" pattern="^[A-Za-z ]+$">
+                    <p *ngIf="nameRef.errors?.['required'] && nameRef.touched" class="text-red-500 text-xs mt-1 font-medium">Name is required.</p>
+                    <p *ngIf="nameRef.errors?.['pattern'] && nameRef.touched" class="text-red-500 text-xs mt-1 font-medium">Name should contain only letters and spaces.</p>
+                    <p *ngIf="(nameRef.errors?.['minlength'] || nameRef.errors?.['maxlength']) && nameRef.touched" class="text-red-500 text-xs mt-1 font-medium">Name must be between 2 and 50 characters.</p>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Email Address</label>
-                    <input type="email" [(ngModel)]="student.email" name="email"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required>
+                    <input #emailRef="ngModel" type="email" [(ngModel)]="student.email" name="email"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required email>
+                    <p *ngIf="emailRef.errors?.['required'] && emailRef.touched" class="text-red-500 text-xs mt-1 font-medium">Email is required.</p>
+                    <p *ngIf="emailRef.errors?.['email'] && emailRef.touched" class="text-red-500 text-xs mt-1 font-medium">Enter a valid email address.</p>
                     <p *ngIf="emailTaken" class="text-red-500 text-xs mt-1 font-medium">Email already exists.</p>
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Phone Number</label>
-                    <input type="number" [(ngModel)]="student.number" name="number"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required>
+                    <input #numberRef="ngModel" type="text" [(ngModel)]="student.number" name="number"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required pattern="^[0-9]{10}$" maxlength="10">
+                    <p *ngIf="numberRef.errors?.['required'] && numberRef.touched" class="text-red-500 text-xs mt-1 font-medium">Phone number is required.</p>
+                    <p *ngIf="numberRef.errors?.['pattern'] && numberRef.touched" class="text-red-500 text-xs mt-1 font-medium">Phone number must be exactly 10 digits.</p>
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Address</label>
-                    <textarea [(ngModel)]="student.address" name="address" rows="3"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required></textarea>
+                    <textarea #addressRef="ngModel" [(ngModel)]="student.address" name="address" rows="3"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
+                        required minlength="5" maxlength="200"></textarea>
+                    <p *ngIf="addressRef.errors?.['required'] && addressRef.touched" class="text-red-500 text-xs mt-1 font-medium">Address is required.</p>
+                    <p *ngIf="(addressRef.errors?.['minlength'] || addressRef.errors?.['maxlength']) && addressRef.touched" class="text-red-500 text-xs mt-1 font-medium">Address must be between 5 and 200 characters.</p>
                 </div>
 
                 <ng-container *ngIf="editIndex === null">
                     <div>
                         <label class="block text-sm font-semibold mb-1.5 text-gray-700">Password</label>
-                        <input type="password" [(ngModel)]="student.password" name="password"
+                        <input #passwordRef="ngModel" type="password" [(ngModel)]="student.password" name="password"
                             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required>
+                        <p *ngIf="passwordRef.invalid && passwordRef.touched" class="text-red-500 text-xs mt-1 font-medium">Password is required.</p>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold mb-1.5 text-gray-700">Confirm Password</label>
-                        <input type="password" [(ngModel)]="student.confirmPassword" name="confirmPassword"
+                        <input #confirmPasswordRef="ngModel" type="password" [(ngModel)]="student.confirmPassword" name="confirmPassword"
                             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all" required>
+                        <p *ngIf="confirmPasswordRef.invalid && confirmPasswordRef.touched" class="text-red-500 text-xs mt-1 font-medium">Confirm password is required.</p>
                     </div>
                     <p *ngIf="passwordMismatch" class="md:col-span-2 text-red-500 text-xs font-medium">Passwords do not match.</p>
                 </ng-container>

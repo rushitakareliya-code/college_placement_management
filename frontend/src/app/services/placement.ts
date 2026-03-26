@@ -25,4 +25,12 @@ export class PlacementService {
     const url = `${this.apiUrl}?studentId=${studentId}`;
     return this.http.get<any>(url, this.getAuthHeaders());
   }
+
+  getAllApplications(): Observable<any> {
+    return this.http.get<any>(this.apiUrl, this.getAuthHeaders());
+  }
+
+  updateApplicationStatus(id: string, status: 'Pending' | 'Selected' | 'Rejected'): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}/status`, { status }, this.getAuthHeaders());
+  }
 }

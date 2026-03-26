@@ -19,7 +19,6 @@ export class Companies implements OnInit {
   editIndex: number | null = null;
   isModalOpen = false;
 
-  passwordMismatch: boolean = false;
   emailTaken: boolean = false;
   formError:string  = '';
 
@@ -52,8 +51,6 @@ constructor(
     return {
       companyName: '',
       companyEmail: '',
-      companyPassword: '',
-      companyConfirmPassword: '', 
       companyPhone: '',
       companyDescription: '',
       companyWebsite: '',
@@ -66,13 +63,13 @@ constructor(
     this.company = this.createEmptyCompany();
     this.editIndex = null;
     this.isModalOpen = true;
-    this.passwordMismatch = false;
     this.emailTaken = false;
     this.formError = '';
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.cdr.detectChanges();
   }
 
   saveCompany(form: NgForm) {
@@ -82,17 +79,12 @@ constructor(
       return;
     }
 
-    // check password match
-    if (this.company.companyPassword !== this.company.companyConfirmPassword) {
-      this.passwordMismatch = true;
-      return;
-    } else {
-      this.passwordMismatch = false;
-    }
-
-    // Prepare data to send (remove confirm password)
+    // Prepare data to send
     const companyData = { ...this.company };
-    delete companyData.companyConfirmPassword;
+    // Backend currently requires companyPassword on add.
+    if (this.editIndex === null) {
+      companyData.companyPassword = 'Temp@1234';
+    }
 
     const handleError = (err: any) => {
       console.error('Save failed', err);
@@ -114,18 +106,22 @@ constructor(
       const id = this.companies[this.editIndex]._id;
       this.companyService.updateCompany(id, companyData).subscribe({
         next: (updatedCompany: any) => {
+          const updated = updatedCompany?.company || updatedCompany;
           this.toastr.success('Company Details Updated Successfully!!');
-          this.companies[this.editIndex!] = updatedCompany;
+          this.companies = this.companies.map((item, idx) => idx === this.editIndex ? updated : item);
           this.closeModal();
+          this.loadCompanies();
         },
         error: handleError
       });
     } else {
       this.companyService.addCompany(companyData).subscribe({
         next: (createdCompany: any) => {
+          const created = createdCompany?.company || createdCompany;
           this.toastr.success('Company Details Added successfully!!');
-          this.companies = [createdCompany, ...this.companies];
+          this.companies = [created, ...this.companies];
           this.closeModal();
+          this.loadCompanies();
         },
         error: handleError
       });
@@ -156,10 +152,14 @@ constructor(
       console.error('ID not found');
       return;
     }
+    const confirmDelete = confirm('Are you sure you want to delete this company?');
+    if (!confirmDelete) return;
     this.companyService.deleteCompany(id).subscribe({
       next: () => {
         this.toastr.success('Company Deleted Successfully!!');
-        this.companies.splice(index, 1);
+        this.companies = this.companies.filter((_, idx) => idx !== index);
+        this.cdr.detectChanges();
+        this.loadCompanies();
       },
       error: (err) => {
         console.error('Delete failed:', err);

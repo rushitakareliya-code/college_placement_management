@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NoticeService } from '../../../services/notice';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-notices',
@@ -18,20 +19,23 @@ export class UserNotices implements OnInit {
     this.loadNotices();
   }
 
-  constructor(private noticeService: NoticeService) {}
+  constructor(private noticeService: NoticeService, private cdr: ChangeDetectorRef) {}
 
   loadNotices(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    this.noticeService.getNotices().subscribe({
+    this.noticeService.getNotices()
+      .pipe(finalize(() => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }))
+      .subscribe({
       next: (data: any) => {
         this.notices = Array.isArray(data) ? data : [];
         this.clearNoticeCount();
-        this.isLoading = false;
       },
       error: (err) => {
         this.errorMessage = err?.error?.message || 'Failed to load notices';
-        this.isLoading = false;
       }
     });
   }

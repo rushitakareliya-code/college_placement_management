@@ -45,8 +45,37 @@ const deletePlacement = async (req, res, next) => {
   }
 };
 
+const updatePlacementStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status || !['Pending', 'Selected', 'Rejected'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status value' });
+    }
+
+    const updated = await Placement.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true, runValidators: true }
+    )
+      .populate('student')
+      .populate('company')
+      .populate('job');
+
+    if (!updated) {
+      return res.status(404).json({ message: 'Placement not found' });
+    }
+
+    res.json(updated);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllPlacements,
   createPlacement,
-  deletePlacement
+  deletePlacement,
+  updatePlacementStatus
 };

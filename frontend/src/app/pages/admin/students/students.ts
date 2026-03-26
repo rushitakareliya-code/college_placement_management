@@ -14,18 +14,24 @@ import { StudentService } from '../../../services/student';
 export class Students implements OnInit {
 
   students: any[] = [];
-
-
   student: any = this.createEmptyStudent();
 
   editIndex: number | null = null;
-
   isModalOpen = false;
 
   passwordMismatch = false;
   emailTaken = false;
   formError = '';
 
+  constructor(
+    private studentService: StudentService,
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.loadStudents();
+  }
 
   private createEmptyStudent() {
     return {
@@ -39,55 +45,40 @@ export class Students implements OnInit {
     };
   }
 
-  constructor(
-    private studentService: StudentService,
-    private toastr: ToastrService,
-    private cdr: ChangeDetectorRef
-  ) {}
-
-  ngOnInit(): void {
-    this.loadStudents();
-  }
-
+  // ✅ Load students
   private loadStudents(): void {
     this.studentService.getStudents().subscribe({
       next: (data: any[]) => {
-        this.students = data;
+        this.students = data || [];
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Failed to load students', err);
-        this.toastr.error('Failed to load students');
       },
     });
   }
 
-
+  // ✅ Open Modal
   openModal() {
-
     this.student = this.createEmptyStudent();
-
     this.editIndex = null;
-
     this.isModalOpen = true;
 
     this.passwordMismatch = false;
     this.emailTaken = false;
     this.formError = '';
-
   }
 
-
+  // ✅ Close Modal
   closeModal() {
-
     this.isModalOpen = false;
-
+    this.cdr.detectChanges();
   }
 
-
+  // ✅ Save Student (Add + Edit)
   saveStudent(form: NgForm) {
     if (form.invalid) {
-      form.form.markAllAsTouched();
+      form.form.markAllAsTouched(); // 🔥 shows validation errors
       return;
     }
 
@@ -97,8 +88,8 @@ export class Students implements OnInit {
 
     const isAddMode = this.editIndex === null;
 
+    // ✅ Password Match Check
     if (this.student.password !== this.student.confirmPassword) {
-      // Validate password mismatch in add mode; in edit mode validate only if user entered a password
       const hasPassword = !!String(this.student.password || '').trim();
       if (isAddMode || hasPassword) {
         this.passwordMismatch = true;
@@ -107,30 +98,41 @@ export class Students implements OnInit {
     }
 
     const payload: any = {
-      name: String(this.student.name || '').trim(),
-      email: String(this.student.email || '').trim(),
+      name: this.student.name.trim(),
+      email: this.student.email.trim(),
       number: Number(this.student.number),
-      address: String(this.student.address || '').trim(),
+      address: this.student.address.trim(),
     };
 
     if (isAddMode) {
       payload.password = this.student.password;
       payload.cpassword = this.student.confirmPassword;
-    } else if (String(this.student.password || '').trim()) {
+    } else if (this.student.password?.trim()) {
       payload.password = this.student.password;
       payload.cpassword = this.student.confirmPassword;
     }
 
+    // ===========================
+    // ✏️ UPDATE STUDENT
+    // ===========================
     if (!isAddMode) {
       const id = this.students[this.editIndex!]?._id;
+
       this.studentService.updateStudent(id, payload).subscribe({
         next: (updated: any) => {
           this.toastr.success('Student updated successfully');
-          this.students[this.editIndex!] = updated;
+
+          // ✅ Update UI instantly
+          this.students = this.students.map((item, idx) =>
+            idx === this.editIndex ? updated : item
+          );
+
           this.closeModal();
+          this.cdr.detectChanges(); // 🔥 important fix
         },
         error: (err) => {
           console.error('Update failed', err);
+
           if (err.status === 400 && err.error?.message?.toLowerCase().includes('email')) {
             this.emailTaken = true;
           } else {
@@ -138,17 +140,26 @@ export class Students implements OnInit {
           }
         },
       });
+
       return;
     }
 
+    // ===========================
+    // ➕ ADD STUDENT
+    // ===========================
     this.studentService.addStudent(payload).subscribe({
       next: (created: any) => {
         this.toastr.success('Student added successfully');
+
+        // ✅ Update UI instantly
         this.students = [created, ...this.students];
+
         this.closeModal();
+        this.cdr.detectChanges(); // 🔥 important fix
       },
       error: (err) => {
         console.error('Add failed', err);
+
         if (err.status === 400 && err.error?.message?.toLowerCase().includes('email')) {
           this.emailTaken = true;
         } else {
@@ -158,9 +169,10 @@ export class Students implements OnInit {
     });
   }
 
-
+  // ✅ Edit Student
   editStudent(index: number) {
     const selected = this.students[index];
+
     this.student = {
       _id: selected?._id || '',
       name: selected?.name || '',
@@ -170,14 +182,16 @@ export class Students implements OnInit {
       password: '',
       confirmPassword: '',
     };
+
     this.editIndex = index;
     this.isModalOpen = true;
+
     this.passwordMismatch = false;
     this.emailTaken = false;
     this.formError = '';
   }
 
-
+  // ✅ Delete Student
   deleteStudent(index: number) {
     const id = this.students[index]?._id;
     if (!id) return;
@@ -188,13 +202,15 @@ export class Students implements OnInit {
     this.studentService.deleteStudent(id).subscribe({
       next: () => {
         this.toastr.success('Student deleted successfully');
-        this.students.splice(index, 1);
+
+        // ✅ Remove from UI instantly
+        this.students = this.students.filter((_, idx) => idx !== index);
+
+        this.cdr.detectChanges(); // 🔥 important fix
       },
       error: (err) => {
         console.error('Delete failed', err);
-        this.toastr.error('Failed to delete student');
       },
     });
   }
-
 }

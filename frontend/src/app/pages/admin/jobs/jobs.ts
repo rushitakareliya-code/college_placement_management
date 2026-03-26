@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CompanyService } from '../../../services/company';
 import { JobService } from '../../../services/job';
 import { ToastrService } from 'ngx-toastr';
@@ -22,6 +22,7 @@ export class Jobs implements OnInit {
   isModalOpen = false;
   isDetailsModalOpen = false;
   detailJob: any = null;
+  formError = '';
 
   constructor(
     private jobService: JobService,
@@ -160,6 +161,7 @@ export class Jobs implements OnInit {
 
   closeModal() {
     this.isModalOpen = false;
+    this.cdr.detectChanges();
   }
 
   openJobDetails(index: number) {
@@ -176,12 +178,13 @@ export class Jobs implements OnInit {
     this.detailJob = null;
   }
 
-  saveJob() {
-    const payload = this.getPayload();
-    if (!payload.role?.trim() || !payload.companyId || !payload.description?.trim()) {
-      this.toastr.warning('Role, company, and description are required');
+  saveJob(form: NgForm) {
+    if (form.invalid) {
+      form.form.markAllAsTouched();
       return;
     }
+    const payload = this.getPayload();
+    this.formError = '';
 
     if (this.editIndex !== null) {
       const id = this.jobs[this.editIndex]?._id;
@@ -192,25 +195,29 @@ export class Jobs implements OnInit {
 
       this.jobService.updateJob(id, payload).subscribe({
         next: (updatedJob: any) => {
+          const updated = updatedJob?.job || updatedJob;
           this.toastr.success('Job updated successfully');
-          this.jobs[this.editIndex!] = this.mapJobToView(updatedJob);
+          this.jobs = this.jobs.map((item, idx) => idx === this.editIndex ? this.mapJobToView(updated) : item);
           this.closeModal();
+          this.loadJobs();
         },
         error: (err) => {
           console.error('Failed to update job', err);
-          this.toastr.error('Failed to update job');
+          this.formError = err?.error?.message || 'Failed to update job';
         },
       });
     } else {
       this.jobService.addJob(payload).subscribe({
         next: (createdJob: any) => {
+          const created = createdJob?.job || createdJob;
           this.toastr.success('Job added successfully');
-          this.jobs = [this.mapJobToView(createdJob), ...this.jobs];
+          this.jobs = [this.mapJobToView(created), ...this.jobs];
           this.closeModal();
+          this.loadJobs();
         },
         error: (err) => {
           console.error('Failed to add job', err);
-          this.toastr.error('Failed to add job');
+          this.formError = err?.error?.message || 'Failed to add job';
         },
       });
     }
@@ -229,11 +236,14 @@ export class Jobs implements OnInit {
       this.toastr.error('Invalid job selected');
       return;
     }
+    const confirmDelete = confirm('Are you sure you want to delete this job?');
+    if (!confirmDelete) return;
     this.jobService.deleteJob(id).subscribe({
       next: () => {
         this.toastr.success('Job deleted successfully');
-        this.jobs.splice(index, 1);
+        this.jobs = this.jobs.filter((_, idx) => idx !== index);
         this.cdr.detectChanges();
+        this.loadJobs();
       },
       error: (err) => {
         console.error('Failed to delete job', err);

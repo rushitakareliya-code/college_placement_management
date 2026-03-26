@@ -17,6 +17,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   studentName = '';
   unreadNoticeCount = 0;
   private pollTimer: any = null;
+  private readonly onWindowFocus = () => {
+    if (this.isLoggedIn) this.fetchUnreadNoticeCount();
+  };
   private readonly noticeSeenKey = 'student_notices_last_seen_at';
 
   constructor(private router: Router, private noticeService: NoticeService) {}
@@ -27,12 +30,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.checkAuth();
     });
     this.startNoticePolling();
+    window.addEventListener('focus', this.onWindowFocus);
   }
 
   ngOnDestroy(): void {
     if (this.pollTimer) {
       clearInterval(this.pollTimer);
     }
+    window.removeEventListener('focus', this.onWindowFocus);
   }
 
   checkAuth() {
@@ -55,7 +60,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       if (this.isLoggedIn) {
         this.fetchUnreadNoticeCount();
       }
-    }, 30000);
+    }, 5000);
   }
 
   fetchUnreadNoticeCount(): void {

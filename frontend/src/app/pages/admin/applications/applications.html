@@ -6,8 +6,11 @@
 
 </div>
 
+<div *ngIf="isLoading" class="text-center text-gray-500 py-8">Loading applications...</div>
+<div *ngIf="errorMessage && !isLoading" class="text-center text-red-600 py-8">{{ errorMessage }}</div>
+<div *ngIf="!isLoading && !errorMessage && applications.length === 0" class="text-center text-gray-500 py-8">No applications found.</div>
 
-<div class="bg-white shadow rounded-xl border overflow-x-auto">
+<div *ngIf="!isLoading && applications.length > 0" class="bg-white shadow rounded-xl border overflow-x-auto">
 
     <table class="w-full text-sm">
 
