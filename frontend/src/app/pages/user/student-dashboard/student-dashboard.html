@@ -1,13 +1,97 @@
-<app-navbar></app-navbar>
 
-<div class="pt-24 bg-[#f8fafc] min-h-screen pb-16">
-    
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
-      <h1 class="text-3xl font-bold text-[#1e293b]">Welcome, {{ studentName }}</h1>
-      <p class="text-slate-500 mt-2">Your applications are listed below. You have applied for {{ applications.length }} job(s).</p>
+
+<div class="pt-32 bg-[#f8fafc] min-h-screen pb-16">
+
+  <div class="max-w-7xl mx-auto px-6">
+    <!-- Header (Correct Design) -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div class="animate-fade-in">
+        <h1 class="text-4xl font-black text-[#1e293b] tracking-tight">Student Dashboard</h1>
+        <p class="text-slate-500 mt-2 font-medium italic">Track your professional journey and career milestones.</p>
+      </div>
+      <div class="flex items-center gap-3 animate-fade-in" style="animation-delay: 100ms">
+        <a routerLink="/home"
+          class="px-8 py-4 bg-[#0eb39e] text-white font-black rounded-[2rem] hover:bg-[#0ca692] transition-all shadow-xl shadow-emerald-200 active:scale-95 flex items-center gap-2">
+          <span>Explore New Jobs</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
     </div>
 
+    <!-- Stats Overview (Correct Design) -->
+    <div *ngIf="!isLoading && totalApps > 0" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 animate-fade-in"
+      style="animation-delay: 200ms">
+      <div
+        class="bg-white p-8 rounded-[2rem] border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all group overflow-hidden relative">
+        <div class="relative z-10 flex items-center gap-5">
+          <div
+            class="w-16 h-16 rounded-[1.5rem] bg-slate-100 text-slate-600 flex items-center justify-center group-hover:bg-[#1e293b] group-hover:text-white transition-colors duration-500">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Applied</p>
+            <h3 class="text-3xl font-black text-slate-800 tracking-tight">{{ totalApps }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white p-8 rounded-[2rem] border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all group overflow-hidden relative">
+        <div class="relative z-10 flex items-center gap-5">
+          <div
+            class="w-16 h-16 rounded-[1.5rem] bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-white transition-colors duration-500">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Pending</p>
+            <h3 class="text-3xl font-black text-slate-800 tracking-tight">{{ pendingApps }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white p-8 rounded-[2rem] border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all group overflow-hidden relative">
+        <div class="relative z-10 flex items-center gap-5">
+          <div
+            class="w-16 h-16 rounded-[1.5rem] bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-500">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Success</p>
+            <h3 class="text-3xl font-black text-slate-800 tracking-tight">{{ shortlistedApps }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white p-8 rounded-[2rem] border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all group overflow-hidden relative">
+        <div class="relative z-10 flex items-center gap-5">
+          <div
+            class="w-16 h-16 rounded-[1.5rem] bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-rose-500 group-hover:text-white transition-colors duration-500">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Rejected</p>
+            <h3 class="text-3xl font-black text-slate-800 tracking-tight">{{ rejectedApps }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content (Old UI Design) -->
     <div *ngIf="isLoading" class="text-center text-slate-600 py-10">
       Loading application history...
     </div>
@@ -16,35 +100,208 @@
       {{ errorMessage }}
     </div>
 
-    <div *ngIf="!isLoading && !errorMessage && applications.length === 0" class="text-center text-slate-500 py-10">
+    <div *ngIf="!isLoading && !errorMessage && totalApps === 0" class="text-center text-slate-500 py-10">
       No applications found yet. Visit the jobs page and apply to your first role.
       <a routerLink="/home" class="text-[#0eb39e] font-semibold hover:text-[#0ca692]">Explore jobs</a>
     </div>
 
-    <div *ngIf="!isLoading && applications.length > 0" class="grid md:grid-cols-2 gap-6">
-      <div *ngFor="let app of applications" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <h2 class="text-xl font-bold text-[#1e293b] mb-1">{{ app.job?.role || 'Unknown Role' }}</h2>
-            <p class="text-sm text-slate-500">{{ app.company?.companyName || app.job?.company || 'Unknown Company' }}</p>
-          </div>
-          <span class="px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="{
-            'bg-yellow-100 text-yellow-700': app.status === 'Pending',
-            'bg-blue-100 text-blue-700': app.status === 'Shortlisted',
-            'bg-green-100 text-green-700': app.status === 'Selected',
-            'bg-red-100 text-red-700': app.status === 'Rejected'
-          }">{{ app.status }}</span>
+    <div *ngIf="!isLoading && totalApps > 0"
+      class="overflow-x-auto bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-slate-50/50 border-b border-slate-100">
+          <tr>
+            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Job Role</th>
+            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Company</th>
+            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Location</th>
+            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Type</th>
+            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest">Applied On</th>
+            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Status
+            </th>
+            <th class="px-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          <tr *ngFor="let app of paginatedApplications" class="hover:bg-slate-50/80 transition-all duration-300 group">
+            <td class="px-8 py-5">
+              <div class="font-black text-slate-800 group-hover:text-[#0eb39e] transition-colors">{{ app.job?.role ||
+                'Unknown Role' }}</div>
+            </td>
+            <td class="px-8 py-5 text-slate-600 font-medium">
+              {{ app.company?.companyName || app.job?.company || 'Unknown Company' }}
+            </td>
+            <td class="px-8 py-5">
+              <span class="text-slate-500 text-sm font-medium">{{ app.job?.location || 'N/A' }}</span>
+            </td>
+            <td class="px-8 py-5">
+              <span
+                class="text-[10px] px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg font-black uppercase tracking-widest">
+                {{ app.job?.type || 'N/A' }}
+              </span>
+            </td>
+            <td class="px-8 py-5 text-slate-500 text-sm font-medium">
+              {{ formatDate(app.appliedAt) }}
+            </td>
+            <td class="px-8 py-5 text-center">
+              <span
+                class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ring-1 ring-inset shadow-sm"
+                [ngClass]="{
+                'bg-yellow-50 text-yellow-700 ring-yellow-100': app.status === 'Pending',
+                'bg-blue-50 text-blue-700 ring-blue-100': app.status === 'Shortlisted',
+                'bg-emerald-50 text-emerald-700 ring-emerald-100': app.status === 'Selected',
+                'bg-rose-50 text-rose-700 ring-rose-100': app.status === 'Rejected'
+              }">{{ app.status }}</span>
+            </td>
+            <td class="px-8 py-5 text-right">
+              <button (click)="openJobModal(app)"
+                class="inline-flex items-center justify-center w-10 h-10 bg-slate-100 text-slate-500 rounded-xl hover:bg-[#0eb39e] hover:text-white transition-all shadow-sm hover:shadow-lg active:scale-95 group-hover:-translate-y-0.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls (Slightly Improved) -->
+    <div *ngIf="totalPages > 1"
+      class="mt-8 flex items-center justify-between bg-white px-8 py-5 rounded-[1.5rem] border border-slate-100 shadow-xl shadow-slate-200/40">
+      <div class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-3">
+        <span class="w-2 h-2 rounded-full bg-slate-200"></span>
+        Page <span class="text-slate-800">{{ currentPage }}</span> of {{ totalPages }}
+      </div>
+      <div class="flex items-center gap-3">
+        <button (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1"
+          class="w-10 h-10 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90 flex items-center justify-center shadow-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button *ngFor="let page of pageNumbers" (click)="setPage(page)"
+            [class]="currentPage === page ? 'bg-slate-900 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'"
+            class="w-10 h-10 rounded-xl text-xs font-black transition-all active:scale-90">
+            {{ page }}
+          </button>
         </div>
 
-        <ul class="mt-4 text-sm text-slate-600 space-y-2">
-          <li><strong>Location:</strong> {{ app.job.location || 'N/A' }}</li>
-          <li><strong>Type:</strong> {{ app.job.type || 'N/A' }}</li>
-          <li><strong>Experience:</strong> {{ app.job.experience || app.job.experience || 'N/A' }}</li>
-          <li><strong>Applied on:</strong> {{ formatDate(app.appliedAt) }}</li>
-        </ul>
+        <button (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages"
+          class="w-10 h-10 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90 flex items-center justify-center shadow-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
 
-        <div class="mt-4 flex items-center gap-3">
-          <a [routerLink]="['/job', app.job?._id || app.job?.id]" class="text-[#0eb39e] font-semibold hover:text-[#0ca692]">View Job</a>
+
+    <!-- Job Details Modal (Old UI Design) -->
+    <div *ngIf="isModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 backdrop-blur-sm">
+      <!-- Backdrop -->
+      <div class="absolute inset-0 bg-slate-900/60" (click)="closeJobModal()"></div>
+
+      <!-- Modal Content -->
+      <div
+        class="relative bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+        <!-- Header -->
+        <div class="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-slate-50/50">
+          <div>
+            <h2 class="text-2xl font-bold text-[#1e293b]">{{ selectedJob?.role }}</h2>
+            <div class="flex items-center gap-3 mt-1">
+              <p class="text-[#0eb39e] font-semibold">{{ selectedJob?.company }}</p>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider" [ngClass]="{
+                'bg-yellow-100 text-yellow-700': selectedJob?.status === 'Pending',
+                'bg-blue-100 text-blue-700': selectedJob?.status === 'Shortlisted',
+                'bg-green-100 text-green-700': selectedJob?.status === 'Selected',
+                'bg-red-100 text-red-700': selectedJob?.status === 'Rejected'
+              }">{{ selectedJob?.status }}</span>
+            </div>
+          </div>
+          <button (click)="closeJobModal()"
+            class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-slate-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
+          <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="p-4 bg-slate-50 rounded-2xl border border-gray-100">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Location</p>
+              <p class="text-slate-700 font-bold text-sm">{{ selectedJob?.location }}</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-2xl border border-gray-100">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Job Type</p>
+              <p class="text-slate-700 font-bold text-sm">{{ selectedJob?.type }}</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-2xl border border-gray-100">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Experience</p>
+              <p class="text-slate-700 font-bold text-sm">{{ selectedJob?.experience }}</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-2xl border border-gray-100">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Salary Range</p>
+              <p class="text-slate-700 font-bold text-sm">{{ selectedJob?.salary }}</p>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="w-1 h-5 bg-[#0eb39e] rounded-full"></span>
+                Description
+              </h3>
+              <p class="text-slate-600 leading-relaxed text-sm whitespace-pre-wrap">{{ selectedJob?.description }}</p>
+            </div>
+
+            <div *ngIf="selectedJob?.responsibilities?.length">
+              <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="w-1 h-5 bg-[#0eb39e] rounded-full"></span>
+                Responsibilities
+              </h3>
+              <ul class="space-y-2">
+                <li *ngFor="let item of selectedJob.responsibilities"
+                  class="flex items-start gap-3 text-slate-600 text-sm">
+                  <svg class="w-5 h-5 text-[#0eb39e] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+
+            <div *ngIf="selectedJob?.requirements?.length">
+              <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <span class="w-1 h-5 bg-[#0eb39e] rounded-full"></span>
+                Requirements
+              </h3>
+              <ul class="space-y-2">
+                <li *ngFor="let item of selectedJob.requirements" class="flex items-start gap-3 text-slate-600 text-sm">
+                  <svg class="w-5 h-5 text-[#0eb39e] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-8 py-6 bg-slate-50 border-t border-gray-100 flex justify-end">
+          <button (click)="closeJobModal()"
+            class="px-8 py-3 bg-[#1e293b] text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-95">
+            Close Details
+          </button>
         </div>
       </div>
     </div>

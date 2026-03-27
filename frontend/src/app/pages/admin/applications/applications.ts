@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacementService } from '../../../services/placement';
 import { finalize } from 'rxjs/operators';
@@ -18,7 +18,10 @@ export class Applications implements OnInit {
 
   selectedApplication:any = null;
   isModalOpen = false;
-  constructor(private placementService: PlacementService) {}
+  constructor(
+    private placementService: PlacementService, 
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadApplications();
@@ -30,6 +33,7 @@ export class Applications implements OnInit {
     this.placementService.getAllApplications()
       .pipe(finalize(() => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       }))
       .subscribe({
       next: (data: any) => {
@@ -44,9 +48,11 @@ export class Applications implements OnInit {
           company: item?.company?.companyName || item?.job?.company || 'Unknown Company',
           status: item?.status === 'Selected' ? 'Approved' : (item?.status || 'Pending')
         }));
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = err?.error?.message || 'Failed to fetch applications';
+        this.cdr.detectChanges();
       }
     });
   }
@@ -76,6 +82,7 @@ export class Applications implements OnInit {
         );
         this.selectedApplication.status = uiStatus;
         this.closeModal();
+        this.cdr.detectChanges();
       },
       error: () => {
         this.closeModal();

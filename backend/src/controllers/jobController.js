@@ -6,7 +6,14 @@ const Placement = require('../models/Placement');
 // Get all jobs (for job listing page)
 const getAllJobs = async (req, res, next) => {
   try {
-    const jobs = await Job.find({ isActive: true })
+    const jobs = await Job.find({ 
+      isActive: true,
+      $or: [
+        { deadline: { $exists: false } },
+        { deadline: null },
+        { deadline: { $gte: new Date() } }
+      ]
+    })
       .populate('companyId', 'companyName companyEmail')
       .sort({ createdAt: -1 });
     res.json(jobs);

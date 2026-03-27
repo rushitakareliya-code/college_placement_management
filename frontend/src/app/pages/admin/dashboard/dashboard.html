@@ -1,160 +1,141 @@
-<div class="p-8 bg-gray-50 min-h-screen font-sans text-slate-900">
+<div class="space-y-6 px-2">
     
-    <div class="mb-10 flex justify-between items-end">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
         <div>
-            <h2 class="text-4xl font-extrabold tracking-tight text-slate-800">
-                Placement Dashboard
-            </h2>
-            <p class="text-slate-500 mt-2 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <h2 class="text-3xl font-bold text-gray-800 tracking-tight">Placement Dashboard</h2>
+            <p class="text-gray-500 text-sm mt-1 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
                 Real-time overview of recruitment activity
             </p>
         </div>
-        <button class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold shadow-sm hover:bg-slate-50 transition">
-            Download Report
+        <button class="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl hover:bg-gray-50 transition-colors shadow-sm active:bg-gray-100">
+            <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span class="font-semibold text-sm">Download Report</span>
         </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-4">
-                <span class="text-indigo-600 font-bold text-xl">👥</span>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div routerLink="/admin/students" class="cursor-pointer bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-gray-50 text-gray-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </div>
-            <p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Total Students</p>
-            <h3 class="text-3xl font-black mt-1 text-slate-800">120</h3>
+            <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Total Students</p>
+            <h3 class="text-3xl font-black mt-1 text-gray-800 group-hover:text-teal-600 transition-colors">{{ totalStudents || 0 }}</h3>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center mb-4">
-                <span class="text-purple-600 font-bold text-xl">🏢</span>
+        <div routerLink="/admin/companies" class="cursor-pointer bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-gray-50 text-gray-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
             </div>
-            <p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Companies</p>
-            <h3 class="text-3xl font-black mt-1 text-slate-800">25</h3>
+            <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Companies</p>
+            <h3 class="text-3xl font-black mt-1 text-gray-800 group-hover:text-teal-600 transition-colors">{{ totalCompanies || 0 }}</h3>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center mb-4">
-                <span class="text-emerald-600 font-bold text-xl">💼</span>
+        <div routerLink="/admin/jobs" class="cursor-pointer bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-gray-50 text-gray-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
             </div>
-            <p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Active Jobs</p>
-            <h3 class="text-3xl font-black mt-1 text-slate-800">40</h3>
+            <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Active Jobs</p>
+            <h3 class="text-3xl font-black mt-1 text-gray-800 group-hover:text-teal-600 transition-colors">{{ totalJobs || 0 }}</h3>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div class="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center mb-4">
-                <span class="text-orange-600 font-bold text-xl">📝</span>
+        <div routerLink="/admin/applications" class="cursor-pointer bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-300 group">
+            <div class="w-12 h-12 bg-gray-50 text-gray-600 rounded-xl flex items-center justify-center mb-5 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             </div>
-            <p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Applications</p>
-            <h3 class="text-3xl font-black mt-1 text-slate-800">310</h3>
+            <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Applications</p>
+            <h3 class="text-3xl font-black mt-1 text-gray-800 group-hover:text-teal-600 transition-colors">{{ totalApplications || 0 }}</h3>
         </div>
     </div>
 
-    <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm mb-10">
+    <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="font-bold text-slate-700 text-lg">Overall Placement Goal</h3>
-            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">On Track</span>
+            <h3 class="text-lg font-bold text-gray-800 tracking-tight">Overall Placement Goal</h3>
+            <span class="px-3 py-1 bg-green-50 text-green-700 border border-green-100 rounded-full text-xs font-bold">{{ placementPercentage >= 85 ? 'On Track' : 'In Progress' }}</span>
         </div>
-        <div class="w-full bg-slate-100 rounded-full h-5 overflow-hidden p-1">
-            <div class="bg-gradient-to-r from-emerald-400 to-green-500 h-3 rounded-full transition-all duration-1000" style="width:65%"></div>
+        <div class="w-full bg-gray-100 rounded-full h-4 overflow-hidden p-0.5">
+            <div class="bg-gradient-to-r transition-all duration-1000 h-3 rounded-full" 
+                 [ngClass]="placementPercentage >= 85 ? 'from-teal-400 to-teal-500' : 'from-amber-400 to-amber-500'" 
+                 [style.width.%]="placementPercentage"></div>
         </div>
         <div class="flex justify-between items-center mt-4">
-            <p class="text-sm font-medium text-slate-500">
-                <span class="text-slate-800 font-bold text-lg">65%</span> Students Placed
+            <p class="text-sm font-medium text-gray-500">
+                <span class="text-gray-800 font-bold text-lg">{{ placementPercentage }}%</span> Students Placed
             </p>
-            <p class="text-xs text-slate-400">Target: 85% by June</p>
+            <p class="text-xs font-semibold text-gray-400">Target: 85% by June</p>
         </div>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-8 mb-10">
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <h3 class="font-bold text-slate-700 mb-6 border-b pb-4">Applications Overview</h3>
-            <div class="h-64 flex items-center justify-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+    <div class="grid lg:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 class="font-bold text-gray-800 mb-6 border-b border-gray-100 pb-4">Applications Overview</h3>
+            <div class="h-64 flex items-center justify-center bg-gray-50/50 rounded-xl border border-dashed border-gray-200 p-2">
                 <canvas id="applicationsChart"></canvas>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <h3 class="font-bold text-slate-700 mb-6 border-b pb-4">Placement Status</h3>
-            <div class="h-64 flex items-center justify-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 class="font-bold text-gray-800 mb-6 border-b border-gray-100 pb-4">Placement Status</h3>
+            <div class="h-64 flex items-center justify-center bg-gray-50/50 rounded-xl border border-dashed border-gray-200 p-2">
                 <canvas id="placementChart"></canvas>
             </div>
         </div>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-8">
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <h3 class="font-bold text-slate-700 mb-6">Recent Applications</h3>
-            <div class="overflow-hidden">
-                <table class="w-full text-left">
+    <div class="grid lg:grid-cols-2 gap-6 pb-10">
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-gray-100">
+                <h3 class="font-bold text-gray-800 tracking-tight">Recent Applications</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
                     <thead>
-                        <tr class="text-slate-400 text-xs uppercase tracking-widest border-b border-slate-50">
-                            <th class="pb-4 font-semibold">Student</th>
-                            <th class="pb-4 font-semibold">Role</th>
-                            <th class="pb-4 font-semibold">Status</th>
+                        <tr class="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100 font-bold">
+                            <th class="p-5">Student</th>
+                            <th class="p-5">Role</th>
+                            <th class="p-5 text-right">Status</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="py-4 font-medium text-slate-700">Rahul Patel</td>
-                            <td class="py-4 text-slate-500">Developer</td>
-                            <td class="py-4">
-                                <span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-xs font-bold">Pending</span>
+                    <tbody class="divide-y divide-gray-50">
+                        <tr *ngFor="let app of recentApplications" class="hover:bg-teal-50/30 transition-colors group">
+                            <td class="p-5 font-bold text-gray-800">{{ app.studentName }}</td>
+                            <td class="p-5 text-gray-600 font-medium">{{ app.role.slice(0, 20) }}{{ app.role.length > 20 ? '...' : '' }}</td>
+                            <td class="p-5 text-right">
+                                <span class="px-3 py-1.5 rounded-full text-xs font-bold border"
+                                      [ngClass]="{
+                                        'bg-amber-50 text-amber-700 border-amber-100': app.status === 'Pending',
+                                        'bg-green-50 text-green-700 border-green-100': app.status === 'Approved' || app.status === 'Selected',
+                                        'bg-red-50 text-red-700 border-red-100': app.status === 'Rejected'
+                                      }">
+                                    {{ app.status }}
+                                </span>
                             </td>
                         </tr>
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="py-4 font-medium text-slate-700">Amit Shah</td>
-                            <td class="py-4 text-slate-500">Analyst</td>
-                            <td class="py-4">
-                                <span class="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-bold">Approved</span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="py-4 font-medium text-slate-700">Priya Mehta</td>
-                            <td class="py-4 text-slate-500">Intern</td>
-                            <td class="py-4">
-                                <span class="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-xs font-bold">Rejected</span>
-                            </td>
+                        <tr *ngIf="recentApplications.length === 0">
+                            <td colspan="3" class="py-12 text-center text-gray-500 font-medium">No recent applications found.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-slate-700">Top Hiring Companies</h3>
-                <a href="#" class="text-indigo-600 text-xs font-bold hover:underline">View All</a>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <h3 class="font-bold text-gray-800 tracking-tight">Top Hiring Companies</h3>
+                <a routerLink="/admin/companies" class="text-teal-600 text-xs font-bold hover:underline">View All</a>
             </div>
-            <ul class="space-y-4">
-                <li class="flex justify-between items-center p-3 hover:bg-slate-50 rounded-xl transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center font-bold text-xs">T</div>
-                        <span class="font-medium text-slate-700">TCS</span>
-                    </div>
-                    <span class="text-slate-500 font-semibold text-sm">32 hires</span>
-                </li>
-                <li class="flex justify-between items-center p-3 hover:bg-slate-50 rounded-xl transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center font-bold text-xs">I</div>
-                        <span class="font-medium text-slate-700">Infosys</span>
-                    </div>
-                    <span class="text-slate-500 font-semibold text-sm">21 hires</span>
-                </li>
-                <li class="flex justify-between items-center p-3 hover:bg-slate-50 rounded-xl transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center font-bold text-xs">W</div>
-                        <span class="font-medium text-slate-700">Wipro</span>
-                    </div>
-                    <span class="text-slate-500 font-semibold text-sm">15 hires</span>
-                </li>
-                <li class="flex justify-between items-center p-3 hover:bg-slate-50 rounded-xl transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center font-bold text-xs">A</div>
-                        <span class="font-medium text-slate-700">Accenture</span>
-                    </div>
-                    <span class="text-slate-500 font-semibold text-sm">10 hires</span>
-                </li>
-            </ul>
+            <div class="p-2">
+                <ul class="space-y-1">
+                    <li *ngFor="let comp of topCompanies" class="flex justify-between items-center p-4 hover:bg-gray-50 rounded-xl transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-gray-100 text-gray-500 flex items-center justify-center font-bold text-sm uppercase shadow-sm border border-gray-200">{{ comp.name.charAt(0) }}</div>
+                            <span class="font-bold text-gray-800 text-base">{{ comp.name }}</span>
+                        </div>
+                        <span class="text-teal-600 font-bold bg-teal-50 px-3 py-1 rounded-lg text-sm">{{ comp.hires }} hires</span>
+                    </li>
+                    <li *ngIf="topCompanies.length === 0" class="text-center text-gray-500 py-12 font-medium">No hiring data available.</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

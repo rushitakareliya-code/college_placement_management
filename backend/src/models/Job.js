@@ -19,6 +19,7 @@ const jobSchema = new mongoose.Schema(
       ref: 'Company',
       required: true,
     },
+    deadline: { type: Date },
     isActive: { type: Boolean, default: true },
     applicants: [
       {

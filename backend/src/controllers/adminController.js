@@ -264,6 +264,8 @@ const addJob = async (req, res, next) => {
       responsibilities,
       requirements,
       companyId,
+      deadline,
+      isActive,
     } = req.body;
 
     if (!role || !companyId || !description) {
@@ -296,6 +298,8 @@ const addJob = async (req, res, next) => {
       responsibilities: parseStringArray(responsibilities),
       requirements: parseStringArray(requirements),
       companyId,
+      deadline: deadline || null,
+      isActive: isActive !== undefined ? isActive : true,
     });
 
     const populatedJob = await Job.findById(job._id).populate(
@@ -325,6 +329,7 @@ const updateJob = async (req, res, next) => {
       responsibilities,
       requirements,
       companyId,
+      deadline,
     } = req.body;
 
     if (!role || !companyId || !description) {
@@ -359,6 +364,8 @@ const updateJob = async (req, res, next) => {
         responsibilities: parseStringArray(responsibilities),
         requirements: parseStringArray(requirements),
         companyId,
+        deadline: deadline || null,
+        isActive: isActive !== undefined ? isActive : true,
       },
       { new: true, runValidators: true }
     ).populate('companyId', 'companyName companyEmail');

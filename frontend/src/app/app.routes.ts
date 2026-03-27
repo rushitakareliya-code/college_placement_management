@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { Contacts } from './pages/admin/contacts/contacts';
 import { Notices } from './pages/admin/notices/notices';
 import { AdminLayout } from './layout/admin-layout/admin-layout';
 import { Dashboard } from './pages/admin/dashboard/dashboard';
@@ -36,6 +37,7 @@ export const routes: Routes = [
             { path: 'jobs', component: Jobs },
             { path: 'applications', component: Applications },
             { path: 'notices', component: Notices },
+            { path: 'contacts', component: Contacts },
         ]
     },
     { path: '', component: HomeComponent },

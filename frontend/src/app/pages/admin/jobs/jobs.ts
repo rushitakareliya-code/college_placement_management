@@ -29,7 +29,7 @@ export class Jobs implements OnInit {
     private companyService: CompanyService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCompanies();
@@ -41,6 +41,7 @@ export class Jobs implements OnInit {
       _id: '',
       role: '',
       companyId: '',
+      deadline: '',
       location: '',
       type: '',
       experience: '',
@@ -85,6 +86,7 @@ export class Jobs implements OnInit {
       _id: job._id,
       role: job.role || '',
       companyId,
+      deadline: job.deadline ? new Date(job.deadline).toISOString().split('T')[0] : '',
       companyName: pop?.companyName || job.company || '',
       location: job.location || '',
       type: job.type || '',
@@ -114,6 +116,7 @@ export class Jobs implements OnInit {
     return {
       role: this.job.role,
       companyId: this.job.companyId,
+      deadline: this.job.deadline,
       location: this.job.location,
       type: this.job.type,
       experience: this.job.experience,

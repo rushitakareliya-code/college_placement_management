@@ -12,6 +12,7 @@ const companyRoutes = require('./src/routes/companyRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const placementRoutes = require('./src/routes/placementRoutes');
 const jobRoutes = require('./src/routes/jobRoutes');
+const contactRoutes = require('./src/routes/contactRoutes');
 
 connectDB();
 
@@ -28,6 +29,7 @@ app.use('/api', adminRoutes);
 app.use('/api', companyRoutes);
 app.use('/api/placements', placementRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/contact', contactRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Student Placement API is running' });

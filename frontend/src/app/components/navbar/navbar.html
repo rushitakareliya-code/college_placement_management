@@ -1,80 +1,107 @@
 <nav class="bg-black text-white fixed top-0 left-0 w-full shadow-md z-50">
-
-  <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
     <!-- Logo -->
-    <div class="flex items-center space-x-4">
-      <div class="bg-white text-black font-bold px-4 py-2 rounded text-lg">
-        PMS
+    <div class="flex items-center gap-3 cursor-pointer group" routerLink="/">
+      <div
+        class="bg-[#0eb39e] p-2 rounded-2xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" stroke-width="2">
+          <path d="M22 10L12 5L2 10L12 15L22 10z" />
+          <path d="M6 12v5c0 0 2 2 6 2s6-2 6-2v-5" />
+        </svg>
       </div>
-      <span class="font-semibold text-xl">
-        Placement Portal
-      </span>
+      <div class="flex items-baseline">
+        <span class="text-2xl font-black text-white tracking-tight">Portal</span>
+        <span class="text-2xl font-black text-[#0eb39e] tracking-tight">Hub</span>
+      </div>
     </div>
 
-    <!-- Navigation -->
-    <div class="flex items-center space-x-8 text-base">
-
-      <ng-container *ngIf="isLoggedIn">
-        <a routerLink="/student-dashboard" class="flex items-center gap-2 hover:text-gray-300 transition">
-          <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
-          </svg>
-          Dashboard
-        </a>
-      </ng-container>
-
-      <a routerLink="/" class="hover:text-gray-300 transition">
-        Home
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex items-center space-x-8 text-base">
+      <a *ngIf="isLoggedIn" routerLink="/student-dashboard" routerLinkActive="text-[#0eb39e]"
+        class="flex items-center gap-2 hover:text-[#0eb39e] transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
+        </svg>
+        Dashboard
       </a>
+      <a routerLink="/" routerLinkActive="text-[#0eb39e]" [routerLinkActiveOptions]="{exact: true}"
+        class="hover:text-[#0eb39e] transition">Home</a>
+      <a routerLink="/about" routerLinkActive="text-[#0eb39e]" class="hover:text-[#0eb39e] transition">About Us</a>
+      <a routerLink="/contact" routerLinkActive="text-[#0eb39e]" class="hover:text-[#0eb39e] transition">Contact Us</a>
 
-      <a routerLink="/about" class="hover:text-gray-300 transition">
-        About Us
-      </a>
+      <div class="h-6 w-[1px] bg-white/20"></div>
 
-      <a routerLink="/contact" class="hover:text-gray-300 transition">
-        Contact Us
-      </a>
-
-      <!-- Show when NOT logged in -->
       <ng-container *ngIf="!isLoggedIn">
-        <a routerLink="/signup" class="hover:text-gray-300 transition">
-          Signup
-        </a>
-
-        <a routerLink="/login" class="text-white rounded-lg transition">
-          <i class="fa fa-sign-in" aria-hidden="true"></i>
-          &nbsp;Login
-        </a>
+        <a routerLink="/signup" class="hover:text-[#0eb39e] transition">Signup</a>
+        <a routerLink="/login"
+          class="px-5 py-2 bg-[#0eb39e] text-white rounded-lg font-bold hover:bg-[#0ca692] transition">Login</a>
       </ng-container>
 
-      <!-- Show when logged in -->
-
       <ng-container *ngIf="isLoggedIn">
-       
-
-        <div class="flex items-center">
-          <button (click)="logout()" class="text-white px-2 py-2 rounded-lg transition">
-            <i class="fa fa-sign-out" aria-hidden="true"></i>
-            &nbsp;Logout
-          </button>
-        </div>
-
-         <button type="button" (click)="openNotices()" class="relative text-white hover:text-gray-300 transition">
+        <button (click)="openNotices()" class="relative text-white hover:text-[#0eb39e] transition">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
           <span *ngIf="unreadNoticeCount > 0"
-            class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center">
-            {{ unreadNoticeCount }}
-          </span>
+            class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] rounded-full flex items-center justify-center">{{
+            unreadNoticeCount }}</span>
+        </button>
+        <button (click)="logout()"
+          class="flex items-center gap-2 px-4 py-2 border border-white/20 rounded-lg hover:bg-white/10 transition text-sm">
+          <i class="fa fa-sign-out"></i> Logout
         </button>
       </ng-container>
-
     </div>
 
+    <!-- Mobile Menu Button -->
+    <div class="md:hidden flex items-center gap-4">
+      <button *ngIf="isLoggedIn" (click)="openNotices()" class="relative text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        <span *ngIf="unreadNoticeCount > 0"
+          class="absolute -top-1 -right-1 bg-red-500 w-2.5 h-2.5 rounded-full ring-2 ring-black"></span>
+      </button>
+      <button (click)="isMobileMenuOpen = !isMobileMenuOpen" class="text-white p-1 focus:outline-none">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16" />
+          <path *ngIf="isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
   </div>
 
+  <!-- Mobile Menu Drawer -->
+  <div *ngIf="isMobileMenuOpen"
+    class="md:hidden bg-[#111] border-t border-white/10 px-6 py-8 space-y-6 animate-in slide-in-from-top duration-300">
+    <div class="flex flex-col space-y-4">
+      <a *ngIf="isLoggedIn" routerLink="/student-dashboard" (click)="isMobileMenuOpen = false"
+        routerLinkActive="text-[#0eb39e]" class="text-lg font-medium border-b border-white/5 pb-2">Dashboard</a>
+      <a routerLink="/" (click)="isMobileMenuOpen = false" routerLinkActive="text-[#0eb39e]"
+        [routerLinkActiveOptions]="{exact: true}" class="text-lg font-medium border-b border-white/5 pb-2">Home</a>
+      <a routerLink="/about" (click)="isMobileMenuOpen = false" routerLinkActive="text-[#0eb39e]"
+        class="text-lg font-medium border-b border-white/5 pb-2">About Us</a>
+      <a routerLink="/contact" (click)="isMobileMenuOpen = false" routerLinkActive="text-[#0eb39e]"
+        class="text-lg font-medium border-b border-white/5 pb-2">Contact Us</a>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <ng-container *ngIf="!isLoggedIn">
+        <button routerLink="/login" (click)="isMobileMenuOpen = false"
+          class="py-3 px-4 bg-[#0eb39e] text-white font-bold rounded-xl active:scale-95 transition-all">Login</button>
+        <button routerLink="/signup" (click)="isMobileMenuOpen = false"
+          class="py-3 px-4 border border-white/20 text-white font-bold rounded-xl active:scale-95 transition-all">Signup</button>
+      </ng-container>
+      <button *ngIf="isLoggedIn" (click)="logout(); isMobileMenuOpen = false"
+        class="col-span-2 py-3 px-4 bg-red-500/10 text-red-500 font-bold rounded-xl border border-red-500/20 active:scale-95 transition-all">
+        Logout
+      </button>
+    </div>
+  </div>
 </nav>

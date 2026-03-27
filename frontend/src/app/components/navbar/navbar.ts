@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   studentName = '';
   unreadNoticeCount = 0;
+  isMobileMenuOpen = false;
   private pollTimer: any = null;
   private readonly onWindowFocus = () => {
     if (this.isLoggedIn) this.fetchUnreadNoticeCount();
