@@ -20,6 +20,7 @@ interface Job {
   description?: string;
   responsibilities?: string[];
   requirements?: string[];
+  deadline?: string;
 }
 
 @Component({
@@ -46,14 +47,14 @@ export class JobDetail implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone   // ✅ FIX: Added NgZone
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       console.log("🔁 Route changed");
       this.jobId = params.get('id') || '';
       console.log("New Job ID:", this.jobId);
-      
+
       if (this.jobId) {
         this.loadJobDetails();
       }
@@ -71,6 +72,25 @@ export class JobDetail implements OnInit {
       .subscribe({
         next: (res) => {
           console.log("✅ RAW API RESPONSE:", res);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          let isExpired = false;
+          if (res.deadline) {
+            const deadlineDate = new Date(res.deadline);
+            deadlineDate.setHours(0, 0, 0, 0);
+            if (deadlineDate.getTime() < today.getTime()) {
+              isExpired = true;
+            }
+          }
+
+          if (res.isActive === false || isExpired) {
+            this.errorMessage = 'This job is no longer available or the deadline has passed.';
+            this.isLoading = false;
+            this.cdr.detectChanges();
+            return;
+          }
+
           this.job = res;
           this.isLoading = false;
           this.cdr.detectChanges();
@@ -97,18 +117,18 @@ export class JobDetail implements OnInit {
   }
 
   onApplicationSubmitted() {
-  this.showApplicationForm = false;
-  this.showSuccess = true;
+    this.showApplicationForm = false;
+    this.showSuccess = true;
 
-  this.cdr.detectChanges(); 
+    this.cdr.detectChanges();
 
-  setTimeout(() => {
-    this.ngZone.run(() => {
-      this.showSuccess = false;
-      this.cdr.detectChanges(); 
-    });
-  }, 3000);
-}
+    setTimeout(() => {
+      this.ngZone.run(() => {
+        this.showSuccess = false;
+        this.cdr.detectChanges();
+      });
+    }, 3000);
+  }
 
   onApplicationFormClosed() {
     this.showApplicationForm = false;

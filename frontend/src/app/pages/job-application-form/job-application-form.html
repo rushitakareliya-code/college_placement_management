@@ -1,15 +1,16 @@
-<div *ngIf="visible"
-     class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+<div *ngIf="visible" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
 
   <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-100">
 
     <!-- Header -->
-    <div class="bg-gradient-to-r from-[#0eb39e] to-[#0ca692] text-white p-8 rounded-t-2xl flex justify-between items-start">
+    <div
+      class="bg-gradient-to-r from-[#0eb39e] to-[#0ca692] text-white p-8 rounded-t-2xl flex justify-between items-start">
       <div class="flex-1">
         <h2 class="text-2xl font-bold mb-1">Apply for {{ job?.role }}</h2>
         <p class="text-teal-50 font-medium">{{ job?.companyId?.companyName || job?.company?.name || job?.company }}</p>
       </div>
-      <button type="button" (click)="closeForm()" class="text-2xl hover:scale-110 transition-transform font-light text-teal-50">&times;</button>
+      <button type="button" (click)="closeForm()"
+        class="text-2xl hover:scale-110 transition-transform font-light text-teal-50">&times;</button>
     </div>
 
     <!-- Form -->
@@ -18,43 +19,58 @@
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Full Name *</label>
         <input #fullNameRef="ngModel" name="fullName" [(ngModel)]="formData.fullName" placeholder="Enter your full name"
-          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" disabled required>
-        <p *ngIf="fullNameRef.invalid && fullNameRef.touched" class="text-red-600 text-sm mt-1">Full name is required</p>
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          disabled required>
+        <p *ngIf="fullNameRef.invalid && fullNameRef.touched" class="text-red-600 text-sm mt-1">Full name is required
+        </p>
       </div>
 
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Email Address *</label>
-        <input #emailRef="ngModel" name="email" type="email" [(ngModel)]="formData.email" placeholder="your.email@example.com"
-          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" disabled required email>
-        <p *ngIf="emailRef.errors?.['required'] && emailRef.touched" class="text-red-600 text-sm mt-1">Email is required</p>
-        <p *ngIf="emailRef.touched && emailRef.errors?.['email']" class="text-red-600 text-sm mt-1">Enter a valid email address</p>
+        <input #emailRef="ngModel" name="email" type="email" [(ngModel)]="formData.email"
+          placeholder="your.email@example.com"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          disabled required email>
+        <p *ngIf="emailRef.errors?.['required'] && emailRef.touched" class="text-red-600 text-sm mt-1">Email is required
+        </p>
+        <p *ngIf="emailRef.touched && emailRef.errors?.['email']" class="text-red-600 text-sm mt-1">Enter a valid email
+          address</p>
       </div>
 
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Phone Number *</label>
         <input #phoneRef="ngModel" name="phone" [(ngModel)]="formData.phone" placeholder="10-digit phone number"
-          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required pattern="^[0-9]{10}$" maxlength="10">
-        <p *ngIf="phoneRef.errors?.['required'] && phoneRef.touched" class="text-red-600 text-sm mt-1">Phone is required</p>
-        <p *ngIf="phoneRef.touched && phoneRef.errors?.['pattern']" class="text-red-600 text-sm mt-1">Enter exactly 10 digits</p>
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          required pattern="^[0-9]{10}$" maxlength="10">
+        <p *ngIf="phoneRef.errors?.['required'] && phoneRef.touched" class="text-red-600 text-sm mt-1">Phone is required
+        </p>
+        <p *ngIf="phoneRef.touched && phoneRef.errors?.['pattern']" class="text-red-600 text-sm mt-1">Enter exactly 10
+          digits</p>
       </div>
 
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Current Location *</label>
-        <input #locRef="ngModel" name="currentLocation" [(ngModel)]="formData.currentLocation" placeholder="Your current location"
-          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <input #locRef="ngModel" name="currentLocation" [(ngModel)]="formData.currentLocation"
+          placeholder="Your current location"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          required>
         <p *ngIf="locRef.invalid && locRef.touched" class="text-red-600 text-sm mt-1">Location is required</p>
       </div>
 
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Skills *</label>
-        <input #skillsRef="ngModel" name="skills" [(ngModel)]="formData.skills" placeholder="e.g. Java, React, Node.js, SQL"
-          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <input #skillsRef="ngModel" name="skills" [(ngModel)]="formData.skills"
+          placeholder="e.g. Java, React, Node.js, SQL"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          required>
         <p *ngIf="skillsRef.invalid && skillsRef.touched" class="text-red-600 text-sm mt-1">Skills are required</p>
       </div>
 
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Experience Level *</label>
-        <select #expRef="ngModel" name="experience" [(ngModel)]="formData.experience" class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <select #expRef="ngModel" name="experience" [(ngModel)]="formData.experience"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          required>
           <option value="">Select your experience level</option>
           <option value="Fresher">Fresher</option>
           <option value="0-1 Year">0-1 Year</option>
@@ -67,29 +83,28 @@
 
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Qualification *</label>
-        <input #qualRef="ngModel" name="qualification" [(ngModel)]="formData.qualification" placeholder="e.g. B.Tech, MCA, B.Sc"
-          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <input #qualRef="ngModel" name="qualification" [(ngModel)]="formData.qualification"
+          placeholder="e.g. B.Tech, MCA, B.Sc"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          required>
         <p *ngIf="qualRef.invalid && qualRef.touched" class="text-red-600 text-sm mt-1">Qualification is required</p>
       </div>
 
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Expected Salary *</label>
-        <input #salRef="ngModel" name="expectedSalary" [(ngModel)]="formData.expectedSalary" placeholder="e.g. 5,00,000 LPA"
-          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all" required>
+        <input #salRef="ngModel" name="expectedSalary" [(ngModel)]="formData.expectedSalary"
+          placeholder="e.g. 5,00,000 LPA"
+          class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
+          required>
         <p *ngIf="salRef.invalid && salRef.touched" class="text-red-600 text-sm mt-1">Expected salary is required</p>
       </div>
 
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Projects & Achievements *</label>
-        <textarea
-          #projectRef="ngModel"
-          name="projects"
-          [(ngModel)]="formData.projects"
+        <textarea #projectRef="ngModel" name="projects" [(ngModel)]="formData.projects"
           placeholder="Tell us about your projects, internships, certifications, or notable achievements..."
           class="w-full border border-gray-200 bg-gray-50 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0eb39e] focus:bg-white transition-all"
-          rows="4"
-          required
-        ></textarea>
+          rows="4" required></textarea>
         <p *ngIf="projectRef.invalid && projectRef.touched" class="text-red-600 text-sm mt-1">
           Projects or achievements are required
         </p>
@@ -98,7 +113,7 @@
       <div>
         <label class="block text-sm font-semibold text-[#1e293b] mb-2">Upload Resume *</label>
         <div class="relative">
-          <input #resumeInput type="file" name="resumeFile" (change)="onResumeSelect($event)" 
+          <input #resumeInput type="file" name="resumeFile" (change)="onResumeSelect($event)"
             class="w-full border-2 border-dashed border-gray-300 bg-gray-50 p-4 rounded-lg cursor-pointer hover:border-[#0eb39e] hover:bg-teal-50/30 transition-all"
             accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
         </div>
@@ -113,12 +128,12 @@
 
       <!-- Buttons -->
       <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
-        <button type="button" (click)="closeForm()" 
+        <button type="button" (click)="closeForm()"
           class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all">
           Cancel
         </button>
 
-        <button type="submit" 
+        <button type="submit"
           class="bg-[#0eb39e] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#0ca692] hover:scale-105 transition-all shadow-lg shadow-teal-200/50">
           Submit Application
         </button>

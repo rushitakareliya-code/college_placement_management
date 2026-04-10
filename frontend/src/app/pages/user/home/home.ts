@@ -112,7 +112,22 @@ export class HomeComponent implements OnInit {
 
     this.jobService.getJobs().subscribe({
       next: (data: any[]) => {
-        this.allJobs = (data || []).map((j) => this.mapJob(j));
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        this.allJobs = (data || [])
+          .filter((j) => {
+            if (j.isActive === false) return false;
+            if (j.deadline) {
+              const deadlineDate = new Date(j.deadline);
+              deadlineDate.setHours(0, 0, 0, 0);
+              if (deadlineDate.getTime() < today.getTime()) {
+                return false;
+              }
+            }
+            return true;
+          })
+          .map((j) => this.mapJob(j));
         this.currentPage = 1;
         this.applyFiltersAndPagination();
         this.isLoading = false;

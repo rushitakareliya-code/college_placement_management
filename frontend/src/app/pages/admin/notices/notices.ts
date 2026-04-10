@@ -29,6 +29,60 @@ export class Notices implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
 
+  // Pagination state
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  public Math = Math;
+
+  // Search state
+  searchQuery: string = '';
+
+  onSearch() {
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+
+  get filteredNotices() {
+    if (!this.searchQuery) return this.notices;
+    const query = this.searchQuery.toLowerCase();
+    return this.notices.filter(n => 
+      n.title?.toLowerCase().includes(query) ||
+      n.message?.toLowerCase().includes(query)
+    );
+  }
+
+  get paginatedNotices() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredNotices.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredNotices.length / this.itemsPerPage);
+  }
+
+  get totalPagesArray() {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.cdr.detectChanges();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.cdr.detectChanges();
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.cdr.detectChanges();
+  }
+
   ngOnInit(): void {
     this.loadNotices();
   }

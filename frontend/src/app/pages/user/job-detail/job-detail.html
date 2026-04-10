@@ -14,15 +14,19 @@
     </div>
     <h2 class="text-xl font-bold text-slate-800 mb-2">{{errorMessage}}</h2>
     <p class="text-slate-500 mb-6">Something went wrong while loading this page. Please try again.</p>
-    <button (click)="loadJobDetails()" class="bg-[#1e293b] text-white px-8 py-2 rounded-xl hover:bg-slate-800 transition-all">
+    <button (click)="loadJobDetails()"
+      class="bg-[#1e293b] text-white px-8 py-2 rounded-xl hover:bg-slate-800 transition-all">
       Try Again
     </button>
   </div>
 </div>
 
-<div *ngIf="showSuccess" class="fixed top-24 right-8 bg-[#0eb39e] text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 text-md font-medium z-50">
+<div *ngIf="showSuccess"
+  class="fixed top-24 right-8 bg-[#0eb39e] text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 text-md font-medium z-50">
   <div class="bg-white/20 p-1 rounded-full">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+    </svg>
   </div>
   Application submitted successfully!
 </div>
@@ -30,19 +34,21 @@
 
 <div *ngIf="job && !isLoading && !errorMessage" class="pt-28 pb-20 bg-[#f8fafc] min-h-screen flex justify-center">
   <div class="bg-white w-full max-w-5xl shadow-sm border border-slate-200 rounded-2xl overflow-hidden mx-4">
-    
+
     <div class="bg-white border-b border-slate-100 p-8 md:p-12">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <nav class="flex text-sm text-slate-400 mb-4 items-center gap-2">
-            <span>Jobs</span> 
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <span>Jobs</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
             <span class="text-[#0eb39e] font-medium">Details</span>
           </nav>
           <h1 class="text-4xl font-extrabold text-[#1e293b] mb-2">{{ job.role }}</h1>
           <p class="text-xl text-[#0eb39e] font-semibold">{{ job.companyId?.companyName || job.company }}</p>
         </div>
-        
+
         <button (click)="applyJob()"
           class="bg-[#0eb39e] text-white px-10 py-4 rounded-xl text-lg font-bold hover:bg-[#0ca692] hover:scale-105 transition-all shadow-lg shadow-teal-200/50">
           Apply Now
@@ -51,7 +57,7 @@
     </div>
 
     <div class="p-8 md:p-12">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
         <div *ngIf="job.location" class="bg-slate-50 p-4 rounded-xl border border-slate-100">
           <p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Location</p>
           <p class="text-slate-700 font-medium">{{ job.location }}</p>
@@ -67,6 +73,10 @@
         <div *ngIf="job.salary" class="bg-slate-50 p-4 rounded-xl border border-slate-100">
           <p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Salary</p>
           <p class="text-[#0eb39e] font-bold">{{ job.salary }}</p>
+        </div>
+        <div *ngIf="job.deadline" class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+          <p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Deadline</p>
+          <p class="text-rose-600 font-bold">{{ job.deadline | date:'mediumDate' }}</p>
         </div>
       </div>
 
@@ -111,8 +121,8 @@
           <section *ngIf="job.requirements?.length">
             <h3 class="text-xl font-bold text-[#1e293b] mb-4">Requirements</h3>
             <div class="flex flex-wrap gap-2">
-              <span *ngFor="let r of job.requirements" 
-                    class="bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-sm text-slate-600 font-medium hover:border-[#0eb39e] transition-colors">
+              <span *ngFor="let r of job.requirements"
+                class="bg-white border border-slate-200 px-3 py-1.5 rounded-lg text-sm text-slate-600 font-medium hover:border-[#0eb39e] transition-colors">
                 {{ r }}
               </span>
             </div>
@@ -123,7 +133,8 @@
   </div>
 </div>
 
-<div *ngIf="!job && !isLoading && !errorMessage" class="pt-28 pb-12 bg-[#f8fafc] min-h-screen flex items-center justify-center">
+<div *ngIf="!job && !isLoading && !errorMessage"
+  class="pt-28 pb-12 bg-[#f8fafc] min-h-screen flex items-center justify-center">
   <div class="text-center">
     <div class="text-6xl mb-4 opacity-20">🔍</div>
     <p class="text-xl font-bold text-slate-400">No job details available at this time</p>
@@ -131,9 +142,6 @@
 </div>
 
 <!-- Application Form Modal -->
-<app-job-application-form
-  [job]="job"
-  [visible]="showApplicationForm"
-  (close)="onApplicationFormClosed()"
+<app-job-application-form [job]="job" [visible]="showApplicationForm" (close)="onApplicationFormClosed()"
   (applicationSubmitted)="onApplicationSubmitted()">
 </app-job-application-form>

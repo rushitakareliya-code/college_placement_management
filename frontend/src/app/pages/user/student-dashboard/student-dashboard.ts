@@ -72,13 +72,25 @@ export class StudentDashboard implements OnInit {
             : (Array.isArray(data?.data) ? data.data : (Array.isArray(data?.placements) ? data.placements : []));
           this.applications = (Array.isArray(arrayData) ? arrayData : [])
             .filter(item => !!item)
-            .map(item => ({
-              status: item?.status || 'Pending',
-              appliedAt: item?.createdAt || item?.updatedAt || null,
-              job: item?.job || {},
-              company: item?.company || {},
-              extra: item
-            }));
+            .map(item => {
+              const jobDeleted = !item?.job;
+              const jobInactive = !jobDeleted && item?.job?.isActive === false;
+              return {
+                status: item?.status || 'Pending',
+                appliedAt: item?.createdAt || item?.updatedAt || null,
+                jobDeleted,
+                jobInactive,
+                job: item?.job || {
+                  role: item?.jobTitle || 'Unknown Role',
+                  company: item?.jobCompany || 'Unknown Company',
+                  location: 'N/A',
+                  type: 'N/A',
+                  description: 'This job has been removed by the administrator.'
+                },
+                company: item?.company || {},
+                extra: item
+              };
+            });
 
           console.log('Mapped applications:', this.applications);
           this.cdr.detectChanges();

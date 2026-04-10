@@ -40,6 +40,10 @@ const getJobById = async (req, res, next) => {
       return res.status(404).json({ message: 'Job not found' });
     }
 
+    if (!job.isActive) {
+      return res.status(404).json({ message: 'Job not found' });
+    }
+
     res.json(job);
   } catch (error) {
     next(error);
@@ -84,6 +88,10 @@ const applyForJob = async (req, res, next) => {
 
     const job = await Job.findById(validJobId);
     if (!job) {
+      return res.status(404).json({ message: 'Job not found' });
+    }
+
+    if (!job.isActive) {
       return res.status(404).json({ message: 'Job not found' });
     }
 
@@ -139,10 +147,13 @@ const applyForJob = async (req, res, next) => {
     }
 
     // Create placement with application data
+    // Snapshot the job title and company name in case the job is deleted later
     const placementData = {
       student: validStudentId,
       company: job.companyId,
       job: validJobId,
+      jobTitle: job.role || '',
+      jobCompany: job.company || '',
       fullName,
       email,
       phone,

@@ -22,12 +22,67 @@ export class Companies implements OnInit {
   emailTaken: boolean = false;
   formError:string  = '';
 
-constructor(
+  constructor(
   private companyService: CompanyService,
   private cdr: ChangeDetectorRef,
   private toastr: ToastrService
 
-) {}
+  ) {}
+
+  // Pagination state
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  public Math = Math;
+
+  // Search state
+  searchQuery: string = '';
+
+  onSearch() {
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+
+  get filteredCompanies() {
+    if (!this.searchQuery) return this.companies;
+    const query = this.searchQuery.toLowerCase();
+    return this.companies.filter(c => 
+      c.companyName?.toLowerCase().includes(query) ||
+      c.companyEmail?.toLowerCase().includes(query) ||
+      c.companyLocation?.toLowerCase().includes(query)
+    );
+  }
+
+  get paginatedCompanies() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredCompanies.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredCompanies.length / this.itemsPerPage);
+  }
+
+  get totalPagesArray() {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.cdr.detectChanges();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.cdr.detectChanges();
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.cdr.detectChanges();
+  }
 
   ngOnInit() {
     this.loadCompanies();

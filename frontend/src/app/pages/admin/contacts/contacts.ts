@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ContactService } from '../../../services/contact.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-contacts',
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, FormsModule],
   templateUrl: './contacts.html',
 })
 export class Contacts implements OnInit {
@@ -21,6 +22,9 @@ export class Contacts implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
   public Math = Math;
+
+  // Search state
+  searchQuery: string = '';
 
   constructor(
     private contactService: ContactService,
@@ -48,14 +52,29 @@ export class Contacts implements OnInit {
     });
   }
 
+  onSearch() {
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+
+  get filteredContacts() {
+    if (!this.searchQuery) return this.contacts;
+    const query = this.searchQuery.toLowerCase();
+    return this.contacts.filter(c => 
+      c.name?.toLowerCase().includes(query) ||
+      c.email?.toLowerCase().includes(query) ||
+      c.message?.toLowerCase().includes(query)
+    );
+  }
+
   // Pagination Getters & Handlers
   get paginatedContacts() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.contacts.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.filteredContacts.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   get totalPages() {
-    return Math.ceil(this.contacts.length / this.itemsPerPage);
+    return Math.ceil(this.filteredContacts.length / this.itemsPerPage);
   }
 
   get totalPagesArray() {

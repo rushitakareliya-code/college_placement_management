@@ -6,14 +6,21 @@
       <p class="text-gray-500 text-sm">Manage student support and inquiry messages</p>
     </div>
 
-    <button (click)="fetchContacts()"
-      class="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl hover:bg-gray-50 transition-colors shadow-sm active:bg-gray-100">
-      <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-      </svg>
-      <span class="font-semibold">Refresh</span>
-    </button>
+    <div class="flex w-full md:w-auto items-center gap-3">
+      <div class="relative w-full md:w-64">
+          <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" placeholder="Search requests..."
+              class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm">
+          <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </div>
+      <button (click)="fetchContacts()"
+        class="flex shrink-0 items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl hover:bg-gray-50 transition-colors shadow-sm active:bg-gray-100">
+        <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        <span class="font-semibold hidden sm:inline">Refresh</span>
+      </button>
+    </div>
   </div>
 
   <div *ngIf="isLoading"
@@ -105,11 +112,11 @@
     </div>
 
     <!-- Pagination Footer -->
-    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-4" *ngIf="contacts.length > itemsPerPage">
+    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-4" *ngIf="filteredContacts.length > itemsPerPage">
       <div class="text-sm text-gray-500 font-medium">
         Showing <span class="font-bold text-gray-700">{{ (currentPage - 1) * itemsPerPage + 1 }}</span> to 
-        <span class="font-bold text-gray-700">{{ Math.min(currentPage * itemsPerPage, contacts.length) }}</span> of 
-        <span class="font-bold text-gray-700">{{ contacts.length }}</span> entries
+        <span class="font-bold text-gray-700">{{ Math.min(currentPage * itemsPerPage, filteredContacts.length) }}</span> of 
+        <span class="font-bold text-gray-700">{{ filteredContacts.length }}</span> entries
       </div>
       
       <div class="flex items-center gap-1.5">

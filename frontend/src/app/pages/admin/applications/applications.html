@@ -1,130 +1,226 @@
-<div class="flex justify-between items-center mb-6">
-
-    <h2 class="text-2xl font-semibold text-gray-700">
-        Applications
-    </h2>
-
-</div>
-
-<div *ngIf="isLoading" class="text-center text-gray-500 py-8">Loading applications...</div>
-<div *ngIf="errorMessage && !isLoading" class="text-center text-red-600 py-8">{{ errorMessage }}</div>
-<div *ngIf="!isLoading && !errorMessage && applications.length === 0" class="text-center text-gray-500 py-8">No applications found.</div>
-
-<div *ngIf="!isLoading && applications.length > 0" class="bg-white shadow-sm rounded-2xl border border-gray-100 overflow-hidden mx-2">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left border-collapse">
-            <thead>
-                <tr class="bg-gray-50/50 border-b border-gray-100 text-gray-500 uppercase text-xs font-bold">
-                    <th class="p-5">Student</th>
-                    <th class="p-5">Job</th>
-                    <th class="p-5">Company</th>
-                    <th class="p-5">Status</th>
-                    <th class="p-5 text-right">Action</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                <tr *ngFor="let app of applications; let i = index" class="hover:bg-teal-50/30 transition-colors group">
-
-                <td class="p-5 font-medium">
-                    {{app.student}}
-                </td>
-
-                <td class="p-5">
-                    {{app.job}}
-                </td>
-
-                <td class="p-5">
-                    {{app.company}}
-                </td>
-
-
-                <td class="p-5">
-
-                    <span class="px-3 py-1 rounded text-xs font-medium" [ngClass]="{
-'bg-yellow-100 text-yellow-700': app.status === 'Pending',
-'bg-green-100 text-green-700': app.status === 'Approved',
-'bg-red-100 text-red-700': app.status === 'Rejected'
-}">
-                        {{app.status}}
-                    </span>
-
-                </td>
-
-
-                <td class="p-5">
-
-                    <button (click)="viewApplication(app)"
-                        class="bg-teal-500 text-white px-3 py-1 rounded-lg hover:bg-teal-600 transition">
-
-                        View
-
-                    </button>
-
-                </td>
-
-            </tr>
-
-        </tbody>
-
-    </table>
-
-</div>
-
-
-
-<!-- Modal -->
-
-<div *ngIf="isModalOpen" (click)="closeModal()"
-    class="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center">
-
-    <div (click)="$event.stopPropagation()" class="bg-white w-[420px] p-6 rounded-xl shadow-lg">
-
-        <h2 class="text-xl font-semibold text-gray-700 mb-5">
-
-            Application Details
-
-        </h2>
-
-
-        <div class="space-y-2 text-sm">
-
-            <p><b>Student:</b> {{selectedApplication?.student}}</p>
-
-            <p><b>Job:</b> {{selectedApplication?.job}}</p>
-
-            <p><b>Company:</b> {{selectedApplication?.company}}</p>
-
-            <p><b>Status:</b> {{selectedApplication?.status}}</p>
-
+<div class="space-y-6 px-2">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 tracking-tight">Applications</h2>
+            <p class="text-gray-500 text-sm">Review and manage student job applications</p>
         </div>
-
-
-        <div class="flex justify-between mt-6">
-
-            <button (click)="updateStatus('Approved')"
-                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
-
-                Approve
-
+        
+        <div class="flex w-full md:w-auto items-center gap-3">
+            <div class="relative w-full md:w-64">
+                <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" placeholder="Search applications..."
+                    class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all shadow-sm">
+                <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <button (click)="loadApplications()" 
+                class="flex shrink-0 items-center gap-2 bg-white border border-gray-200 text-gray-700 px-5 py-2.5 rounded-xl hover:bg-gray-50 transition-all shadow-sm active:scale-95 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-teal-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span class="font-semibold hidden sm:inline">Refresh</span>
             </button>
-
-
-            <button (click)="updateStatus('Rejected')"
-                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-
-                Reject
-
-            </button>
-
-
-            <button (click)="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
-
-                Close
-
-            </button>
-
         </div>
-
     </div>
 
+    <div *ngIf="isLoading" class="flex flex-col justify-center items-center py-20 bg-white rounded-2xl border border-gray-100 shadow-sm">
+        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-teal-500 mb-4"></div>
+        <p class="text-gray-500 font-medium">Loading applications...</p>
+    </div>
+    
+    <div *ngIf="errorMessage && !isLoading" class="bg-red-50 border border-red-100 text-red-600 px-6 py-4 rounded-xl flex items-center gap-3">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <p class="font-medium">{{ errorMessage }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && filteredApplications.length === 0" class="text-center py-24 bg-white rounded-2xl border border-gray-100 shadow-sm">
+        <div class="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100">
+            <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800">No applications found</h3>
+    </div>
+
+    <div *ngIf="!isLoading && applications.length > 0" class="bg-white shadow-sm rounded-2xl border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/50 border-b border-gray-100 text-gray-500 uppercase text-xs font-bold">
+                        <th class="p-5">Student</th>
+                        <th class="p-5">Position & Company</th>
+                        <th class="p-5 text-center">Status</th>
+                        <th class="p-5 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    <tr *ngFor="let app of paginatedApplications; let i = index" class="hover:bg-teal-50/30 transition-colors group">
+                        <td class="p-5">
+                            <div class="font-bold text-gray-800 text-base">{{app.student}}</div>
+                            <div class="text-xs text-teal-600 font-medium">{{app.studentEmail}}</div>
+                        </td>
+
+                        <td class="p-5">
+                            <div class="text-gray-800 font-semibold">{{app.job}}</div>
+                            <div class="text-xs text-gray-400">{{app.company}}</div>
+                        </td>
+
+                        <td class="p-5 text-center">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold border" [ngClass]="{
+                                'bg-amber-50 text-amber-700 border-amber-100': app.status === 'Pending',
+                                'bg-green-50 text-green-700 border-green-100': app.status === 'Approved',
+                                'bg-red-50 text-red-700 border-red-100': app.status === 'Rejected'
+                            }">
+                                {{app.status}}
+                            </span>
+                        </td>
+
+                        <td class="p-5">
+                            <div class="flex justify-end items-center gap-2">
+                                
+                                <ng-container *ngIf="app.status === 'Pending'">
+                                    <button (click)="updateRowStatus(app, 'Approved', $event)" 
+                                        class="bg-teal-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-green-700 transition-colors">
+                                        Approve
+                                    </button>
+                                    <button (click)="updateRowStatus(app, 'Rejected', $event)" 
+                                        class="bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-red-700 transition-colors">
+                                        Reject
+                                    </button>
+                                </ng-container>
+                                <button (click)="viewApplication(app)" 
+                                    class="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors" title="View Details">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination Footer -->
+    <div class="px-6 py-4 mt-4 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4" *ngIf="filteredApplications.length > itemsPerPage">
+      <div class="text-sm text-gray-500 font-medium">
+        Showing <span class="font-bold text-gray-700">{{ (currentPage - 1) * itemsPerPage + 1 }}</span> to 
+        <span class="font-bold text-gray-700">{{ Math.min(currentPage * itemsPerPage, filteredApplications.length) }}</span> of 
+        <span class="font-bold text-gray-700">{{ filteredApplications.length }}</span> entries
+      </div>
+      
+      <div class="flex items-center gap-1.5">
+        <button [disabled]="currentPage === 1" (click)="prevPage()" 
+                class="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm text-sm">
+          Previous
+        </button>
+        
+        <div class="flex items-center gap-1 hidden sm:flex">
+          <button *ngFor="let page of totalPagesArray" 
+                  (click)="goToPage(page)"
+                  [class.bg-teal-600]="currentPage === page"
+                  [class.text-white]="currentPage === page"
+                  [class.border-transparent]="currentPage === page"
+                  [class.bg-white]="currentPage !== page"
+                  [class.text-gray-600]="currentPage !== page"
+                  [class.border-gray-200]="currentPage !== page"
+                  [class.hover:bg-gray-50]="currentPage !== page"
+                  class="w-8 h-8 flex items-center justify-center rounded-lg border text-sm font-bold transition-colors shadow-sm">
+            {{ page }}
+          </button>
+        </div>
+
+        <button [disabled]="currentPage === totalPages" (click)="nextPage()" 
+                class="px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm text-sm">
+          Next
+        </button>
+      </div>
+    </div>
+</div>
+
+<div *ngIf="isModalOpen" (click)="closeModal()"
+    class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-6">
+
+    <div (click)="$event.stopPropagation()" 
+        class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
+
+        <div class="flex items-center justify-between p-6 border-b border-gray-100 flex-shrink-0">
+            <h2 class="text-2xl font-bold text-gray-800">Application Details</h2>
+            <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+
+        <div class="p-8 overflow-y-auto custom-scrollbar space-y-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1">
+                    <h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider">Applicant Name</h3>
+                    <p class="text-lg font-bold text-gray-800">{{selectedApplication?.fullName || selectedApplication?.student}}</p>
+                    <p class="text-gray-500 font-medium">{{selectedApplication?.email || selectedApplication?.studentEmail}}</p>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider">Role & Company</h3>
+                    <p class="text-lg font-bold text-gray-800">{{selectedApplication?.job}}</p>
+                    <p class="text-gray-500 font-medium">{{selectedApplication?.company}}</p>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider mb-1">Contact & Location</h3>
+                    <p class="text-gray-700 font-medium">{{selectedApplication?.phone || '—'}}</p>
+                    <p class="text-gray-400 text-xs">{{selectedApplication?.currentLocation || 'Location not specified'}}</p>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider mb-1">Expected Salary</h3>
+                    <p class="text-gray-800 font-bold">{{selectedApplication?.expectedSalary || 'Negotiable'}}</p>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 space-y-4">
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase mb-2">Education & Experience</h4>
+                    <p class="text-gray-700"><span class="font-bold">Edu:</span> {{selectedApplication?.qualification || '—'}}</p>
+                    <p class="text-gray-700 mt-1"><span class="font-bold">Exp:</span> {{selectedApplication?.experience || '—'}}</p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase mb-2">Skills</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <p class="text-gray-700 leading-relaxed">{{selectedApplication?.skills || 'No skills listed'}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold text-teal-600 uppercase tracking-wider">Portfolio Projects</h3>
+                <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{selectedApplication?.projects || 'No projects listed'}}</p>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-gray-400 uppercase">Status:</span>
+                    <span class="px-2 py-0.5 rounded text-xs font-bold border" [ngClass]="{
+                        'bg-amber-50 text-amber-700 border-amber-100': selectedApplication?.status === 'Pending',
+                        'bg-green-50 text-green-700 border-green-100': selectedApplication?.status === 'Approved',
+                        'bg-red-50 text-red-700 border-red-100': selectedApplication?.status === 'Rejected'
+                    }">{{selectedApplication?.status}}</span>
+                </div>
+
+                <a *ngIf="selectedApplication?.resume" 
+                   [href]="getResumeUrl(selectedApplication.resume)" 
+                   target="_blank"
+                   class="flex items-center gap-2 bg-teal-50 text-teal-600 px-4 py-2 rounded-xl font-bold hover:bg-teal-100 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    View Resume
+                </a>
+            </div>
+        </div>
+
+        <div class="p-6 border-t border-gray-100 bg-gray-50/50 flex flex-wrap justify-end gap-3">
+            <button (click)="closeModal()" class="px-6 py-2.5 text-gray-500 font-semibold hover:bg-gray-100 rounded-xl transition-colors">
+                Cancel
+            </button>
+            <ng-container *ngIf="selectedApplication?.status === 'Pending'">
+                <button (click)="updateStatus('Rejected')" class="px-6 py-2.5 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors">
+                    Reject
+                </button>
+                <button (click)="updateStatus('Approved')" class="px-6 py-2.5 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition-colors">
+                    Approve
+                </button>
+            </ng-container>
+        </div>
+    </div>
 </div>

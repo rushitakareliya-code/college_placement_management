@@ -330,6 +330,7 @@ const updateJob = async (req, res, next) => {
       requirements,
       companyId,
       deadline,
+      isActive,
     } = req.body;
 
     if (!role || !companyId || !description) {

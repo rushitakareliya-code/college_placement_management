@@ -29,6 +29,61 @@ export class Students implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Pagination state
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  public Math = Math;
+
+  // Search state
+  searchQuery: string = '';
+
+  onSearch() {
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+
+  get filteredStudents() {
+    if (!this.searchQuery) return this.students;
+    const query = this.searchQuery.toLowerCase();
+    return this.students.filter(s => 
+      s.name?.toLowerCase().includes(query) ||
+      s.email?.toLowerCase().includes(query) ||
+      s.number?.includes(query)
+    );
+  }
+
+  get paginatedStudents() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredStudents.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredStudents.length / this.itemsPerPage);
+  }
+
+  get totalPagesArray() {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.cdr.detectChanges();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.cdr.detectChanges();
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.cdr.detectChanges();
+  }
+
   ngOnInit(): void {
     this.loadStudents();
   }

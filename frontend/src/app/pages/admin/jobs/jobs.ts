@@ -31,6 +31,61 @@ export class Jobs implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
+  // Pagination state
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  public Math = Math;
+
+  // Search state
+  searchQuery: string = '';
+
+  onSearch() {
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+
+  get filteredJobs() {
+    if (!this.searchQuery) return this.jobs;
+    const query = this.searchQuery.toLowerCase();
+    return this.jobs.filter(j => 
+      j.role?.toLowerCase().includes(query) ||
+      j.companyName?.toLowerCase().includes(query) ||
+      j.location?.toLowerCase().includes(query)
+    );
+  }
+
+  get paginatedJobs() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredJobs.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredJobs.length / this.itemsPerPage);
+  }
+
+  get totalPagesArray() {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.cdr.detectChanges();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.cdr.detectChanges();
+    }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.cdr.detectChanges();
+  }
+
   ngOnInit(): void {
     this.loadCompanies();
     this.loadJobs();
@@ -57,7 +112,7 @@ export class Jobs implements OnInit {
       applicantCount: 0,
       createdAt: undefined as string | undefined,
       updatedAt: undefined as string | undefined,
-      isActive: undefined as boolean | undefined,
+      isActive: true,
     };
   }
 
@@ -127,6 +182,7 @@ export class Jobs implements OnInit {
       description: this.job.description,
       responsibilities: this.linesToArray(this.job.responsibilitiesText),
       requirements: this.linesToArray(this.job.requirementsText),
+      isActive: this.job.isActive,
     };
   }
 
@@ -251,6 +307,27 @@ export class Jobs implements OnInit {
       error: (err) => {
         console.error('Failed to delete job', err);
         this.toastr.error('Failed to delete job');
+      },
+    });
+  }
+
+  toggleJobActive(index: number) {
+    const job = this.jobs[index];
+    if (!job || !job._id) {
+      this.toastr.error('Invalid job selected');
+      return;
+    }
+    const newActiveStatus = !job.isActive;
+    this.jobService.updateJob(job._id, { isActive: newActiveStatus }).subscribe({
+      next: (updatedJob: any) => {
+        const updated = updatedJob?.job || updatedJob;
+        this.jobs[index] = this.mapJobToView(updated);
+        this.toastr.success(`Job ${newActiveStatus ? 'activated' : 'deactivated'} successfully`);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to toggle job status', err);
+        this.toastr.error('Failed to update job status');
       },
     });
   }

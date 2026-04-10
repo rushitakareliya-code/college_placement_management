@@ -67,6 +67,15 @@ const updatePlacementStatus = async (req, res, next) => {
       return res.status(404).json({ message: 'Placement not found' });
     }
 
+    // Also update the job's applicants array status
+    if (updated.job && updated.job._id) {
+      const Job = require('../models/Job');
+      await Job.updateOne(
+        { _id: updated.job._id, "applicants.student": updated.student._id },
+        { $set: { "applicants.$.status": status } }
+      );
+    }
+
     res.json(updated);
   } catch (error) {
     next(error);
