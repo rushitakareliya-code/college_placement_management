@@ -41,10 +41,9 @@ export class UserNotices implements OnInit {
   }
 
   clearNoticeCount(): void {
-    const latestCreatedAt = this.notices.length
-      ? this.notices[0]?.createdAt
-      : null;
-    const seenAt = latestCreatedAt ? new Date(latestCreatedAt).getTime() : Date.now();
-    localStorage.setItem('student_notices_last_seen_at', String(seenAt));
+    // Store current time so every notice visible right now is marked as seen.
+    // The navbar uses createdAt > seenAt, so any notice created strictly
+    // after this moment will still show as unread.
+    localStorage.setItem('student_notices_last_seen_at', String(Date.now()));
   }
 }

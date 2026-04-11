@@ -44,16 +44,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
   checkAuth() {
     const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
-    this.isLoggedIn = false;
-    this.unreadNoticeCount = 0;
     if (token && userStr) {
       const user = JSON.parse(userStr);
       if (user.role === 'student') {
+        const wasLoggedIn = this.isLoggedIn;
         this.isLoggedIn = true;
         this.studentName = user.name?.split(' ')[0] || 'Student';
-        this.fetchUnreadNoticeCount();
+        // Only fetch on first login detection; polling handles subsequent updates.
+        if (!wasLoggedIn) {
+          this.fetchUnreadNoticeCount();
+        }
+        return;
       }
     }
+    // Not logged in – clear state
+    this.isLoggedIn = false;
+    this.unreadNoticeCount = 0;
   }
 
   startNoticePolling(): void {
