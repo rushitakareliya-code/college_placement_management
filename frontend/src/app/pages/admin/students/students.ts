@@ -19,6 +19,9 @@ export class Students implements OnInit {
   editIndex: number | null = null;
   isModalOpen = false;
 
+  selectedStudent: any = null;
+  isViewModalOpen = false;
+
   passwordMismatch = false;
   emailTaken = false;
   formError = '';
@@ -244,6 +247,19 @@ export class Students implements OnInit {
     this.passwordMismatch = false;
     this.emailTaken = false;
     this.formError = '';
+  }
+
+  // ✅ View Student
+  viewStudent(index: number) {
+    this.selectedStudent = this.students[index];
+    this.isViewModalOpen = true;
+  }
+
+  // ✅ Close View Modal
+  closeViewModal() {
+    this.isViewModalOpen = false;
+    this.selectedStudent = null;
+    this.cdr.detectChanges();
   }
 
   // ✅ Delete Student

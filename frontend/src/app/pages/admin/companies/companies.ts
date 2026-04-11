@@ -19,6 +19,9 @@ export class Companies implements OnInit {
   editIndex: number | null = null;
   isModalOpen = false;
 
+  selectedCompany: any = null;
+  isViewModalOpen = false;
+
   emailTaken: boolean = false;
   formError:string  = '';
 
@@ -198,6 +201,17 @@ export class Companies implements OnInit {
 
     this.editIndex = index;
     this.isModalOpen = true;
+  }
+
+  viewCompany(index: number) {
+    this.selectedCompany = this.companies[index];
+    this.isViewModalOpen = true;
+  }
+
+  closeViewModal() {
+    this.isViewModalOpen = false;
+    this.selectedCompany = null;
+    this.cdr.detectChanges();
   }
 
   deleteCompany(index: number) {

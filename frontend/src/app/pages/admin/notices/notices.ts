@@ -23,6 +23,9 @@ export class Notices implements OnInit {
   editIndex: number | null = null;
   formError = '';
 
+  selectedNotice: any = null;
+  isViewModalOpen = false;
+
   constructor(
     private noticeService: NoticeService,
     private toastr: ToastrService,
@@ -203,6 +206,17 @@ export class Notices implements OnInit {
 
     this.isModalOpen = true;
 
+  }
+
+  viewNotice(index: number) {
+    this.selectedNotice = this.notices[index];
+    this.isViewModalOpen = true;
+  }
+
+  closeViewModal() {
+    this.isViewModalOpen = false;
+    this.selectedNotice = null;
+    this.cdr.detectChanges();
   }
 
   onFilesSelected(event: Event) {

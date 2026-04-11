@@ -62,10 +62,16 @@
                     </td>
                     <td class="p-5 text-right">
                         <div class="flex justify-end items-center gap-2">
-                            <button (click)="editCompany((currentPage - 1) * itemsPerPage + i)" class="p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all">
+                            <button (click)="viewCompany((currentPage - 1) * itemsPerPage + i)" class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="View Details">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                            <button (click)="editCompany((currentPage - 1) * itemsPerPage + i)" class="p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all" title="Edit">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                             </button>
-                            <button (click)="deleteCompany((currentPage - 1) * itemsPerPage + i)" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                            <button (click)="deleteCompany((currentPage - 1) * itemsPerPage + i)" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             </button>
                         </div>
@@ -219,5 +225,72 @@
                 </button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- View Detail Modal -->
+<div *ngIf="isViewModalOpen" (click)="closeViewModal()" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-6 lg:p-12 overflow-y-auto">
+    <div (click)="$event.stopPropagation()" class="bg-white w-full max-w-2xl my-auto rounded-2xl shadow-2xl transform transition-all animate-in fade-in zoom-in duration-200 overflow-hidden flex flex-col max-h-[90vh]">
+        <div class="flex items-center justify-between p-6 border-b border-gray-100 flex-shrink-0 bg-gray-50/50">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Company Details
+            </h2>
+            <button (click)="closeViewModal()" class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto custom-scrollbar" *ngIf="selectedCompany">
+            <div class="space-y-6">
+                <!-- Data display grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <p class="text-sm font-semibold mb-1 text-gray-500 uppercase tracking-wider">Company Name</p>
+                        <p class="text-gray-800 font-medium text-lg">{{ selectedCompany.companyName }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <p class="text-sm font-semibold mb-1 text-gray-500 uppercase tracking-wider">Email Address</p>
+                        <p class="text-teal-600 font-medium text-lg break-all">{{ selectedCompany.companyEmail }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <p class="text-sm font-semibold mb-1 text-gray-500 uppercase tracking-wider">Phone Number</p>
+                        <p class="text-gray-800 font-medium text-lg">{{ selectedCompany.companyPhone }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <p class="text-sm font-semibold mb-1 text-gray-500 uppercase tracking-wider">Location</p>
+                        <p class="text-gray-800 font-medium text-lg">{{ selectedCompany.companyLocation }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <p class="text-sm font-semibold mb-1 text-gray-500 uppercase tracking-wider">Website URL</p>
+                        <a *ngIf="selectedCompany.companyWebsite" [href]="selectedCompany.companyWebsite" target="_blank" class="text-teal-600 font-medium text-lg break-all hover:underline">{{ selectedCompany.companyWebsite }}</a>
+                        <p *ngIf="!selectedCompany.companyWebsite" class="text-gray-800 font-medium text-lg">N/A</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <p class="text-sm font-semibold mb-1 text-gray-500 uppercase tracking-wider">Difficulty</p>
+                        <p class="font-medium text-lg"
+                            [ngClass]="{
+                                'text-green-600': selectedCompany.companyDifficulty === 'Easy',
+                                'text-yellow-600': selectedCompany.companyDifficulty === 'Moderate',
+                                'text-red-600': selectedCompany.companyDifficulty === 'Hard'
+                            }">
+                            {{ selectedCompany.companyDifficulty }}
+                        </p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 md:col-span-2">
+                        <p class="text-sm font-semibold mb-1 text-gray-500 uppercase tracking-wider">Description</p>
+                        <p class="text-gray-800 font-medium whitespace-pre-line">{{ selectedCompany.companyDescription }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end p-6 border-t border-gray-100 flex-shrink-0 bg-gray-50/50">
+            <button (click)="closeViewModal()" class="px-6 py-2.5 bg-gray-800 text-white font-semibold rounded-xl hover:bg-gray-700 shadow-md active:scale-95 transition-all">
+                Close
+            </button>
+        </div>
     </div>
 </div>
