@@ -89,16 +89,25 @@
 
     <div *ngIf="!isLoading && !loadError && displayJobs.length > 0" class="grid md:grid-cols-3 gap-8">
       <div *ngFor="let job of displayJobs"
-        class="bg-white border border-gray-100 rounded-2xl p-7 hover:border-teal-200 transition-all group">
+        class="relative bg-white border border-gray-100 rounded-2xl p-7 hover:border-teal-200 transition-all group overflow-hidden">
+
+        <!-- Top-Left Applied Badge -->
+        <div *ngIf="job.applied"
+          class="absolute top-0 left-0 bg-[#0eb39e] text-white px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-br-2xl flex items-center gap-1.5 shadow-sm z-10">
+          <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+          Applied
+        </div>
 
         <div class="flex justify-between items-start mb-4">
           <h3 class="text-xl font-bold text-gray-800 group-hover:text-[#0eb39e] transition-colors">
             {{job.role}}
           </h3>
-          <span
-            class="px-3 py-1 text-xs font-medium rounded-full bg-orange-50 text-orange-600 border border-orange-100">
-            {{ job.type || 'Open' }}
-          </span>
+          <div class="flex flex-col items-end gap-1.5">
+            <span
+              class="px-3 py-1 text-xs font-medium rounded-full bg-orange-50 text-orange-600 border border-orange-100">
+              {{ job.type || 'Open' }}
+            </span>
+          </div>
         </div>
 
         <div class="space-y-2 mb-8">

@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../../components/navbar/navbar';
 import { JobService } from '../../../services/job';
+import { PlacementService } from '../../../services/placement';
 import { FormsModule } from '@angular/forms';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 interface JobSummary {
   _id: string; // job ID for backend fetch
@@ -12,6 +15,7 @@ interface JobSummary {
   location: string;
   exp: string;
   type?: string;
+  applied?: boolean;
 }
 
 @Component({
@@ -38,6 +42,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
     private jobService: JobService,
+    private placementService: PlacementService,
     private cdr: ChangeDetectorRef  
   ) {}
 
@@ -45,7 +50,7 @@ export class HomeComponent implements OnInit {
     this.loadJobs();
   }
 
-  private mapJob(job: any): JobSummary {
+  private mapJob(job: any, appliedIds: Set<string>): JobSummary {
     return {
       _id: job?._id,
       role: job?.role ?? '',
@@ -53,6 +58,7 @@ export class HomeComponent implements OnInit {
       location: job?.location ?? '',
       exp: job?.experience ?? job?.exp ?? '',
       type: job?.type ?? '',
+      applied: appliedIds.has(job?._id)
     };
   }
 
@@ -108,15 +114,35 @@ export class HomeComponent implements OnInit {
 
   private loadJobs(): void {
     this.isLoading = true;
-    this.loadError = '';  
+    this.loadError = '';
 
-    this.jobService.getJobs().subscribe({
-      next: (data: any[]) => {
+    const userRaw = localStorage.getItem('user');
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    const studentId = (user?.role === 'student') ? (user?.id || user?._id) : null;
+
+    const jobs$ = this.jobService.getJobs();
+    const placements$ = studentId 
+      ? this.placementService.getStudentApplications(studentId).pipe(catchError(() => of([])))
+      : of([]);
+
+    forkJoin({
+      jobs: jobs$,
+      placements: placements$
+    }).subscribe({
+      next: ({ jobs, placements }) => {
+        const appliedJobIds = new Set<string>();
+        if (Array.isArray(placements)) {
+          placements.forEach((p: any) => {
+            const jobId = p.job?._id || p.job;
+            if (jobId) appliedJobIds.add(jobId.toString());
+          });
+        }
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        this.allJobs = (data || [])
-          .filter((j) => {
+        this.allJobs = (jobs || [])
+          .filter((j: any) => {
             if (j.isActive === false) return false;
             if (j.deadline) {
               const deadlineDate = new Date(j.deadline);
@@ -127,7 +153,8 @@ export class HomeComponent implements OnInit {
             }
             return true;
           })
-          .map((j) => this.mapJob(j));
+          .map((j: any) => this.mapJob(j, appliedJobIds));
+          
         this.currentPage = 1;
         this.applyFiltersAndPagination();
         this.isLoading = false;
@@ -138,7 +165,8 @@ export class HomeComponent implements OnInit {
         this.loadError = 'Failed to load jobs';
         this.displayJobs = [];
         this.isLoading = false;
-      },
+        this.cdr.detectChanges();
+      }
     });
   }
 
