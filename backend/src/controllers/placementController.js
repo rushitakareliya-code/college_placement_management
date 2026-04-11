@@ -1,6 +1,8 @@
 const Placement = require('../models/Placement');
 const Student = require('../models/Student');
 const Company = require('../models/Company');
+const { dispatchEmail } = require('../config/emailQueue');
+const { renderTemplate } = require('../config/emailTemplates');
 
 const getAllPlacements = async (req, res, next) => {
   try {
@@ -75,6 +77,30 @@ const updatePlacementStatus = async (req, res, next) => {
         { $set: { "applicants.$.status": status } }
       );
     }
+
+    // ── Send status-update email (non-blocking) ─────────────────────────────
+    const studentEmail = updated.student && updated.student.email;
+    if (studentEmail && (status === 'Selected' || status === 'Rejected')) {
+      const templateName = status === 'Selected' ? 'applicationAccepted' : 'applicationRejected';
+      const subjectLine  = status === 'Selected'
+        ? `🎉 Congratulations! Your application was accepted – ${updated.jobTitle || updated.job?.role || 'the position'}`
+        : `📋 Application Update – ${updated.jobTitle || updated.job?.role || 'your application'} at ${updated.jobCompany || updated.company?.companyName || ''}`;
+
+      dispatchEmail({
+        to:      studentEmail,
+        subject: subjectLine,
+        html:    renderTemplate(templateName, {
+          studentName: updated.student.name  || 'Student',
+          jobRole:     updated.jobTitle      || updated.job?.role        || 'the position',
+          company:     updated.jobCompany    || updated.company?.companyName || 'the company',
+          updatedAt:   new Date().toLocaleString(),
+          year:        new Date().getFullYear(),
+        }),
+      }).catch((emailErr) => {
+        console.error('[EmailQueue] Failed to send status-update email:', emailErr.message);
+      });
+    }
+    // ───────────────────────────────────────────────────────────────────────
 
     res.json(updated);
   } catch (error) {
