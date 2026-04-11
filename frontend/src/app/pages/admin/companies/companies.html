@@ -165,9 +165,9 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Phone Number</label>
                     <input #companyPhoneRef="ngModel" type="text" [(ngModel)]="company.companyPhone" name="companyPhone"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required pattern="^[0-9]{10,15}$" maxlength="15" placeholder="e.g. 1800123456">
+                        required pattern="^[0-9]{10}$" maxlength="10" placeholder="e.g. 9876543210">
                     <p *ngIf="companyPhoneRef.errors?.['required'] && companyPhoneRef.touched" class="text-red-500 text-xs mt-1 font-medium">Phone number is required.</p>
-                    <p *ngIf="companyPhoneRef.errors?.['pattern'] && companyPhoneRef.touched" class="text-red-500 text-xs mt-1 font-medium">Phone number must be 10 to 15 digits.</p>
+                    <p *ngIf="companyPhoneRef.errors?.['pattern'] && companyPhoneRef.touched" class="text-red-500 text-xs mt-1 font-medium">Phone number must be exactly 10 digits.</p>
                 </div>
 
                 <div class="md:col-span-2 space-y-4 pt-4">

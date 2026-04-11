@@ -145,6 +145,10 @@ const addCompany = async (req, res) => {
       return res.status(400).json({ message: 'Required fields missing' });
     }
 
+    if (companyPhone && !/^[0-9]{10}$/.test(companyPhone)) {
+      return res.status(400).json({ message: 'Phone number must be exactly 10 digits.' });
+    }
+
     // ✅ 2. Check duplicate email
     const existing = await Company.findOne({ companyEmail });
     if (existing) {
@@ -187,6 +191,10 @@ const updateCompany = async (req, res) => {
     // 🔥 Remove password if empty
     if (!req.body.companyPassword) {
       delete req.body.companyPassword;
+    }
+
+    if (req.body.companyPhone && !/^[0-9]{10}$/.test(req.body.companyPhone)) {
+      return res.status(400).json({ message: 'Phone number must be exactly 10 digits.' });
     }
 
     const updatedCompany = await Company.findByIdAndUpdate(
