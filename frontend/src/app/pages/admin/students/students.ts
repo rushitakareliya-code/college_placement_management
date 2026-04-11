@@ -49,9 +49,9 @@ export class Students implements OnInit {
     if (!this.searchQuery) return this.students;
     const query = this.searchQuery.toLowerCase();
     return this.students.filter(s => 
-      s.name?.toLowerCase().includes(query) ||
-      s.email?.toLowerCase().includes(query) ||
-      s.number?.includes(query)
+      (s.name && s.name.toLowerCase().includes(query)) ||
+      (s.email && s.email.toLowerCase().includes(query)) ||
+      (s.number && String(s.number).toLowerCase().includes(query))
     );
   }
 

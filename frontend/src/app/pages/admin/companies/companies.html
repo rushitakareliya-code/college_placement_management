@@ -146,7 +146,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Company Name</label>
                     <input #companyNameRef="ngModel" type="text" [(ngModel)]="company.companyName" name="companyName"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required minlength="2" maxlength="100" pattern="^[A-Za-z0-9 .,&()'-]+$">
+                        required minlength="2" maxlength="100" pattern="^[A-Za-z0-9 .,&()'-]+$" placeholder="e.g. Acme Corp">
                     <p *ngIf="companyNameRef.errors?.['required'] && companyNameRef.touched" class="text-red-500 text-xs mt-1 font-medium">Company name is required.</p>
                     <p *ngIf="companyNameRef.errors?.['pattern'] && companyNameRef.touched" class="text-red-500 text-xs mt-1 font-medium">Company name contains invalid characters.</p>
                     <p *ngIf="(companyNameRef.errors?.['minlength'] || companyNameRef.errors?.['maxlength']) && companyNameRef.touched" class="text-red-500 text-xs mt-1 font-medium">Company name must be between 2 and 100 characters.</p>
@@ -156,7 +156,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Email</label>
                     <input #companyEmailRef="ngModel" type="email" [(ngModel)]="company.companyEmail" name="companyEmail"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required email>
+                        required email placeholder="e.g. contact@acme.com">
                     <p *ngIf="companyEmailRef.errors?.['required'] && companyEmailRef.touched" class="text-red-500 text-xs mt-1 font-medium">Email is required.</p>
                     <p *ngIf="companyEmailRef.errors?.['email'] && companyEmailRef.touched" class="text-red-500 text-xs mt-1 font-medium">Enter a valid email address.</p>
                 </div>
@@ -165,7 +165,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Phone Number</label>
                     <input #companyPhoneRef="ngModel" type="text" [(ngModel)]="company.companyPhone" name="companyPhone"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required pattern="^[0-9]{10,15}$" maxlength="15">
+                        required pattern="^[0-9]{10,15}$" maxlength="15" placeholder="e.g. 1800123456">
                     <p *ngIf="companyPhoneRef.errors?.['required'] && companyPhoneRef.touched" class="text-red-500 text-xs mt-1 font-medium">Phone number is required.</p>
                     <p *ngIf="companyPhoneRef.errors?.['pattern'] && companyPhoneRef.touched" class="text-red-500 text-xs mt-1 font-medium">Phone number must be 10 to 15 digits.</p>
                 </div>
@@ -178,7 +178,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Website URL</label>
                     <input #companyWebsiteRef="ngModel" type="text" [(ngModel)]="company.companyWebsite" name="companyWebsite"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required pattern="^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$">
+                        required pattern="^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$" placeholder="e.g. https://www.acme.com">
                     <p *ngIf="companyWebsiteRef.errors?.['required'] && companyWebsiteRef.touched" class="text-red-500 text-xs mt-1 font-medium">Website URL is required.</p>
                     <p *ngIf="companyWebsiteRef.errors?.['pattern'] && companyWebsiteRef.touched" class="text-red-500 text-xs mt-1 font-medium">Enter a valid website URL.</p>
                 </div>
@@ -199,7 +199,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Location</label>
                     <input #companyLocationRef="ngModel" type="text" [(ngModel)]="company.companyLocation" name="companyLocation"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required minlength="2" maxlength="120" pattern="^[A-Za-z0-9 ,.-]+$">
+                        required minlength="2" maxlength="120" pattern="^[A-Za-z0-9 ,.-]+$" placeholder="e.g. San Francisco, CA">
                     <p *ngIf="companyLocationRef.errors?.['required'] && companyLocationRef.touched" class="text-red-500 text-xs mt-1 font-medium">Location is required.</p>
                     <p *ngIf="companyLocationRef.errors?.['pattern'] && companyLocationRef.touched" class="text-red-500 text-xs mt-1 font-medium">Location contains invalid characters.</p>
                 </div>
@@ -208,7 +208,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Description</label>
                     <textarea #companyDescriptionRef="ngModel" [(ngModel)]="company.companyDescription" name="companyDescription" rows="3"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required minlength="10" maxlength="500"></textarea>
+                        required minlength="10" maxlength="500" placeholder="Provide a brief description of the company..."></textarea>
                     <p *ngIf="companyDescriptionRef.errors?.['required'] && companyDescriptionRef.touched" class="text-red-500 text-xs mt-1 font-medium">Description is required.</p>
                     <p *ngIf="(companyDescriptionRef.errors?.['minlength'] || companyDescriptionRef.errors?.['maxlength']) && companyDescriptionRef.touched" class="text-red-500 text-xs mt-1 font-medium">Description must be between 10 and 500 characters.</p>
                 </div>

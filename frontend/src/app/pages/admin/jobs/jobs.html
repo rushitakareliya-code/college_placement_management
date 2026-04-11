@@ -179,7 +179,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Role Title</label>
                     <input #roleRef="ngModel" type="text" [(ngModel)]="job.role" name="role"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required minlength="2" maxlength="80" pattern="^[A-Za-z ]+$">
+                        required minlength="2" maxlength="80" pattern="^[A-Za-z ]+$" placeholder="e.g. Software Developer">
                     <p *ngIf="roleRef.errors?.['required'] && roleRef.touched"
                         class="text-red-500 text-xs mt-1 font-medium">Role title is required.</p>
                     <p *ngIf="roleRef.errors?.['pattern'] && roleRef.touched"
@@ -203,7 +203,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Location</label>
                     <input #locationRef="ngModel" type="text" [(ngModel)]="job.location" name="location"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required maxlength="100" pattern="^[A-Za-z0-9 ,.-]+$">
+                        required maxlength="100" pattern="^[A-Za-z0-9 ,.-]+$" placeholder="e.g. San Francisco, CA">
                     <p *ngIf="locationRef.errors?.['required'] && locationRef.touched"
                         class="text-red-500 text-xs mt-1 font-medium">Location is required.</p>
                     <p *ngIf="locationRef.errors?.['pattern'] && locationRef.touched"
@@ -225,7 +225,7 @@
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Application Deadline</label>
-                    <input #deadlineRef="ngModel" type="date" [(ngModel)]="job.deadline" name="deadline"
+                    <input #deadlineRef="ngModel" type="date" [(ngModel)]="job.deadline" name="deadline" [min]="getTodayDate()"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all cursor-pointer">
                     <p class="text-gray-400 text-xs mt-1 font-medium">Once this date passes, the job will be invisible
                         to students.</p>
@@ -276,7 +276,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Working Days</label>
                     <input #workingDaysRef="ngModel" type="text" [(ngModel)]="job.workingDays" name="workingDays"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required maxlength="40" pattern="^[A-Za-z0-9 ,-]+$">
+                        required maxlength="40" pattern="^[A-Za-z0-9 ,-]+$" placeholder="e.g. Monday to Friday">
                     <p *ngIf="workingDaysRef.errors?.['required'] && workingDaysRef.touched"
                         class="text-red-500 text-xs mt-1 font-medium">Working days is required.</p>
                     <p *ngIf="workingDaysRef.errors?.['pattern'] && workingDaysRef.touched"
@@ -287,7 +287,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Week Off</label>
                     <input #weekOffRef="ngModel" type="text" [(ngModel)]="job.weekOff" name="weekOff"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required maxlength="40" pattern="^[A-Za-z0-9 ,-]+$">
+                        required maxlength="40" pattern="^[A-Za-z0-9 ,-]+$" placeholder="e.g. Saturday, Sunday">
                     <p *ngIf="weekOffRef.errors?.['required'] && weekOffRef.touched"
                         class="text-red-500 text-xs mt-1 font-medium">Week off is required.</p>
                     <p *ngIf="weekOffRef.errors?.['pattern'] && weekOffRef.touched"
@@ -298,7 +298,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Shift</label>
                     <input #shiftRef="ngModel" type="text" [(ngModel)]="job.shift" name="shift"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required maxlength="40" pattern="^[A-Za-z0-9 :.-]+$">
+                        required maxlength="40" pattern="^[A-Za-z0-9 :.-]+$" placeholder="e.g. 9:00 AM - 5:00 PM">
                     <p *ngIf="shiftRef.errors?.['required'] && shiftRef.touched"
                         class="text-red-500 text-xs mt-1 font-medium">Shift is required.</p>
                     <p *ngIf="shiftRef.errors?.['pattern'] && shiftRef.touched"
@@ -313,7 +313,7 @@
                     <label class="block text-sm font-semibold mb-1.5 text-gray-700">Description</label>
                     <textarea #descriptionRef="ngModel" [(ngModel)]="job.description" name="description" rows="3"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all"
-                        required></textarea>
+                        required placeholder="Enter detailed job description..."></textarea>
                     <p *ngIf="descriptionRef.errors?.['required'] && descriptionRef.touched"
                         class="text-red-500 text-xs mt-1 font-medium">Description is required.</p>
                 </div>
@@ -324,7 +324,7 @@
                     <textarea #responsibilitiesRef="ngModel" [(ngModel)]="job.responsibilitiesText"
                         name="responsibilitiesText" rows="3"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all font-mono text-xs"
-                        required minlength="5"></textarea>
+                        required minlength="5" placeholder="Enter job responsibilities..."></textarea>
                     <p *ngIf="responsibilitiesRef.errors?.['required'] && responsibilitiesRef.touched"
                         class="text-red-500 text-xs mt-1 font-medium">Responsibilities are required.</p>
                 </div>
@@ -334,7 +334,7 @@
                     <textarea #requirementsRef="ngModel" [(ngModel)]="job.requirementsText" name="requirementsText"
                         rows="3"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 outline-none transition-all font-mono text-xs"
-                        required minlength="5"></textarea>
+                        required minlength="5" placeholder="Enter job requirements..."></textarea>
                     <p *ngIf="requirementsRef.errors?.['required'] && requirementsRef.touched"
                         class="text-red-500 text-xs mt-1 font-medium">Requirements are required.</p>
                 </div>

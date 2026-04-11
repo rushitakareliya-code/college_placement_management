@@ -116,6 +116,11 @@ export class Jobs implements OnInit {
     };
   }
 
+  getTodayDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  }
+
   private linesToArray(text: string): string[] {
     if (!text || !String(text).trim()) return [];
     return String(text)
