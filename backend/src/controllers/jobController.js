@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Job = require('../models/Job');
 const Company = require('../models/Company');
 const Placement = require('../models/Placement');
+const { dispatchEmail } = require('../config/emailQueue');
+const { renderTemplate } = require('../config/emailTemplates');
 
 // Get all jobs (for job listing page)
 const getAllJobs = async (req, res, next) => {
@@ -174,6 +176,24 @@ const applyForJob = async (req, res, next) => {
     job.applicants = job.applicants || [];
     job.applicants.push({ student: validStudentId, status: 'Pending' });
     await job.save();
+
+    // ── Dispatch application-confirmation email (non-blocking) ─────────────
+    if (email) {
+      dispatchEmail({
+        to: email,
+        subject: `✅ Application Received – ${job.role} at ${job.company}`,
+        html: renderTemplate('applicationConfirmation', {
+          studentName: fullName || 'Student',
+          jobRole:     job.role,
+          company:     job.company,
+          appliedAt:   new Date().toLocaleString(),
+          year:        new Date().getFullYear(),
+        }),
+      }).catch((emailErr) => {
+        console.error('[EmailQueue] Failed to enqueue application email:', emailErr.message);
+      });
+    }
+    // ──────────────────────────────────────────────────────────────────────
 
     res.status(201).json({
       message: 'Application submitted successfully!',

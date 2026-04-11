@@ -32,6 +32,7 @@ export class AdminLayout implements OnInit, OnDestroy {
     jobs: 'Jobs',
     applications: 'Applications',
     notices: 'Notices',
+    'email-settings': 'Email Settings',
   };
 
   constructor(private router: Router) {}

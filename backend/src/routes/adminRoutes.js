@@ -26,6 +26,14 @@ const {
 
 } = require('../controllers/adminController');
 
+const {
+  getSmtpConfig,
+  saveSmtpConfig,
+  deleteSmtpConfig,
+  sendTestEmail,
+  getQueueStatus,
+} = require('../controllers/emailController');
+
 const uploadsDir = path.join(__dirname, '../../uploads/notices');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
@@ -76,5 +84,12 @@ router.post('/notices', upload.array('attachments', 10), addNotice);
 router.put('/notices/:noticeId', upload.array('attachments', 10), updateNotice);
 router.delete('/notices/:noticeId', deleteNotice);
 router.get('/placement-report', getPlacementReport);
+
+// ── Email / SMTP config routes ────────────────────────────────────────────────
+router.get('/email-settings', getSmtpConfig);
+router.post('/email-settings', saveSmtpConfig);
+router.delete('/email-settings', deleteSmtpConfig);
+router.post('/email-settings/test', sendTestEmail);
+router.get('/email-settings/queue-status', getQueueStatus);
 
 module.exports = router;

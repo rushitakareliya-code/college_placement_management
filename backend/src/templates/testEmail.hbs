@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMTP Test – PlacementHub (Mailtrap)</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f8fafc;font-family:'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;-webkit-font-smoothing:antialiased;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#f8fafc;padding:40px 10px;">
+    <tr>
+      <td align="center">
+        <table width="580" cellpadding="0" cellspacing="0" role="presentation" style="max-width:580px;width:100%;background-color:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);border:1px solid #eef2f6;">
+          
+          <tr>
+            <td style="padding:40px 40px 20px 40px;">
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td>
+                    <div style="background:linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);width:40px;height:40px;border-radius:10px;display:inline-block;text-align:center;line-height:40px;vertical-align:middle;">
+                      <span style="color:#ffffff;font-size:20px;font-weight:800;font-family:Arial, sans-serif;">P</span>
+                    </div>
+                    <span style="color:#0f172a;font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-left:10px;vertical-align:middle;display:inline-block;">PlacementHub</span>
+                    <span style="background-color:#f1f5f9;color:#64748b;font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;margin-left:12px;vertical-align:middle;border:1px solid #e2e8f0;display:inline-block;letter-spacing:0.5px;">
+                      MAILTRAP TEST
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:0 40px;">
+              <h1 style="color:#0f172a;margin:20px 0 12px;font-size:24px;font-weight:800;line-height:1.2;letter-spacing:-0.02em;">
+                ✅ SMTP Test Successful
+              </h1>
+              <p style="color:#64748b;margin:0 0 32px;font-size:15px;line-height:1.6;">
+                Your <strong>Mailtrap</strong> SMTP settings are configured correctly. This test email was dispatched directly from the <strong>Admin → Email Settings</strong> panel.
+              </p>
+
+              <div style="background-color:#ffffff;border:2px solid #f1f5f9;border-radius:20px;overflow:hidden;margin-bottom:28px;">
+                <div style="background-color:#f0fdf4;padding:12px 20px;border-bottom:2px solid #f1f5f9;">
+                  <span style="color:#16a34a;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;">
+                    Connection Parameters
+                  </span>
+                </div>
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="padding:8px 0;">
+                  <tr>
+                    <td style="padding:12px 20px;border-bottom:1px solid #f8fafc;">
+                      <span style="display:block;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:2px;">SMTP Host</span>
+                      <span style="color:#0f172a;font-size:14px;font-weight:600;">{{smtpHost}}</span>
+                    </td>
+                    <td style="padding:12px 20px;border-bottom:1px solid #f8fafc;">
+                      <span style="display:block;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:2px;">Port</span>
+                      <span style="color:#0f172a;font-size:14px;font-weight:600;">{{smtpPort}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding:12px 20px;border-bottom:1px solid #f8fafc;">
+                      <span style="display:block;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:2px;">From Identity</span>
+                      <span style="color:#0f172a;font-size:14px;font-weight:600;">{{fromName}} &lt;{{fromEmail}}&gt;</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="padding:12px 20px;">
+                      <span style="display:block;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:2px;">Sent to Recipient</span>
+                      <span style="color:#0f172a;font-size:14px;font-weight:600;">{{recipient}}</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="background-color:#eff6ff;border:1px solid #dbeafe;border-radius:16px;padding:20px;">
+                <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                  <tr>
+                    <td style="color:#1e40af;font-size:14px;line-height:1.6;">
+                      📬 <strong>Check your Mailtrap inbox</strong> – 
+                      <a href="https://mailtrap.io" style="color:#14b8a6;font-weight:700;text-decoration:none;">mailtrap.io</a>
+                      <span style="display:block;font-size:12px;color:#60a5fa;margin-top:4px;">Email Testing → Inboxes → your inbox</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <p style="color:#64748b;font-size:14px;line-height:1.6;margin:32px 0 40px;">
+                — <strong style="color:#0f172a;">PlacementHub Admin System</strong>
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background-color:#f8fafc;padding:32px 40px;text-align:center;border-top:1px solid #f1f5f9;">
+              <p style="margin:0 0 6px;color:#94a3b8;font-size:11px;font-weight:500;">
+                Sent at {{sentAt}} via PlacementHub Mailtrap SMTP
+              </p>
+              <p style="margin:0;color:#cbd5e1;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">
+                © {{year}} PlacementHub · Admin auto-generated test
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

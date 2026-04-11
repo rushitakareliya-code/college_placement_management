@@ -40,6 +40,8 @@ export class JobDetail implements OnInit {
 
   // Application form
   showApplicationForm = false;
+  hasApplied = false;
+  applicationStatus = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -93,6 +95,7 @@ export class JobDetail implements OnInit {
 
           this.job = res;
           this.isLoading = false;
+          this.checkApplicationStatus();
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -119,6 +122,7 @@ export class JobDetail implements OnInit {
   onApplicationSubmitted() {
     this.showApplicationForm = false;
     this.showSuccess = true;
+    this.checkApplicationStatus(); // Refresh status to show 'Already Applied'
 
     this.cdr.detectChanges();
 
@@ -128,6 +132,33 @@ export class JobDetail implements OnInit {
         this.cdr.detectChanges();
       });
     }, 3000);
+  }
+
+  checkApplicationStatus() {
+    const userRaw = localStorage.getItem('user');
+    if (!userRaw || !this.jobId) return;
+
+    const user = JSON.parse(userRaw);
+    const studentId = user.id || user._id;
+
+    if (!studentId) return;
+
+    this.http.get<any[]>(`http://localhost:5000/api/placements?studentId=${studentId}`)
+      .subscribe({
+        next: (placements) => {
+          const existing = placements.find(p => p.job?._id === this.jobId || p.job === this.jobId);
+          if (existing) {
+            this.hasApplied = true;
+            this.applicationStatus = existing.status || 'Pending';
+          } else {
+            this.hasApplied = false;
+          }
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Error checking application status:", err);
+        }
+      });
   }
 
   onApplicationFormClosed() {

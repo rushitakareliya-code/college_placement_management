@@ -23,6 +23,7 @@ import { StudentDashboard } from './pages/user/student-dashboard/student-dashboa
 import { UserNotices } from './pages/user/notices/notices';
 import { AdminLoginComponent } from './pages/admin/admin-login/admin-login';
 import { AdminAuthGuard } from './guards/admin-auth.guard';
+import { EmailSettings } from './pages/admin/email-settings/email-settings';
 
 export const routes: Routes = [
     { path: 'admin/login', component: AdminLoginComponent }, 
@@ -38,6 +39,7 @@ export const routes: Routes = [
             { path: 'applications', component: Applications },
             { path: 'notices', component: Notices },
             { path: 'contacts', component: Contacts },
+            { path: 'email-settings', component: EmailSettings },
         ]
     },
     { path: '', component: HomeComponent },
